@@ -4,8 +4,8 @@ import Header1 from "@/components/layout/header/Header1";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Not found || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Not found || CompSpotter",
+  description: "Not found || CompSpotter",
 };
 
 export default function NotFoundPage() {

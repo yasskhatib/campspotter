@@ -3,15 +3,6 @@ import "./styles/style.css";
 import Aos from "aos";
 import HomePage1 from "./pages/homes/home-1";
 import { useEffect } from "react";
-import HomePage2 from "./pages/homes/home-2";
-import HomePage3 from "./pages/homes/home-3";
-import HomePage4 from "./pages/homes/home-4";
-import HomePage5 from "./pages/homes/home-5";
-import HomePage6 from "./pages/homes/home-6";
-import HomePage7 from "./pages/homes/home-7";
-import HomePage8 from "./pages/homes/home-8";
-import HomePage9 from "./pages/homes/home-9";
-import HomePage10 from "./pages/homes/home-10";
 import ScrollTopBehaviour from "./components/common/ScrollTopBehavier";
 import ScrollToTop from "./components/common/ScrollToTop";
 import TourListPage1 from "./pages/tour-lists/tour-list-1";
@@ -65,15 +56,6 @@ function App() {
         <Routes>
           <Route path="/">
             <Route index element={<HomePage1 />} />
-            <Route path="/home-2" element={<HomePage2 />} />
-            <Route path="/home-3" element={<HomePage3 />} />
-            <Route path="/home-4" element={<HomePage4 />} />
-            <Route path="/home-5" element={<HomePage5 />} />
-            <Route path="/home-6" element={<HomePage6 />} />
-            <Route path="/home-7" element={<HomePage7 />} />
-            <Route path="/home-8" element={<HomePage8 />} />
-            <Route path="/home-9" element={<HomePage9 />} />
-            <Route path="/home-10" element={<HomePage10 />} />
 
             <Route path="/tour-list-1" element={<TourListPage1 />} />
             <Route path="/tour-list-2" element={<TourListPage2 />} />
