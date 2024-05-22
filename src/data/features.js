@@ -2,26 +2,26 @@ export const features = [
   {
     id: 1,
     iconSrc: "/img/icons/1/ticket.svg",
-    title: "Ultimate flexibility",
-    text: "You're in control, with free cancellation and payment options to satisfy any plan or budget.",
+    title: "Detailed Listings",
+    text: "Get all the information you need about each camp, including itinerary, program, and pricing.",
   },
   {
     id: 2,
     iconSrc: "/img/icons/1/hot-air-balloon.svg",
-    title: "Memorable experiences",
-    text: "Browse and book tours and activities so incredible, you'll want to tell your friends.",
+    title: "Verified Reviews",
+    text: "Trustworthy reviews from fellow campers to help you choose the best camps.",
   },
   {
     id: 3,
     iconSrc: "/img/icons/1/diamond.svg",
-    title: "Quality at our core",
-    text: "High-quality standards. Millions of reviews. A tourz company.",
+    title: "Easy Reservations",
+    text: "Secure and simple booking process with multiple payment options..",
   },
   {
     id: 4,
     iconSrc: "/img/icons/1/medal.svg",
-    title: "Award-winning support",
-    text: "New price? New plan? No problem. We're here to help, 24/7.",
+    title: "Choose Your Group",
+    text: "Browse all camping groups in Tunisia and choose your preferred group.",
   },
 ];
 export const featuresFour = [

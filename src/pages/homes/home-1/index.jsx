@@ -14,7 +14,7 @@ import Header1 from "@/components/layout/header/Header1";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Home-111 || ViaTour - Travel & Tour Reactjs Template",
+  title: "Campspotter - Adventure Made Easy!",
   description: "ViaTour - Travel & Tour Reactjs Template",
 };
 

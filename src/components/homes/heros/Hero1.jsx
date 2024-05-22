@@ -53,7 +53,7 @@ export default function Hero1() {
                 data-aos-delay="100"
                 className="hero__title"
               >
-                Your world of joy
+                CAMPSPOTTER
               </h1>
 
               <p
@@ -61,8 +61,8 @@ export default function Hero1() {
                 data-aos-delay="300"
                 className="hero__text"
               >
-                From local escapes to far-flung adventures, find what makes you
-                happy anytime, anywhere
+                Discover joy in every journey, whether it's a nearby getaway or a distant adventure,
+                and find happiness anytime, anywhere.
               </p>
 
               <div
