@@ -15,7 +15,7 @@ import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
   title: "Campspotter - Adventure Made Easy!",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  description: "Campspotter - Adventure Made Easy!",
 };
 
 export default function HomePage1() {
@@ -28,7 +28,7 @@ export default function HomePage1() {
       <DestinationsOne />
       <Tour1 />
       <Banner />
-      <TourTypeOne />
+      <br></br>
       <TourSlderOne />
       <TestimonialOne />
       <BannerOne />

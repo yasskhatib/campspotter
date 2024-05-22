@@ -15,13 +15,13 @@ export default function Tour1() {
               data-aos-delay=""
               className="text-30 md:text-24"
             >
-              Find Popular Tours
+              Find Popular Campings
             </h2>
           </div>
 
           <div className="col-auto">
             <Link
-              to={"/tour-list-1"}
+              to={"/tour-list-4"}
               data-aos="fade-left"
               data-aos-delay=""
               className="buttonArrow d-flex items-center "

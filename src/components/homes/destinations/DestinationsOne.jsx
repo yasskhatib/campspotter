@@ -12,7 +12,7 @@ export default function DestinationsOne() {
         <div className="row y-gap-10 justify-between items-end">
           <div className="col-auto">
             <h2 data-aos="fade-up" className="text-30 md:text-24">
-              Trending destinations
+              Trending camps destinations
             </h2>
           </div>
 
@@ -21,8 +21,7 @@ export default function DestinationsOne() {
               to={"/tour-list-1"}
               className="buttonArrow d-flex items-center "
             >
-              <span>See all</span>
-              <i className="icon-arrow-top-right text-16 ml-10"></i>
+              
             </Link>
           </div>
         </div>
