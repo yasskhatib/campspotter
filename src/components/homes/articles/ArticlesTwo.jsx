@@ -6,7 +6,7 @@ import React from "react";
 
 export default function ArticlesTwo() {
   return (
-    <section className="layout-pt-xl layout-pb-xl bg-black ">
+    <section className="layout-pt-xl layout-pb-xl bg-accent-1 ">
       <div className="container">
         <div className="row justify-between items-end y-gap-10">
           <div className="col-auto">

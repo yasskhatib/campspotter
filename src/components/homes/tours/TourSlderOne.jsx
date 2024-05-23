@@ -9,8 +9,8 @@ import { Link } from "react-router-dom";
 
 export default function TourSlderOne() {
   return (
-    <section className="layout-pt-xl layout-pb-xl relative">
-      <div className="sectionBg -w-1530 rounded-12 bg-light-1"></div>
+    <section className="layout-pt-xl layout-pt-sm relative">
+      <div className="sectionBg -w-1530 rounded-12 bg-white"></div>
 
       <div className="container">
         <div className="row justify-between items-end y-gap-10">

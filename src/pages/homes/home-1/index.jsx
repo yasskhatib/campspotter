@@ -4,7 +4,6 @@ import DestinationsOne from "@/components/homes/destinations/DestinationsOne";
 import FeaturesOne from "@/components/homes/features/FeaturesOne";
 import Hero1 from "@/components/homes/heros/Hero1";
 import Testimonialstwo from "@/components/homes/testimonials/Testimonialstwo";
-import TourTypeOne from "@/components/homes/tourTypes/TourTypeOne";
 import Tour1 from "@/components/homes/tours/Tour1";
 import TourSlderOne from "@/components/homes/tours/TourSlderOne";
 import FooterOne from "@/components/layout/footers/FooterOne";
@@ -29,8 +28,11 @@ export default function HomePage1() {
       <Banner />
       <br></br>
       <TourSlderOne />
+      <br></br>
       <Testimonialstwo />
+      <br></br>
       <ArticlesThree />
+      <br></br>
       <FooterOne />
     </main>
   );
