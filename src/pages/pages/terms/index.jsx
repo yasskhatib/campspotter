@@ -7,8 +7,8 @@ import React from "react";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Terms || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Terms || Campspotter - Adventure Made Easy!",
+  description: "Campspotter - Adventure Made Easy!",
 };
 
 export default function TermsPage() {

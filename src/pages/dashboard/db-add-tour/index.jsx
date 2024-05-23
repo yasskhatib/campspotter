@@ -4,8 +4,8 @@ import React from "react";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Dashboard-add-tour || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Dashboard-add-tour || Campspotter - Adventure Made Easy!",
+  description: "Campspotter - Adventure Made Easy!",
 };
 
 export default function DBAddTourPage() {

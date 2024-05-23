@@ -4,8 +4,8 @@ import React from "react";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Dashboard-favorites || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Dashboard-favorites || Campspotter - Adventure Made Easy!",
+  description: "Campspotter - Adventure Made Easy!",
 };
 
 export default function DBFavoritesPage() {

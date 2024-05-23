@@ -3,18 +3,15 @@ import React from "react";
 
 export default function Login() {
   return (
-    <section className="mt-header layout-pt-lg layout-pb-lg">
+    <section className="mt-header layout-pt-lg layout-pb-lg bg-img">
       <div className="container">
         <div className="row justify-center">
           <div className="col-xl-6 col-lg-7 col-md-9">
-            <div className="text-center mb-60 md:mb-30">
-              <h1 className="text-30">Log In</h1>
-              <div className="text-18 fw-500 mt-20 md:mt-15">
-                We're glad to see you again!
-              </div>
+            <div className="text-center mb-60 md:mb-30" style={{ color: 'white' }}>
+              <h1 className="text-60" style={{ color: 'white' }}>Log In</h1>
               <div className="mt-5">
                 Don't have an account?{" "}
-                <Link to="/register" className="text-accent-1">
+                <Link to="/register" className="text-accent-1" style={{ color: '#ffff' }}>
                   Sign Up!
                 </Link>
               </div>
@@ -23,6 +20,7 @@ export default function Login() {
             <form
               onSubmit={(e) => e.preventDefault()}
               className="contactForm border-1 rounded-12 px-60 py-60 md:px-25 md:py-30"
+              style={{ backgroundColor: 'white' }}
             >
               <div className="form-input ">
                 <input type="email" required />
@@ -76,25 +74,6 @@ export default function Login() {
                 <i className="icon-arrow-top-right ml-10"></i>
               </button>
 
-              <div className="relative line mt-50 mb-30">
-                <div className="line__word fw-500">OR</div>
-              </div>
-
-              <div className="row y-gap-15">
-                <div className="col">
-                  <button className="button -md -outline-blue-1 text-blue-1 col-12">
-                    <i className="icon-facebook mr-10"></i>
-                    Continue Facebook
-                  </button>
-                </div>
-
-                <div className="col">
-                  <button className="button -md -outline-red-1 text-red-1 col-12">
-                    <i className="icon-google mr-10"></i>
-                    Continue Google
-                  </button>
-                </div>
-              </div>
             </form>
           </div>
         </div>

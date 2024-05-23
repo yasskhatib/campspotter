@@ -11,8 +11,8 @@ import React from "react";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Tour-list-10 || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Tour-list-10 || Campspotter - Adventure Made Easy!",
+  description: "Campspotter - Adventure Made Easy!",
 };
 
 export default function TourListPage10() {

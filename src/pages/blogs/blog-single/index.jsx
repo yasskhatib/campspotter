@@ -8,8 +8,8 @@ import { useParams } from "react-router-dom";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Blog-single || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Blog-single || Campspotter - Adventure Made Easy!",
+  description: "Campspotter - Adventure Made Easy!",
 };
 
 export default function BlogSinglePage() {

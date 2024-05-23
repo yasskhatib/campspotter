@@ -6,8 +6,8 @@ import BlogList1 from "@/components/blogs/BlogList1";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Blog-list-1 || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Blog-list-1 || Campspotter - Adventure Made Easy!",
+  description: "Campspotter - Adventure Made Easy!",
 };
 
 export default function BlogListPage1() {

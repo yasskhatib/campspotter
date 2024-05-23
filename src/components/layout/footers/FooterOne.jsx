@@ -1,5 +1,4 @@
 import React from "react";
-import Paymentcards from "../components/Paymentcards";
 import FooterLinks from "../components/FooterLinks";
 import Socials from "../components/Socials";
 
@@ -12,6 +11,40 @@ export default function FooterOne() {
         </div>
 
         <div className="container">
+          
+
+          <div className="footer__content">
+            <div className="row y-gap-40 justify-between">
+              <div className="col-lg-4 col-md-6">
+                <h4 className="text-20 fw-500">Contact</h4>
+
+                <div className="y-gap-10 mt-20">
+                  <a className="d-block" href="#">
+                    Rue Iben Khaldoum, Jemmel, Monastir,
+                    Tunisia.
+                  </a>
+                  <a className="d-block" href="#">
+                    contact@campspotter.com
+                  </a>
+                </div>
+              </div>
+
+              <FooterLinks />
+
+              <div className="col-lg-3 col-md-6">
+                <h4 className="text-20 fw-500">Newsletter</h4>
+                <p className="mt-20">
+                  Subscribe to newsletter to stay up to date
+                </p>
+
+                <div className="footer__newsletter">
+                  <input type="Email" placeholder="Your email address" />
+                  <button>Send</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
           <div className="footer__info">
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
@@ -22,8 +55,8 @@ export default function FooterOne() {
 
                   <div className="col-auto">
                     <div className="text-20 fw-500">
-                      Speak to our expert at
-                      <span className="text-accent-1">1-800-453-6744</span>
+                      Speak to our commercial agent:
+                      <span className="text-accent-1"> 58-627-255</span>
                     </div>
                   </div>
                 </div>
@@ -37,38 +70,6 @@ export default function FooterOne() {
                     <Socials />
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="footer__content">
-            <div className="row y-gap-40 justify-between">
-              <div className="col-lg-4 col-md-6">
-                <h4 className="text-20 fw-500">Contact</h4>
-
-                <div className="y-gap-10 mt-20">
-                  <a className="d-block" href="#">
-                    328 Queensberry Street, North Melbourne VIC3051, Australia.
-                  </a>
-                  <a className="d-block" href="#">
-                    hi@viatours.com
-                  </a>
-                </div>
-              </div>
-
-              <FooterLinks />
-
-              <div className="col-lg-3 col-md-6">
-                <h4 className="text-20 fw-500">Newsletter</h4>
-                <p className="mt-20">
-                  Subscribe to the free newsletter and stay up to date
-                </p>
-
-                <div className="footer__newsletter">
-                  <input type="Email" placeholder="Your email address" />
-                  <button>Send</button>
-                </div>
-
               </div>
             </div>
           </div>
