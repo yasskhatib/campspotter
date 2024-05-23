@@ -20,7 +20,7 @@ export default function TourSlderOne() {
               data-aos-delay=""
               className="text-30 md:text-24"
             >
-              Top Trending
+              Top 5 Camps of the Month
             </h2>
           </div>
 

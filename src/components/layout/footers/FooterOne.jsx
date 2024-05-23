@@ -69,19 +69,6 @@ export default function FooterOne() {
                   <button>Send</button>
                 </div>
 
-                <h4 className="text-20 fw-500 mt-30">Mobile Apps</h4>
-
-                <div className="mt-10">
-                  <a className="d-flex items-center" href="#">
-                    <i className="icon-apple text-16 mr-10"></i>
-                    iOS App
-                  </a>
-
-                  <a className="d-flex items-center mt-10" href="#">
-                    <i className="icon-android text-16 mr-10"></i>
-                    Android App
-                  </a>
-                </div>
               </div>
             </div>
           </div>
@@ -92,14 +79,10 @@ export default function FooterOne() {
         <div className="footer__bottom">
           <div className="row y-gap-5 justify-between items-center">
             <div className="col-auto">
-              <div>© Copyright Viatours {new Date().getFullYear()}</div>
+              <div>© Copyright CampSpotter {new Date().getFullYear()}</div>
             </div>
 
-            <div className="col-auto">
-              <div className="footer__images d-flex items-center x-gap-10">
-                <Paymentcards />
-              </div>
-            </div>
+           
           </div>
         </div>
       </div>

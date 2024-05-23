@@ -15,15 +15,15 @@ export default function BannerFour() {
               data-aos-delay=""
               className="text-70 md:text-40 sm:text-30 text-white fw-700"
             >
-              Keep things flexible
+              Simplify Camping, Amplify Fun!
             </h2>
             <p
               data-aos="fade-up"
               data-aos-delay=""
               className="text-white mt-20"
             >
-              Use Reserve Now & Pay Later to secure the activities you
-              <br className="md:d-none" /> don't want to miss without being
+              Join Us: Embark on Unforgettable Adventures with Camp Spotter!
+              <br className="md:d-none" /> Explore the Great Outdoors with Ease!
               locked in.
             </p>
           </div>

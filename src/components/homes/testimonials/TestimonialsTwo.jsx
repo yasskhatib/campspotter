@@ -29,7 +29,7 @@ export default function TestimonialsTwo() {
     }
   };
   return (
-    <section className="layout-pt-xl layout-pb-xl bg-accent-1-05">
+    <section className="layout-pt-x2 layout-pb-xl bg-accent-1-05">
       <div className="container">
         <div className="row justify-center text-center">
           <div className="col-auto">

@@ -12,7 +12,7 @@ export default function DestinationsOne() {
         <div className="row y-gap-10 justify-between items-end">
           <div className="col-auto">
             <h2 data-aos="fade-up" className="text-30 md:text-24">
-              Trending camps destinations
+              Trending Camps Destinations
             </h2>
           </div>
 
