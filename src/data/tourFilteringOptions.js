@@ -1,10 +1,9 @@
 export const toursTypes = [
-  "Nature Tours",
-  "Adventure Tours",
-  "Cultural Tours",
-  "Food Tours",
-  "City Tours",
-  "Cruises Tours",
+  "1 Night",
+  "2 Nights",
+  "+2 Nights",
+  "All inclusive",
+  "Beach camp",
 ];
 
 export const durations = [

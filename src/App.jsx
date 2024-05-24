@@ -5,16 +5,9 @@ import HomePage1 from "./pages/homes/home-1";
 import { useEffect } from "react";
 import ScrollTopBehaviour from "./components/common/ScrollTopBehavier";
 import ScrollToTop from "./components/common/ScrollToTop";
-import TourListPage1 from "./pages/tour-lists/tour-list-1";
-import TourListPage2 from "./pages/tour-lists/tour-list-2";
-import TourListPage3 from "./pages/tour-lists/tour-list-3";
-import TourListPage4 from "./pages/tour-lists/tour-list-4";
-import TourListPage5 from "./pages/tour-lists/tour-list-5";
-import TourListPage6 from "./pages/tour-lists/tour-list-6";
-import TourListPage7 from "./pages/tour-lists/tour-list-7";
-import TourListPage8 from "./pages/tour-lists/tour-list-8";
-import TourListPage9 from "./pages/tour-lists/tour-list-9";
-import TourListPage10 from "./pages/tour-lists/tour-list-10";
+
+import TourListPage4 from "./pages/tour-lists/camps";
+
 import TourSinglePage1 from "./pages/tour-singles/tour-single-1";
 import TourSinglePage2 from "./pages/tour-singles/tour-single-2";
 import TourSinglePage3 from "./pages/tour-singles/tour-single-3";
@@ -57,16 +50,9 @@ function App() {
           <Route path="/">
             <Route index element={<HomePage1 />} />
 
-            <Route path="/tour-list-1" element={<TourListPage1 />} />
-            <Route path="/tour-list-2" element={<TourListPage2 />} />
-            <Route path="/tour-list-3" element={<TourListPage3 />} />
-            <Route path="/tour-list-4" element={<TourListPage4 />} />
-            <Route path="/tour-list-5" element={<TourListPage5 />} />
-            <Route path="/tour-list-6" element={<TourListPage6 />} />
-            <Route path="/tour-list-7" element={<TourListPage7 />} />
-            <Route path="/tour-list-8" element={<TourListPage8 />} />
-            <Route path="/tour-list-9" element={<TourListPage9 />} />
-            <Route path="/tour-list-10" element={<TourListPage10 />} />
+
+            <Route path="/camps" element={<TourListPage4 />} />
+
 
             <Route path="/tour-single-1/:id" element={<TourSinglePage1 />} />
             <Route path="/tour-single-2/:id" element={<TourSinglePage2 />} />

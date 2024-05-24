@@ -21,7 +21,7 @@ export default function Tour1() {
 
           <div className="col-auto">
             <Link
-              to={"/tour-list-4"}
+              to={"/camps"}
               data-aos="fade-left"
               data-aos-delay=""
               className="buttonArrow d-flex items-center "

@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import HeaderSerch from "../components/HeaderSerch";
 import Destinations from "../components/Destinations";
-import Activities from "../components/Activities";
-import Currency from "../components/Currency";
 import MobileMenu from "../components/MobileMenu";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -78,17 +76,31 @@ export default function Header1() {
           </div>
 
           <div className="header__right">
-            <Destinations />
-            <Activities />
-            <Currency />
-            <Link to="/register" className="ml-10">
-              Sign up
+            <Link to="/camps" className="ml-40">
+              Camping list
+            </Link>
+            <Link to="/camps" className="ml-40">
+              Group list
+            </Link>
+            
+            <Link
+              to="/register"
+              className="ml-40"
+            >
+              Join as Camper
             </Link>
 
+
+            <Link to="/register"
+              className="ml-40"
+              style={{ fontWeight: 'bold' }}
+
+              >
+              Join as Group
+            </Link>
             <Link
               to="/login"
-              className="button -sm -dark-1 bg-accent-1 rounded-200 text-white ml-30"
-            >
+              className="button -sm -dark-1 bg-green-3 rounded-200 text-white ml-40" >
               Log in
             </Link>
 

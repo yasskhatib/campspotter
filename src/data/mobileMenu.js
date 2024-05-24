@@ -7,7 +7,7 @@ export const menuData = [
       { id: 21, label: "Tour list 1", href: "/tour-list-1" },
       { id: 22, label: "Tour list 2", href: "/tour-list-2" },
       { id: 23, label: "Tour list 3", href: "/tour-list-3" },
-      { id: 24, label: "Tour list 4", href: "/tour-list-4" },
+      { id: 24, label: "Tour list 4", href: "/camps" },
       { id: 25, label: "Tour list 5", href: "/tour-list-5" },
       { id: 26, label: "Tour list 6", href: "/tour-list-6" },
       { id: 27, label: "Tour list 7", href: "/tour-list-7" },

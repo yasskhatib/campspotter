@@ -45,7 +45,7 @@ export default function TourList3() {
           <div className="row custom-dd-container justify-between items-center relative z-5">
             <div className="col-auto">
               <div className="row custom-dd-container x-gap-10 y-gap-10 items-center">
-                <div className="col-auto">
+                <div className="col-auto" hidden>
                   <button
                     onClick={() => setSidebarOpen(true)}
                     className="button -h-50 px-20 -outline-dark-1 text-dark-1"
@@ -56,7 +56,7 @@ export default function TourList3() {
                   </button>
                 </div>
 
-                <div className="col-auto">
+                <div className="col-auto" hidden>
                   <div
                     className="dropdown -base -date js-calendar js-form-dd js-dropdown js-dont-close"
                     data-main-value=""
@@ -83,12 +83,12 @@ export default function TourList3() {
                       className="dropdown__button h-50 min-w-auto js-button"
                       onClick={() => settourTypeActive((pre) => !pre)}
                     >
-                      <span className="js-title">Tour Type</span>
+                      <span className="js-title">Camps Filter</span>
                       <i className="icon-chevron-down ml-10"></i>
                     </div>
 
                     <div className="dropdown__menu px-30 py-30 shadow-1 border-1 js-">
-                      <h5 className="text-18 fw-500">Tour Type</h5>
+                      <h5 className="text-18 fw-500">Camps Type</h5>
                       <div className="pt-20">
                         <div className="d-flex flex-column y-gap-15">
                           {toursTypes.map((elm, i) => (
@@ -113,13 +113,6 @@ export default function TourList3() {
                             </div>
                           ))}
                         </div>
-
-                        <a
-                          href="#"
-                          className="d-flex text-15 fw-500 text-accent-2 mt-15"
-                        >
-                          See More
-                        </a>
                       </div>
 
                       <button className="button px-25 py-15 lh-12 -accent-1 text-accent-1 bg-accent-1-05 border-accent-1 mt-10">
@@ -141,7 +134,7 @@ export default function TourList3() {
               >
                 <div
                   className="dropdown__button js-button"
-                  onClick={() => setDdActives((pre) => !pre)}
+                  onClick={() => setDdActives((pre) => !pre)} hidden
                 >
                   <span>Sort by: </span>
                   <span className="js-title">

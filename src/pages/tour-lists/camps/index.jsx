@@ -1,24 +1,24 @@
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
-import Hero from "@/components/tours/Hero";
-import TourList5 from "@/components/tours/TourList5";
+import PageHeader from "@/components/tours/PageHeader";
+import TourList3 from "@/components/tours/TourList3";
 import React from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Tour-list-6 || Campspotter - Adventure Made Easy!",
+  title: "camps || Campspotter - Adventure Made Easy!",
   description: "Campspotter - Adventure Made Easy!",
 };
 
-export default function TourListPage6() {
+export default function TourListPage4() {
   return (
     <>
       <MetaComponent meta={metadata} />
       <main>
         <Header1 />
-        <Hero />
-        <TourList5 />
+        <PageHeader />
+        <TourList3 />
         <FooterOne />
       </main>
     </>
