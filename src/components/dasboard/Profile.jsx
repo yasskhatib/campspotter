@@ -1,24 +1,114 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Profile({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [image1, setImage1] = useState("");
-  const [image2, setImage2] = useState("/img/dashboard/addtour/1.jpg");
+  const [userInfo, setUserInfo] = useState({
+    fullName: "",
+    email: "",
+    governorate: "",
+    telephone: ""
+  });
+  const [passwords, setPasswords] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
 
-  const handleImageChange = (event, func) => {
-    const file = event.target.files[0];
+  useEffect(() => {
+    const email = localStorage.getItem('userEmail');
+    fetchUserInfo(email);
+  }, []);
 
-    if (file) {
-      const reader = new FileReader();
+  const fetchUserInfo = async (email) => {
+    try {
+      const response = await fetch(`http://localhost:5000/userinfo?email=${email}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUserInfo({
+          fullName: data.fullName,
+          email: data.email,
+          governorate: data.governorate,
+          telephone: data.telephone
+        });
+      } else {
+        toast.error('Failed to fetch user info');
+      }
+    } catch (error) {
+      toast.error('Error fetching user info');
+    }
+  };
 
-      reader.onloadend = () => {
-        func(reader.result);
-      };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo({
+      ...userInfo,
+      [name]: value
+    });
+  };
 
-      reader.readAsDataURL(file);
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswords({
+      ...passwords,
+      [name]: value
+    });
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/updateProfile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userInfo),
+      });
+      if (response.ok) {
+        toast.success('Profile updated successfully');
+      } else {
+        toast.error('Failed to update profile');
+      }
+    } catch (error) {
+      toast.error('Error updating profile');
+    }
+  };
+
+  const handleChangePassword = async () => {
+    const { oldPassword, newPassword, confirmPassword } = passwords;
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      toast.error('Password must be at least 8 characters long and include at least one letter and one number');
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:5000/changePassword`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: userInfo.email, oldPassword, newPassword }),
+      });
+      if (response.ok) {
+        toast.success('Password changed successfully');
+        setPasswords({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        });
+      } else {
+        toast.error('Failed to change password');
+      }
+    } catch (error) {
+      toast.error('Error changing password');
     }
   };
 
@@ -35,81 +125,29 @@ export default function Profile({ onLogout }) {
             <div className="contactForm row y-gap-30">
               <div className="col-md-6">
                 <div className="form-input">
-                  <input type="text" required />
-                  <label className="lh-1 text-16 text-light-1">Name</label>
+                  <input placeholder="Fullname" type="text" name="fullName" value={userInfo.fullName} onChange={handleChange} required />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-input">
-                  <input type="text" required />
-                  <label className="lh-1 text-16 text-light-1">Last Name</label>
+                  <input placeholder="Email" type="email" name="email" value={userInfo.email} onChange={handleChange} required />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-input">
-                  <input type="text" required />
-                  <label className="lh-1 text-16 text-light-1">Phone</label>
+                  <input placeholder="Governorate" type="text" name="governorate" value={userInfo.governorate} onChange={handleChange} required />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-input">
-                  <input type="text" required />
-                  <label className="lh-1 text-16 text-light-1">Email</label>
+                  <input placeholder="phone" type="text" name="telephone" value={userInfo.telephone} onChange={handleChange} required />
                 </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-input">
-                  <textarea required rows="8"></textarea>
-                  <label className="lh-1 text-16 text-light-1">Info</label>
-                </div>
-              </div>
-              <div className="col-12">
-                <h4 className="text-18 fw-500 mb-20">Your photo</h4>
-                <div className="row x-gap-20 y-gap">
-                  {image1 ? (
-                    <div className="col-auto">
-                      <div className="relative">
-                        <img src={image1} alt="image" className="size-200 rounded-12 object-cover" />
-                        <button onClick={() => { setImage1(""); }} className="absoluteIcon1 button -dark-1">
-                          <i className="icon-delete text-18"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="col-auto">
-                      <label htmlFor="imageInp1" className="size-200 rounded-12 border-dash-1 bg-accent-1-05 flex-center flex-column">
-                        <img alt="image" src={"/img/dashboard/upload.svg"} />
-                        <div className="text-16 fw-500 text-accent-1 mt-10">Upload Images</div>
-                      </label>
-                      <input onChange={(e) => handleImageChange(e, setImage1)} accept="image/*" id="imageInp1" type="file" style={{ display: "none" }} />
-                    </div>
-                  )}
-                  {image2 ? (
-                    <div className="col-auto">
-                      <div className="relative">
-                        <img src={image2} alt="image" className="size-200 rounded-12 object-cover" />
-                        <button onClick={() => { setImage2(""); }} className="absoluteIcon1 button -dark-1">
-                          <i className="icon-delete text-18"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="col-auto">
-                      <label htmlFor="imageInp2" className="size-200 rounded-12 border-dash-1 bg-accent-1-05 flex-center flex-column">
-                        <img alt="image" src={"/img/dashboard/upload.svg"} />
-                        <div className="text-16 fw-500 text-accent-1 mt-10">Upload Images</div>
-                      </label>
-                      <input onChange={(e) => handleImageChange(e, setImage2)} accept="image/*" id="imageInp2" type="file" style={{ display: "none" }} />
-                    </div>
-                  )}
-                </div>
-                <div className="text-14 mt-20">PNG or JPG no bigger than 800px wide and tall.</div>
-                <button className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                  Save Changes
-                  <i className="icon-arrow-top-right text-16 ml-10"></i>
-                </button>
               </div>
             </div>
+            <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleSaveChanges}>
+              Save Changes
+              <i className="icon-arrow-top-right ml-10"></i>
+            </button>
           </div>
           <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-30">
             <h5 className="text-20 fw-500 mb-30">Change Password</h5>
@@ -117,30 +155,27 @@ export default function Profile({ onLogout }) {
               <div className="row y-gap-30">
                 <div className="col-md-6">
                   <div className="form-input">
-                    <input type="text" required />
-                    <label className="lh-1 text-16 text-light-1">Old password</label>
+                    <input placeholder="Old password" type="password" name="oldPassword" value={passwords.oldPassword} onChange={handlePasswordChange} required />
                   </div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-input">
-                    <input type="text" required />
-                    <label className="lh-1 text-16 text-light-1">New password</label>
+                    <input placeholder="New password" type="password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordChange} required />
                   </div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-input">
-                    <input type="text" required />
-                    <label className="lh-1 text-16 text-light-1">Confirm new password</label>
-                  </div>
+                    <input placeholder="Confirm new password" type="password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} required />
+             </div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-12">
-                  <button className="button -md -dark-1 bg-accent-1 text-white">
+                  <button className="button -md -dark-1 bg-accent-1 text-white" onClick={handleChangePassword}>
                     Save Changes
                     <i className="icon-arrow-top-right text-16 ml-10"></i>
                   </button>
@@ -153,6 +188,7 @@ export default function Profile({ onLogout }) {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

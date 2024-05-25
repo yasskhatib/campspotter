@@ -36,7 +36,25 @@ export default function Login() {
         },
         body: JSON.stringify(formData),
       });
+
+      const contentType = response.headers.get('content-type');
+      let data;
+
+      if (contentType && contentType.indexOf('application/json') !== -1) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
+
       if (response.ok) {
+        if (typeof data === 'string') {
+          // Handle plain text response
+          localStorage.setItem('fullName', formData.email); // Use email as a fallback
+        } else {
+          // Handle JSON response
+          localStorage.setItem('fullName', data.fullName);
+        }
+
         toast.success('Login successful', {
           position: "bottom-right",
           autoClose: 5000,
@@ -46,12 +64,14 @@ export default function Login() {
           draggable: true,
           progress: undefined,
         });
+
         localStorage.setItem('loggedIn', true);
+        localStorage.setItem('userEmail', formData.email);
         navigate('/db-profile');
       } else {
-        const errorMessage = await response.text();
-        if (errorMessage === 'Email does not exist') {
-          toast.info(errorMessage, {
+        if (typeof data === 'string') {
+          // Handle plain text error response
+          toast.error(data, {
             position: "bottom-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -61,7 +81,8 @@ export default function Login() {
             progress: undefined,
           });
         } else {
-          toast.error(errorMessage, {
+          // Handle JSON error response
+          toast.error(data.message, {
             position: "bottom-right",
             autoClose: 5000,
             hideProgressBar: false,
