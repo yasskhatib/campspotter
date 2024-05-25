@@ -41,8 +41,14 @@ export const sidebarItems = [
     iconClass: "icon-account text-26",
     label: "My Profile",
   },
-  { id: 8, href: "/", iconClass: "icon-logout text-26", label: "Logout" },
+  {
+    id: 8,
+    href: "#",
+    iconClass: "icon-logout text-26",
+    label: "Logout",
+  },
 ];
+
 
 export const states = [
   {

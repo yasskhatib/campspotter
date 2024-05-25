@@ -1,8 +1,102 @@
-import { Link } from "react-router-dom";
-import React from "react";
-
+import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Register() {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    telephone: '',
+    governorate: '',
+    password: '',
+  });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('loggedIn');
+    if (loggedIn) {
+      navigate('/db-profile'); // Redirect to profile or dashboard page if already logged in
+    }
+  }, [navigate]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      toast.error('Password must be at least 8 characters long and include at least one letter and one number', {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        toast.success('User registered successfully', {
+          position: "bottom-right",
+          autoClose: 7000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setFormData({
+          fullName: '',
+          email: '',
+          telephone: '',
+          governorate: '',
+          password: '',
+        });
+      } else {
+        const errorMessage = await response.text();
+        toast.error(errorMessage, {
+          position: "bottom-right",
+          autoClose: 7000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      toast.error('Error: ' + error.message, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
   return (
     <section className="mt-header layout-pt-lg layout-pb-lg bg-img2">
       <div className="container">
@@ -12,32 +106,28 @@ export default function Register() {
               <h1 className="text-60" style={{ color: 'white' }}>Signup</h1>
               <div className="mt-5" style={{ color: '#ffff' }}>
                 Already have an account?{" "}
-                <Link to="/login" className="text-accent-1" >
+                <Link to="/login" className="text-accent-1">
                   Log In!
                 </Link>
               </div>
             </div>
 
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="contactForm border-1 rounded-12 px-60 py-60 md:px-25 md:py-30"
-              style={{ backgroundColor: 'white' }}
-            >
+            <form onSubmit={handleSubmit} className="contactForm border-1 rounded-12 px-60 py-60 md:px-25 md:py-30" style={{ backgroundColor: 'white' }}>
               <div className="form-input">
-                <input type="text" placeholder="Full Name" required />
+                <input type="text" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
               </div>
 
               <div className="form-input mt-30">
-                <input type="text" placeholder="Your Email" required />
+                <input type="text" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
               </div>
 
               <div className="form-input mt-30">
-                <input type="number" placeholder="Telephone" required />
+                <input type="number" name="telephone" placeholder="Telephone" value={formData.telephone} onChange={handleChange} required />
               </div>
 
               <div className="form-input mt-30">
-                <select required>
-                  <option value="" disabled selected>Select Your Governorate</option>
+                <select name="governorate" value={formData.governorate} onChange={handleChange} required>
+                  <option value="" disabled>Select Your Governorate</option>
                   <option value="Ariana">Ariana</option>
                   <option value="Beja">Beja</option>
                   <option value="Ben Arous">Ben Arous</option>
@@ -66,7 +156,7 @@ export default function Register() {
               </div>
 
               <div className="form-input mt-30">
-                <input type="password" placeholder="Password" required />
+                <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
               </div>
 
               <button className="button -md -dark-1 bg-accent-1 text-white col-12 mt-30">
@@ -74,10 +164,10 @@ export default function Register() {
                 <i className="icon-arrow-top-right ml-10"></i>
               </button>
             </form>
-
           </div>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 }
