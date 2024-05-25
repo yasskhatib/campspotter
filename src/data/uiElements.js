@@ -18,12 +18,32 @@ export const tabContent = [
 ];
 
 export const ddoptions = [
-  { id: 1, value: "banking", label: "Banking" },
-  { id: 2, value: "digital & creative", label: "Digital & Creative" },
-  { id: 3, value: "retail", label: "Retail" },
-  { id: 4, value: "designer", label: "Designer" },
-  { id: 5, value: "developer", label: "Developer" },
+  { id: 1, value: "ariana", label: "Ariana" },
+  { id: 2, value: "beja", label: "Beja" },
+  { id: 3, value: "ben_arous", label: "Ben Arous" },
+  { id: 4, value: "bizerte", label: "Bizerte" },
+  { id: 5, value: "gabes", label: "Gabes" },
+  { id: 6, value: "gafsa", label: "Gafsa" },
+  { id: 7, value: "jendouba", label: "Jendouba" },
+  { id: 8, value: "kairouan", label: "Kairouan" },
+  { id: 9, value: "kasserine", label: "Kasserine" },
+  { id: 10, value: "kebili", label: "Kebili" },
+  { id: 11, value: "kef", label: "Kef" },
+  { id: 12, value: "mahdia", label: "Mahdia" },
+  { id: 13, value: "manouba", label: "Manouba" },
+  { id: 14, value: "medenine", label: "Medenine" },
+  { id: 15, value: "monastir", label: "Monastir" },
+  { id: 16, value: "nabeul", label: "Nabeul" },
+  { id: 17, value: "sfax", label: "Sfax" },
+  { id: 18, value: "sidi_bouzid", label: "Sidi Bouzid" },
+  { id: 19, value: "siliana", label: "Siliana" },
+  { id: 20, value: "sousse", label: "Sousse" },
+  { id: 21, value: "tataouine", label: "Tataouine" },
+  { id: 22, value: "tozeur", label: "Tozeur" },
+  { id: 23, value: "tunis", label: "Tunis" },
+  { id: 24, value: "zaghouan", label: "Zaghouan" },
 ];
+
 
 export const requirements = [
   "You will need a copy of Adobe XD 2019 or above. A free trial can be downloaded from Adobe.",

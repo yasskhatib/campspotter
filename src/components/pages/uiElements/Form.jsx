@@ -2,7 +2,6 @@ import React from "react";
 import ProgressBar from "./ProgressBar";
 import Range from "./RangeSlider";
 import Tooltips from "./Tooltips";
-import SelectWithSearch from "./SelectWithSearch";
 import MultipleSelectBox from "./MultipleSelectBox";
 
 export default function Form() {

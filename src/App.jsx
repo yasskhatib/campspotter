@@ -3,6 +3,8 @@ import "./styles/style.css";
 import Aos from "aos";
 import HomePage1 from "./pages/homes/home-1";
 import { useEffect } from "react";
+import axios from 'axios';
+
 import ScrollTopBehaviour from "./components/common/ScrollTopBehavier";
 import ScrollToTop from "./components/common/ScrollToTop";
 
