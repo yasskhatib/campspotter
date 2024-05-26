@@ -81,10 +81,10 @@ export default function Profile({ onLogout }) {
   const handleChangePassword = async () => {
     const { oldPassword, newPassword, confirmPassword } = passwords;
     if (newPassword !== confirmPassword) {
-      toast.error('New passwords do not match');
+      toast.info('New passwords do not match');
       return;
     }
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za\d]{8,}$/;
     if (!passwordRegex.test(newPassword)) {
       toast.error('Password must be at least 8 characters long and include at least one letter and one number');
       return;
@@ -105,7 +105,7 @@ export default function Profile({ onLogout }) {
           confirmPassword: ""
         });
       } else {
-        toast.error('Failed to change password');
+        toast.error('Password change failed: The old password is incorrect.');
       }
     } catch (error) {
       toast.error('Error changing password');
@@ -118,8 +118,8 @@ export default function Profile({ onLogout }) {
       <div className="dashboard__content">
         <Header setSideBarOpen={setSideBarOpen} />
         <div className="dashboard__content_content">
-          <h1 className="text-30">My Profile</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur.</p>
+          <h1 className="text-30">Hi {userInfo.fullName}</h1>
+          <p>Feel free to modify your profile information in the forms below:</p>
           <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
             <h5 className="text-20 fw-500 mb-30">Profile Details</h5>
             <div className="contactForm row y-gap-30">
@@ -170,7 +170,7 @@ export default function Profile({ onLogout }) {
                 <div className="col-md-6">
                   <div className="form-input">
                     <input placeholder="Confirm new password" type="password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} required />
-             </div>
+                  </div>
                 </div>
               </div>
               <div className="row">
@@ -188,7 +188,18 @@ export default function Profile({ onLogout }) {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={7000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </div>
   );
 }

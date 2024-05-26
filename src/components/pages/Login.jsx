@@ -37,24 +37,10 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
 
-      const contentType = response.headers.get('content-type');
-      let data;
-
-      if (contentType && contentType.indexOf('application/json') !== -1) {
-        data = await response.json();
-      } else {
-        data = await response.text();
-      }
+      const data = await response.json();
 
       if (response.ok) {
-        if (typeof data === 'string') {
-          // Handle plain text response
-          localStorage.setItem('fullName', formData.email); // Use email as a fallback
-        } else {
-          // Handle JSON response
-          localStorage.setItem('fullName', data.fullName);
-        }
-
+        localStorage.setItem('fullName', data.fullName);
         toast.success('Login successful', {
           position: "bottom-right",
           autoClose: 5000,
@@ -69,29 +55,67 @@ export default function Login() {
         localStorage.setItem('userEmail', formData.email);
         navigate('/db-profile');
       } else {
-        if (typeof data === 'string') {
-          // Handle plain text error response
-          toast.error(data, {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        } else {
-          // Handle JSON error response
-          toast.error(data.message, {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        }
+        toast.error(data.message, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      toast.error('Error: ' + error.message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      toast.error('Please enter your email address first', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/forgotPassword?email=${formData.email}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        toast.error(data.message, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       toast.error('Error: ' + error.message, {
@@ -131,7 +155,6 @@ export default function Login() {
                   onChange={handleChange}
                   required
                 />
-                <label className="lh-1 text-16 text-light-1">Email Address</label>
               </div>
 
               <div className="form-input mt-30">
@@ -143,7 +166,6 @@ export default function Login() {
                   onChange={handleChange}
                   required
                 />
-                <label className="lh-1 text-16 text-light-1">Password</label>
               </div>
 
               <div className="row y-ga-10 justify-between items-center pt-30">
@@ -165,7 +187,7 @@ export default function Login() {
                 </div>
 
                 <div className="col-auto">
-                  <a href="#">Lost your password?</a>
+                  <a href="#" onClick={handleForgotPassword}>Lost your password?</a>
                 </div>
               </div>
 

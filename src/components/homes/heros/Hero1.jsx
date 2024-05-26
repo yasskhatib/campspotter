@@ -57,11 +57,11 @@ export default function Hero1() {
               </h1>
 
               <p
-                data-aos={"fade-up"}
+                data-aos="fade-up"
                 data-aos-delay="300"
                 className="hero__text"
               >
-                Discover joy in every journey, whether it's a nearby getaway or a distant adventure,
+                Discover joy in every journey, whether it&apos;s a nearby getaway or a distant adventure,
                 and find happiness anytime, anywhere.
               </p>
 
