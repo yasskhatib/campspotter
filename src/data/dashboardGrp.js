@@ -1,21 +1,48 @@
 export const sidebarItems = [
-
-
-
   {
     id: 1,
-    href: "/db-profile",
-    iconClass: "icon-account text-26",
-    label: "My Profile",
+    href: "/db-main",
+    iconClass: "icon-dashboard text-26",
+    label: "Dashboard",
   },
   {
     id: 2,
+    href: "/db-booking",
+    iconClass: "icon-calendar text-26",
+    label: "My Booking",
+  },
+  {
+    id: 3,
     href: "/db-listing",
     iconClass: "icon-menu text-26",
     label: "My Listings",
   },
   {
-    id: 3,
+    id: 4,
+    href: "/db-add-tour",
+    iconClass: "icon-clipboard text-26",
+    label: "Add Tour",
+  },
+  {
+    id: 5,
+    href: "/db-favorites",
+    iconClass: "icon-heart text-26",
+    label: "My Favorites",
+  },
+  {
+    id: 6,
+    href: "/db-messages",
+    iconClass: "icon-message text-26",
+    label: "Messages",
+  },
+  {
+    id: 7,
+    href: "/db-profile",
+    iconClass: "icon-account text-26",
+    label: "My Profile",
+  },
+  {
+    id: 8,
     href: "#",
     iconClass: "icon-logout text-26",
     label: "Logout",

@@ -3,13 +3,13 @@ export const features = [
     id: 1,
     iconSrc: "/img/icons/1/ticket.svg",
     title: "Detailed Listings",
-    text: "Get all the information you need about each camp, including itinerary, program, and pricing.",
+    text: "Get all camp details: itinerary, program, and pricing information.",
   },
   {
     id: 2,
     iconSrc: "/img/icons/1/hot-air-balloon.svg",
     title: "Verified Reviews",
-    text: "Trustworthy reviews from fellow campers to help you choose the best camps.",
+    text: "Trustworthy reviews from campers help you choose the best camps.",
   },
   {
     id: 3,

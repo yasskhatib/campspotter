@@ -10110,6 +10110,13 @@ h1, h2, h3, h4, h5, h6 {
   background-repeat: no-repeat;
 }
 
+.bg-img3 {
+  background-image: url('../img/general/bg2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .layout-pt-xl {
   padding-top: 120px;
 }
@@ -13899,4 +13906,28 @@ button.gm-ui-hover-effect::after {
 
 .h-500 {
   height: 500px;
+}
+
+.image-preview {
+  margin-top: 10px;
+  max-width: 200px;
+  /* Ensure the container does not exceed 200px */
+  overflow: hidden;
+  /* Hide overflow content */
+  border-radius: 9px;
+  /* Apply border radius to the container */
+}
+
+.img-thumbnail {
+  width: 100%;
+  /* Make the image fill the container */
+  border-radius: 9px;
+  /* Apply border radius to the image */
+  transition: transform 0.2s;
+  /* Smooth zoom transition */
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.2);
+  /* Zoom in effect */
 }

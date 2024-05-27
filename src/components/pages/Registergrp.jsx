@@ -1,15 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Register() {
+export default function RegisterCampgrp() {
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
     email: '',
     telephone: '',
     governorate: '',
+    chefName: '',
+    picture: null,
+    creationDate: '',
+    socialMediaLink: '',
+    comments: '',
     password: '',
+    confirmPassword: ''
   });
 
   const navigate = useNavigate();
@@ -17,22 +23,59 @@ export default function Register() {
   useEffect(() => {
     const loggedIn = localStorage.getItem('loggedIn');
     if (loggedIn) {
-      navigate('/db-profile'); // Redirect to profile or dashboard page if already logged in
+      navigate('/campgrp-dashboard'); // Redirect to dashboard if already logged in
     }
   }, [navigate]);
 
+  const currentYear = new Date().getFullYear();
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { name, value, files } = e.target;
+    if (name === 'picture') {
+      setFormData({
+        ...formData,
+        picture: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validation for creationDate
+    const creationYear = parseInt(formData.creationDate, 10);
+    if (creationYear < 2010 || creationYear > currentYear) {
+      toast.error(`Creation year must be between 2010 and ${currentYear}`, {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
     // Password validation
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match', {
+        position: "bottom-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordRegex.test(formData.password)) {
       toast.error('Password must be at least 8 characters long and include at least one letter and one number', {
@@ -47,16 +90,19 @@ export default function Register() {
       return;
     }
 
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('http://localhost:5000/registerCampgrp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
+      const data = await response.json();
       if (response.ok) {
-        toast.success('User registered successfully', {
+        toast.success(data.message, {
           position: "bottom-right",
           autoClose: 7000,
           hideProgressBar: false,
@@ -66,15 +112,20 @@ export default function Register() {
           progress: undefined,
         });
         setFormData({
-          fullName: '',
+          name: '',
           email: '',
           telephone: '',
           governorate: '',
+          chefName: '',
+          picture: null,
+          creationDate: '',
+          socialMediaLink: '',
+          comments: '',
           password: '',
+          confirmPassword: ''
         });
       } else {
-        const errorMessage = await response.text();
-        toast.error(errorMessage, {
+        toast.error(data.message, {
           position: "bottom-right",
           autoClose: 7000,
           hideProgressBar: false,
@@ -86,7 +137,7 @@ export default function Register() {
       }
     } catch (error) {
       toast.error('Error: ' + error.message, {
-        position: toast.POSITION.BOTTOM_RIGHT,
+        position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -98,15 +149,15 @@ export default function Register() {
   };
 
   return (
-    <section className="mt-header layout-pt-lg layout-pb-lg bg-img2">
+    <section className="mt-header layout-pt-lg layout-pb-lg bg-img3">
       <div className="container">
         <div className="row justify-center">
           <div className="col-xl-6 col-lg-7 col-md-9">
             <div className="text-center mb-60 md:mb-30" style={{ color: 'white' }}>
-              <h1 className="text-60" style={{ color: 'white' }}>Signup for Camper</h1>
+              <h1 className="text-60" style={{ color: 'white' }}>Signup for Camping Group</h1>
               <div className="mt-5" style={{ color: '#ffff' }}>
                 Already have an account?{" "}
-                <Link to="/login" className="text-accent-1">
+                <Link to="/logingrp" className="text-accent-1">
                   Log In!
                 </Link>
               </div>
@@ -114,11 +165,15 @@ export default function Register() {
 
             <form onSubmit={handleSubmit} className="contactForm border-1 rounded-12 px-60 py-60 md:px-25 md:py-30" style={{ backgroundColor: 'white' }}>
               <div className="form-input">
-                <input type="text" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
+                <input type="text" name="name" placeholder="Group Name" value={formData.name} onChange={handleChange} required />
               </div>
 
               <div className="form-input mt-30">
-                <input type="text" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
+                <input type="text" name="chefName" placeholder="Chef Name" value={formData.chefName} onChange={handleChange} required />
+              </div>
+
+              <div className="form-input mt-30">
+                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
               </div>
 
               <div className="form-input mt-30">
@@ -156,10 +211,30 @@ export default function Register() {
               </div>
 
               <div className="form-input mt-30">
+                <input type="number" name="creationDate" placeholder="Creation Year (e.g., 2010)" value={formData.creationDate} onChange={handleChange} min="2010" max={currentYear} required />
+              </div>
+
+              <div className="form-input mt-30">
+                <input type="text" name="socialMediaLink" placeholder="Social Media Link" value={formData.socialMediaLink} onChange={handleChange} />
+              </div>
+
+              <div className="form-input mt-30">
+                <input type="text" name="comments" placeholder="Comments" value={formData.comments} onChange={handleChange} />
+              </div>
+
+              <div className="form-input mt-30">
+                <input type="file" name="picture" onChange={handleChange} />
+              </div>
+
+              <div className="form-input mt-30">
                 <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
               </div>
 
-              <button className="button -md -dark-1 bg-accent-1 text-white col-12 mt-30">
+              <div className="form-input mt-30">
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} required />
+              </div>
+
+              <button type="submit" className="button -md -dark-1 bg-accent-1 text-white col-12 mt-30">
                 Register
                 <i className="icon-arrow-top-right ml-10"></i>
               </button>

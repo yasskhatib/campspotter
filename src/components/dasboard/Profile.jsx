@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
@@ -36,6 +36,7 @@ export default function Profile({ onLogout }) {
           telephone: data.telephone
         });
       } else {
+        
         toast.error('Failed to fetch user info');
       }
     } catch (error) {
@@ -135,16 +136,42 @@ export default function Profile({ onLogout }) {
               </div>
               <div className="col-md-6">
                 <div className="form-input">
-                  <input placeholder="Governorate" type="text" name="governorate" value={userInfo.governorate} onChange={handleChange} required />
+                  <select name="governorate" value={userInfo.governorate} onChange={handleChange} required>
+                    <option value="" disabled>Select Your Governorate</option>
+                    <option value="Ariana">Ariana</option>
+                    <option value="Beja">Beja</option>
+                    <option value="Ben Arous">Ben Arous</option>
+                    <option value="Bizerte">Bizerte</option>
+                    <option value="Gabes">Gabes</option>
+                    <option value="Gafsa">Gafsa</option>
+                    <option value="Jendouba">Jendouba</option>
+                    <option value="Kairouan">Kairouan</option>
+                    <option value="Kasserine">Kasserine</option>
+                    <option value="Kebili">Kebili</option>
+                    <option value="Kef">Kef</option>
+                    <option value="Mahdia">Mahdia</option>
+                    <option value="Manouba">Manouba</option>
+                    <option value="Medenine">Medenine</option>
+                    <option value="Monastir">Monastir</option>
+                    <option value="Nabeul">Nabeul</option>
+                    <option value="Sfax">Sfax</option>
+                    <option value="Sidi Bouzid">Sidi Bouzid</option>
+                    <option value="Siliana">Siliana</option>
+                    <option value="Sousse">Sousse</option>
+                    <option value="Tataouine">Tataouine</option>
+                    <option value="Tozeur">Tozeur</option>
+                    <option value="Tunis">Tunis</option>
+                    <option value="Zaghouan">Zaghouan</option>
+                  </select>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-input">
-                  <input placeholder="phone" type="text" name="telephone" value={userInfo.telephone} onChange={handleChange} required />
+                  <input placeholder="Phone" type="text" name="telephone" value={userInfo.telephone} onChange={handleChange} required />
                 </div>
               </div>
             </div>
-            <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleSaveChanges}>
+            <button className="button -md -dark-1 bg-green-2 text-white mt-30" onClick={handleSaveChanges} style={{ width: '100%' }}>
               Save Changes
               <i className="icon-arrow-top-right ml-10"></i>
             </button>
@@ -153,7 +180,7 @@ export default function Profile({ onLogout }) {
             <h5 className="text-20 fw-500 mb-30">Change Password</h5>
             <div className="contactForm y-gap-30">
               <div className="row y-gap-30">
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <div className="form-input">
                     <input placeholder="Old password" type="password" name="oldPassword" value={passwords.oldPassword} onChange={handlePasswordChange} required />
                   </div>
@@ -165,8 +192,7 @@ export default function Profile({ onLogout }) {
                     <input placeholder="New password" type="password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordChange} required />
                   </div>
                 </div>
-              </div>
-              <div className="row">
+              
                 <div className="col-md-6">
                   <div className="form-input">
                     <input placeholder="Confirm new password" type="password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} required />
@@ -175,7 +201,7 @@ export default function Profile({ onLogout }) {
               </div>
               <div className="row">
                 <div className="col-12">
-                  <button className="button -md -dark-1 bg-accent-1 text-white" onClick={handleChangePassword}>
+                  <button className="button -md -dark-1 bg-green-3 text-white" onClick={handleChangePassword} style={{ width: '100%' }}>
                     Save Changes
                     <i className="icon-arrow-top-right text-16 ml-10"></i>
                   </button>

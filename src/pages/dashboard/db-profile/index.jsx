@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Profile from "@/components/dasboard/Profile";
@@ -34,9 +35,10 @@ export default function DBProfilePage() {
           telephone: data.telephone
         });
         // Display alert with user information
-        alert(`Full Name: ${data.fullName}\nEmail: ${data.email}\nGovernorate: ${data.governorate}\nTelephone: ${data.telephone}`);
       } else {
         console.error('Failed to fetch user info');
+        navigate('/login'); // Redirect to loginCampgrp if no camp group user is logged in
+
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
@@ -53,7 +55,7 @@ export default function DBProfilePage() {
   };
 
   const metadata = {
-    title: `${userInfo.fullName} Dashboard || Campspotter - Adventure Made Easy!`,
+    title: `${userInfo.fullName} Dashboard - Campspotter`,
     description: "Campspotter - Adventure Made Easy!",
   };
 

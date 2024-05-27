@@ -1,4 +1,4 @@
-                import {sidebarItems} from "@/data/dashboard";
+                import {sidebarItems} from "@/data/dashboardGrp";
                 import {Link, useLocation} from "react-router-dom";
                 import PropTypes from "prop-types";
 
@@ -24,7 +24,7 @@
                         key={i}
                         className={`sidebar__item ${pathname === elm.href ? "-is-active" : ""}`}
                       >
-                        {elm.id === 3 ? (
+                        {elm.id === 8 ? (
                           <a onClick={onLogout} className="sidebar__link" style={{ cursor: 'pointer' }}>
                             <i className={elm.iconClass}></i>
                             <span className="ml-10">{elm.label}</span>

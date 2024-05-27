@@ -1,9 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Login() {
+export default function Logingrp() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,7 +22,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/loginCampgrp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +33,8 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('fullName', data.fullName);
+        localStorage.setItem('campgrpLoggedIn', true);
+        localStorage.setItem('campgrpEmail', formData.email);
         toast.success('Login successful', {
           position: "bottom-right",
           autoClose: 5000,
@@ -44,9 +45,7 @@ export default function Login() {
           progress: undefined,
         });
 
-        localStorage.setItem('loggedIn', true);
-        localStorage.setItem('userEmail', formData.email);
-        navigate('/db-profile');
+        navigate('/campgrp-dashboard');
       } else {
         toast.error(data.message, {
           position: "bottom-right",
@@ -86,7 +85,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/forgotPassword?email=${formData.email}`);
+      const response = await fetch(`http://localhost:5000/forgotPasswordCampgrp?email=${formData.email}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -124,15 +123,15 @@ export default function Login() {
   };
 
   return (
-    <section className="mt-header layout-pt-lg layout-pb-lg bg-img">
+    <section className="mt-header layout-pt-lg layout-pb-lg bg-img3">
       <div className="container">
         <div className="row justify-center">
           <div className="col-xl-6 col-lg-7 col-md-9">
             <div className="text-center mb-60 md:mb-30" style={{ color: 'white' }}>
-              <h1 className="text-60" style={{ color: 'white' }}>Log-In for Camper</h1>
+              <h1 className="text-60" style={{ color: 'white' }}>Log In for Camping Group</h1>
               <div className="mt-5">
                 Don&apos;t have an account?{" "}
-                <Link to="/register" className="text-accent-1" style={{ color: '#ffff' }}>
+                <Link to="/registergrp" className="text-accent-1" style={{ color: '#ffff' }}>
                   Sign Up!
                 </Link>
               </div>
@@ -162,8 +161,6 @@ export default function Login() {
               </div>
 
               <div className="row y-ga-10 justify-between items-center pt-30">
-              
-
                 <div className="col-auto">
                   <a href="#" onClick={handleForgotPassword}>Lost your password?</a>
                 </div>

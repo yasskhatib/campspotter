@@ -1,22 +1,22 @@
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
-import Register from "@/components/pages/Register";
+import Registergrp from "@/components/pages/Registergrp";
 //import React from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Signup Camper - Campspotter",
-  description: "Signup Camper - Campspotter",
+  title: "Signup Group - Campspotter",
+  description: "Signup Group - Campspotter",
 };
 
-export default function RegisterPage() {
+export default function RegisterCampgrp() {
   return (
     <>
       <MetaComponent meta={metadata} />
       <main>
         <Header1 />
-        <Register />
+        <Registergrp />
         <FooterOne />
       </main>
     </>

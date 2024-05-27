@@ -23,6 +23,7 @@ import DBAddTourPage from "./pages/dashboard/db-add-tour";
 import DBFavoritesPage from "./pages/dashboard/db-favorites";
 import DBMessagesPage from "./pages/dashboard/db-messages";
 import DBProfilePage from "./pages/dashboard/db-profile";
+
 import BlogListPage1 from "./pages/blogs/blog-list-1";
 import BlogListPage2 from "./pages/blogs/blog-list-2";
 import BlogListPage3 from "./pages/blogs/blog-list-3";
@@ -32,7 +33,14 @@ import AboutPage from "./pages/pages/about";
 import HelpCenterPage from "./pages/pages/help-center";
 import TermsPage from "./pages/pages/terms";
 import LoginPage from "./pages/pages/login";
+import Logincampgrp from "./pages/pages/logingrp";
+
+import DBCampgrpProfilePage from "./pages/dashboard/campgrp-dashboard";
+
+
 import RegisterPage from "./pages/pages/register";
+import RegisterCampgrp from "./pages/pages/registergrp";
+
 import InvoicePage from "./pages/pages/invoice";
 import UIElementsPage from "./pages/pages/ui-elements";
 import NotFoundPage from "./pages/pages/404";
@@ -72,6 +80,8 @@ function App() {
             <Route path="/db-messages" element={<DBMessagesPage />} />
             <Route path="/db-profile" element={<DBProfilePage />} />
 
+            <Route path="/campgrp-dashboard" element={<DBCampgrpProfilePage />} />
+
             <Route path="/blog-list-1" element={<BlogListPage1 />} />
             <Route path="/blog-list-2" element={<BlogListPage2 />} />
             <Route path="/blog-list-3" element={<BlogListPage3 />} />
@@ -81,8 +91,11 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/help-center" element={<HelpCenterPage />} />
             <Route path="/terms" element={<TermsPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage/>} />
+            <Route path="/logingrp" element={<Logincampgrp/>} />
+
+            <Route path="/register" element={<RegisterPage/>} />
+            <Route path="/registergrp" element={<RegisterCampgrp />} />
             <Route path="/invoice" element={<InvoicePage />} />
             <Route path="/ui-elements" element={<UIElementsPage />} />
             <Route path="/contact" element={<ContactPage />} />

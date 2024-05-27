@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import HeaderSerch from "../components/HeaderSerch";
-import Destinations from "../components/Destinations";
 import MobileMenu from "../components/MobileMenu";
-
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Header1() {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [addClass, setAddClass] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [dashboardLink, setDashboardLink] = useState("");
 
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
-
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const [addClass, setAddClass] = useState(false);
 
   // Add a class to the element when scrolled 50px
   const handleScroll = () => {
@@ -25,14 +24,65 @@ export default function Header1() {
     }
   };
 
+  const fetchCampgrpName = async (email) => {
+    try {
+      const response = await fetch(`http://localhost:5000/campgrpInfo?email=${email}`);
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('campgrpName', data.name);
+        return data.name;
+      } else {
+        console.error('Failed to fetch camping group info');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching camping group info:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+
+    // Check if either a camper or a campgrp is logged in
+    const camperLoggedIn = localStorage.getItem('loggedIn');
+    const campgrpLoggedIn = localStorage.getItem('campgrpLoggedIn');
+
+    if (camperLoggedIn || campgrpLoggedIn) {
+      setIsLoggedIn(true);
+
+      if (camperLoggedIn) {
+        const fullName = localStorage.getItem('fullName');
+        setUsername(fullName || "User");
+        setDashboardLink('/db-profile');
+      } else if (campgrpLoggedIn) {
+        const campgrpEmail = localStorage.getItem('campgrpEmail');
+        fetchCampgrpName(campgrpEmail).then(campgrpName => {
+          setUsername(campgrpName || "Group");
+          setDashboardLink('/campgrp-dashboard');
+        });
+      }
+    }
 
     // Cleanup the event listener when the component unmounts
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const handleLogout = () => {
+    if (localStorage.getItem('loggedIn')) {
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('fullName');
+      localStorage.removeItem('userEmail');
+    } else if (localStorage.getItem('campgrpLoggedIn')) {
+      localStorage.removeItem('campgrpLoggedIn');
+      localStorage.removeItem('campgrpName');
+      localStorage.removeItem('campgrpEmail');
+    }
+    setIsLoggedIn(false);
+    navigate('/');
+  };
 
   return (
     <>
@@ -67,12 +117,14 @@ export default function Header1() {
               <i className="icon-search text-18"></i>
             </button>
 
-            <button
-              onClick={() => pageNavigate("/login")}
-              className="d-flex ml-20"
-            >
-              <i className="icon-person text-18"></i>
-            </button>
+            {!isLoggedIn && (
+              <button
+                onClick={() => pageNavigate("/login")}
+                className="d-flex ml-20"
+              >
+                <i className="icon-person text-18"></i>
+              </button>
+            )}
           </div>
 
           <div className="header__right">
@@ -82,27 +134,42 @@ export default function Header1() {
             <Link to="/camps" className="ml-40">
               Group list
             </Link>
-            
-            <Link
-              to="/register"
-              className="ml-40"
-            >
-              Join as Camper
-            </Link>
 
-
-            <Link to="/register"
-              className="ml-40"
-              style={{ fontWeight: 'bold' }}
-
-              >
-              Join as Group
-            </Link>
-            <Link
-              to="/login"
-              className="button -sm -dark-1 bg-green-3 rounded-200 text-white ml-40" >
-              Log in
-            </Link>
+            {!isLoggedIn ? (
+              <>
+                <Link to="/register" className="ml-40">
+                  Join as Camper
+                </Link>
+                <Link
+                  to="/registergrp"
+                  className="ml-40"
+                  style={{ fontWeight: 'bold' }}
+                >
+                  Join as Group
+                </Link>
+                <Link
+                  to="/login"
+                  className="button -sm -dark-1 bg-green-3 rounded-200 text-white ml-40"
+                >
+                  Log in
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate(dashboardLink)}
+                  className="button -sm -dark-1 bg-blue-1 rounded-200 text-white ml-40"
+                >
+                  Hi {username}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="button -sm -dark-1 bg-green-3 rounded-200 text-white ml-20"
+                >
+                  Logout
+                </button>
+              </>
+            )}
 
             <button
               onClick={() => setMobileMenuOpen(true)}
