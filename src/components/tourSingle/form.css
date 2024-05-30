@@ -1,0 +1,197 @@
+/* Form Styles */
+.tourSingleSidebar {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.searchForm {
+    margin-top: 20px;
+}
+
+.searchForm__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.form-checkbox input {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    position: static;
+    opacity: 100;
+}
+
+.form-checkbox label {
+    margin: 0;
+}
+
+.total-price {
+    margin-top: 8px;
+}
+
+.modal-content .btn {
+    padding: 10px 55px;
+    border-radius: 9px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.btn-primary {
+    background-color: #e8961c;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    border-radius: 9px;
+}
+
+.btn-secondary {
+    background-color: #173a58;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-disabled {
+    background-color: #6c757d;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 4px;
+    cursor: not-allowed;
+}
+
+.reservation-status {
+    margin-top: 15px;
+    color: red;
+    font-weight: bold;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+    
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+    
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+    padding: 15px;
+}
+
+.modal-content h4 {
+    margin-top: 0;
+}
+
+.modal-content p {
+    margin: 15px 0;
+}
+
+
+.modal-title {
+            font-weight: 900;
+    }
+
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.modal .icon {
+    color: green;
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tourSingleSidebar {
+        padding: 15px;
+    }
+
+    .sidebar-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sidebar-header h3 {
+        font-size: 1.25em;
+    }
+
+    .searchForm__form {
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        padding: 8px 12px;
+    }
+}

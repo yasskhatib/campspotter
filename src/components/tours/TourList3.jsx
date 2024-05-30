@@ -179,18 +179,20 @@ export default function TourList3() {
             ))}
           </div>
 
-          <div className="d-flex justify-center flex-column mt-60">
-            <Pagination
-              currentPage={currentPage}
-              totalItems={camps.length}
-              itemsPerPage={ITEMS_PER_PAGE}
-              onPageChange={handlePageChange}
-            />
+          {camps.length > ITEMS_PER_PAGE && (
+            <div className="d-flex justify-center flex-column mt-60">
+              <Pagination
+                currentPage={currentPage}
+                totalItems={camps.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={handlePageChange}
+              />
 
-            <div className="text-14 text-center mt-20">
-              Showing results {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, camps.length)} of {camps.length}
+              <div className="text-14 text-center mt-20">
+                Showing results {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, camps.length)} of {camps.length}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
       <ToggleSidebar

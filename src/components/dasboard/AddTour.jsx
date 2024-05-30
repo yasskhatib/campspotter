@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom'; // Updated to useNavigate
 import Sidebar from "./Sidebargrp";
 import Header from "./Header";
 import ReactQuill from 'react-quill';
@@ -8,6 +9,7 @@ import 'react-quill/dist/quill.snow.css';
 
 export default function AddTour() {
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const navigate = useNavigate(); // Updated to useNavigate
   const [formData, setFormData] = useState({
     title: "",
     emplacement: "",
@@ -80,6 +82,8 @@ export default function AddTour() {
           prix: "",
           inclusion: ""
         });
+        // Redirect to db-listing-grp page
+        navigate('/db-listing-grp'); // Updated to useNavigate
       } else {
         toast.error('Failed to add camp', {
           position: "bottom-right",

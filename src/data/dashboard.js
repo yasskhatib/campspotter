@@ -1,21 +1,33 @@
 export const sidebarItems = [
 
-
-
   {
     id: 1,
+    href: "/",
+    iconClass: "icon-home text-26",
+    label: "Home Page",
+  },
+
+  {
+    id: 2,
+    href: "/camps",
+    iconClass: "icon-menu text-26",
+    label: "Camp list",
+  },
+
+  {
+    id: 3,
     href: "/db-profile",
     iconClass: "icon-account text-26",
     label: "My Profile",
   },
   {
-    id: 2,
+    id: 4,
     href: "/db-listing",
-    iconClass: "icon-menu text-26",
-    label: "My Listings",
+    iconClass: "icon-heart text-26",
+    label: "My Reservations",
   },
   {
-    id: 3,
+    id: 5,
     href: "#",
     iconClass: "icon-logout text-26",
     label: "Logout",

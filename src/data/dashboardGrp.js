@@ -1,6 +1,20 @@
 export const sidebarItems = [
   {
     id: 1,
+    href: "/",
+    iconClass: "icon-home text-26",
+    label: "Home Page",
+  },
+
+  {
+    id: 2,
+    href: "/camps",
+    iconClass: "icon-menu text-26",
+    label: "Camp list",
+  },
+
+  {
+    id: 3,
     href: "/db-main",
     iconClass: "icon-dashboard text-26",
     label: "Dashboard",
@@ -8,13 +22,13 @@ export const sidebarItems = [
  
 
   {
-    id: 2,
+    id: 4,
     href: "/db-listing-grp",
-    iconClass: "icon-menu text-26",
+    iconClass: "icon-heart text-26",
     label: "My Listings",
   },
   {
-    id: 3,
+    id: 5,
     href: "/db-add-tour",
     iconClass: "icon-clipboard text-26",
     label: "Add Tour",
@@ -22,13 +36,13 @@ export const sidebarItems = [
 
 
   {
-    id: 4,
+    id: 6,
     href: "/campgrp-dashboard",
     iconClass: "icon-account text-26",
     label: "My Profile",
   },
   {
-    id: 5,
+    id: 7,
     href: "#",
     iconClass: "icon-logout text-26",
     label: "Logout",

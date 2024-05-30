@@ -21,6 +21,29 @@ export default function TourSinglePage3() {
   const { id } = useParams();
   const [camp, setCamp] = useState(null);
   const [pageTitle, setPageTitle] = useState(" -Campspotter");
+  const [user, setUser] = useState(null);
+
+  const fetchUser = async () => {
+    const camperLoggedIn = localStorage.getItem('loggedIn');
+    const campgrpLoggedIn = localStorage.getItem('campgrpLoggedIn');
+
+    if (camperLoggedIn) {
+      const fullName = localStorage.getItem('fullName');
+      const userEmail = localStorage.getItem('userEmail');
+      setUser({ fullName, email: userEmail, role: 'camper' });
+    } else if (campgrpLoggedIn) {
+      const campgrpEmail = localStorage.getItem('campgrpEmail');
+      try {
+        const response = await axios.get(`http://localhost:5000/campgrpInfo?email=${campgrpEmail}`);
+        if (response.data) {
+          const { name } = response.data;
+          setUser({ fullName: name, email: campgrpEmail, role: 'campgrp' });
+        }
+      } catch (error) {
+        console.error('Error fetching camping group info:', error);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchCamp = async () => {
@@ -35,6 +58,7 @@ export default function TourSinglePage3() {
     };
 
     fetchCamp();
+    fetchUser();
   }, [id]);
 
   useEffect(() => {
@@ -51,7 +75,7 @@ export default function TourSinglePage3() {
       <main>
         <Header1 />
         <PageHeader />
-        <SingleThree camp={camp} />
+        <SingleThree camp={camp} user={user} />
         <TourSlider />
         <FooterOne />
       </main>

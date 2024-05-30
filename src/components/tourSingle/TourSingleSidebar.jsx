@@ -1,280 +1,298 @@
-import React, { useEffect, useState } from "react";
-import Calender from "../common/dropdownSearch/Calender";
+import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
+import axios from 'axios';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './form.css'; // Import the custom CSS file
+import LoadingSpinner from "@/components/common/LoadingSpinner"; // Ensure the path is correct
 
-import { times } from "@/data/tourSingleContent";
+export default function TourSingleSidebar({ camp, user }) {
+  const [extras, setExtras] = useState({ materialRent: false, autoBaggageTransfer: false });
+  const [totalPrice, setTotalPrice] = useState(camp ? camp.prix : 0);
+  const [comments, setComments] = useState('');
+  const [formDisabled, setFormDisabled] = useState(false);
+  const [selectedGovernorate, setSelectedGovernorate] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [remainingPlaces, setRemainingPlaces] = useState(null);
+  const [governorates] = useState(['Tunis', 'Sfax', 'Sousse', 'Kairouan', 'Bizerte', 'Gabes']);
+  const [alreadyReserved, setAlreadyReserved] = useState(false);
+  const [campExpired, setCampExpired] = useState(false);
+  const [campCanceled, setCampCanceled] = useState(false);
 
-export default function TourSingleSidebar() {
-  const prices = {
-    adultPrice: 94,
-    youthPrice: 84,
-    childrenPrice: 20,
-    extraService: 40,
-    servicePerPerson: 40,
+  useEffect(() => {
+    const checkReservationStatus = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/check-reservation', {
+          params: { campId: camp._id, userEmail: user.email }
+        });
+        if (response.data.reserved) {
+          setAlreadyReserved(true);
+          setFormDisabled(true);
+        }
+      } catch (error) {
+        console.error('Error checking reservation status:', error);
+      }
+    };
+
+    const fetchRemainingPlaces = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/camp-reservations', {
+          params: { campId: camp._id }
+        });
+        setRemainingPlaces(camp.groupSize - response.data.reservations);
+        if (response.data.reservations >= camp.groupSize) {
+          setFormDisabled(true);
+        }
+      } catch (error) {
+        console.error('Error fetching remaining places:', error);
+      }
+    };
+
+    if (user && user.email) {
+      checkReservationStatus();
+    }
+    fetchRemainingPlaces();
+
+    // Check if the camp date is expired or status is canceled
+    const today = new Date();
+    const campDate = new Date(camp.date);
+    if (campDate <= today) {
+      setCampExpired(true);
+      setFormDisabled(true);
+    }
+    if (camp.status === 'Canceled') {
+      setCampCanceled(true);
+      setFormDisabled(true);
+    }
+  }, [camp, user]);
+
+  useEffect(() => {
+    if (camp) {
+      let extrasTotal = 0;
+      if (extras.materialRent) extrasTotal += 20;
+      if (extras.autoBaggageTransfer) extrasTotal += 10;
+      setTotalPrice(camp.prix + extrasTotal);
+    }
+  }, [extras, camp]);
+
+  const handleReservation = async () => {
+    const reservationPromise = axios.post('http://localhost:5000/reserve', {
+      reservationId: new Date().getTime(),
+      campId: camp._id,
+      campName: camp.title,
+      date: camp.date,
+      name: user.fullName,
+      email: user.email,
+      reservationDate: new Date(),
+      totalPrice,
+      selectedExtras: extras,
+      comments,
+    });
+
+    toast.promise(reservationPromise, {
+      pending: 'Processing your reservation...',
+      success: `Reservation confirmed, ${user.fullName}!`,
+      error: 'Reservation failed',
+    }, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      newestOnTop: true,
+      closeOnClick: true,
+      rtl: false,
+      pauseOnFocusLoss: true,
+      draggable: true,
+      pauseOnHover: true,
+      theme: "colored",
+      transition: Bounce,
+    }).then(response => {
+      if (response.status === 201) {
+        setShowConfirmModal(false);
+        setFormDisabled(true);
+        setAlreadyReserved(true);
+
+        const reservedCamps = JSON.parse(localStorage.getItem('reservedCamps')) || {};
+        reservedCamps[camp._id] = true;
+        localStorage.setItem('reservedCamps', JSON.stringify(reservedCamps));
+      }
+    }).catch(error => {
+      console.error('Error making reservation:', error);
+    });
   };
 
-  const [adultNumber, setAdultNumber] = useState(3);
-  const [youthNumber, setYouthNumber] = useState(2);
-  const [childrenNumber, setChildrenNumber] = useState(4);
-  const [isExtraService, setisExtraService] = useState(false);
-  const [isServicePerPerson, setIsServicePerPerson] = useState(false);
-  const [extraCharge, setExtraCharge] = useState(0);
-  useEffect(() => {
-    setExtraCharge(0);
-    if (isExtraService) {
-      setExtraCharge((pre) => pre + prices.extraService);
+  const confirmReservation = () => {
+    if (!user || user.role !== 'camper') {
+      toast.error('Please log in first', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        newestOnTop: true,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+      return;
     }
-    if (isServicePerPerson) {
-      setExtraCharge((pre) => pre + prices.servicePerPerson);
-    }
-  }, [isExtraService, isServicePerPerson, setExtraCharge]);
 
-  const [selectedTime, setSelectedTime] = useState("");
-  const [activeTimeDD, setActiveTimeDD] = useState(false);
+    if (!selectedGovernorate) {
+      toast.error('Please select a governorate', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        newestOnTop: true,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+      return;
+    }
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmYes = () => {
+    setShowConfirmModal(false);
+    handleReservation();
+  };
+
+  const handleConfirmNo = () => {
+    setShowConfirmModal(false);
+  };
+
+  if (!camp) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="tourSingleSidebar">
-      <div className="d-flex items-center">
-        <div>From</div>
-        <div className="text-20 fw-500 ml-10">$1,200</div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
+      <div className="sidebar-header">
+        <h3>{camp.title}</h3>
       </div>
-
-      <div className="searchForm -type-1 -sidebar mt-20">
+      <hr></hr>
+      <br></br>
+      <div className="sidebar-header d-flex align-items-center">
+        <div className="text-20 fw-500">Price from: <b>{camp.prix} TND</b></div>
+        <br></br>
+        <div>
+          {new Date(camp.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </div>
+      </div>
+      <div className="searchForm mt-20">
         <div className="searchForm__form">
-          <div className="searchFormItem js-select-control js-form-dd js-calendar">
-            <div className="searchFormItem__button" data-x-click="calendar">
-              <div className="searchFormItem__icon size-50 rounded-12 bg-light-1 flex-center">
-                <i className="text-20 icon-calendar"></i>
-              </div>
-              <div className="searchFormItem__content">
-                <h5>From</h5>
-                <div>
-                  <span className="js-first-date">
-                    <Calender />
-                  </span>
-                  <span className="js-last-date"></span>
-                </div>
-              </div>
-              <div className="searchFormItem__icon_chevron">
-                <i className="icon-chevron-down d-flex text-18"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="searchFormItem js-select-control js-form-dd">
-            <div
-              className="searchFormItem__button"
-              onClick={() => setActiveTimeDD((pre) => !pre)}
-              data-x-click="time"
+          <div className="form-group">
+            <span className="text-16 fw-500">Pick-up Governorate</span>
+            <select
+              className="form-control"
+              value={selectedGovernorate}
+              onChange={(e) => setSelectedGovernorate(e.target.value)}
+              disabled={formDisabled}
+              required
             >
-              <div className="searchFormItem__icon size-50 rounded-12 bg-light-1 flex-center">
-                <i className="text-20 icon-clock"></i>
-              </div>
-              <div className="searchFormItem__content">
-                <h5>Time</h5>
-                <div className="js-select-control-chosen">
-                  {selectedTime ? selectedTime : "Choose time"}
-                </div>
-              </div>
-              <div className="searchFormItem__icon_chevron">
-                <i className="icon-chevron-down d-flex text-18"></i>
-              </div>
-            </div>
-
-            <div
-              className={`searchFormItemDropdown -tour-type ${
-                activeTimeDD ? "is-active" : ""
-              }`}
-              data-x="time"
-              data-x-toggle="is-active"
-            >
-              <div className="searchFormItemDropdown__container">
-                <div className="searchFormItemDropdown__list sroll-bar-1">
-                  {times.map((elm, i) => (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        setSelectedTime((pre) => (pre == elm ? "" : elm));
-                        setActiveTimeDD(false);
-                      }}
-                      className="searchFormItemDropdown__item"
-                    >
-                      <button className="js-select-control-button">
-                        <span className="js-select-control-choice">{elm}</span>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+              <option value="" disabled>Select your governorate</option>
+              {governorates.map((gov, index) => (
+                <option key={index} value={gov}>{gov}</option>
+              ))}
+            </select>
           </div>
-        </div>
-      </div>
-
-      <h5 className="text-18 fw-500 mb-20 mt-20">Tickets</h5>
-
-      <div>
-        <div className="d-flex items-center justify-between">
-          <div className="text-14">
-            Adult (18+ years){" "}
-            <span className="fw-500">
-              ${(prices.adultPrice * adultNumber).toFixed(2)}
-            </span>
-          </div>
-
-          <div className="d-flex items-center js-counter">
-            <button
-              onClick={() => setAdultNumber((pre) => (pre > 1 ? pre - 1 : pre))}
-              className="button size-30 border-1 rounded-full js-down"
-            >
-              <i className="icon-minus text-10"></i>
-            </button>
-
-            <div className="flex-center ml-10 mr-10">
-              <div className="text-14 size-20 js-count">{adultNumber}</div>
-            </div>
-
-            <button
-              onClick={() => setAdultNumber((pre) => pre + 1)}
-              className="button size-30 border-1 rounded-full js-up"
-            >
-              <i className="icon-plus text-10"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-15">
-        <div className="d-flex items-center justify-between">
-          <div className="text-14">
-            Youth (13-17 years){" "}
-            <span className="fw-500">
-              ${(prices.youthPrice * youthNumber).toFixed(2)}
-            </span>
-          </div>
-
-          <div className="d-flex items-center js-counter">
-            <button
-              onClick={() => setYouthNumber((pre) => (pre > 1 ? pre - 1 : pre))}
-              className="button size-30 border-1 rounded-full js-down"
-            >
-              <i className="icon-minus text-10"></i>
-            </button>
-
-            <div className="flex-center ml-10 mr-10">
-              <div className="text-14 size-20 js-count">{youthNumber}</div>
-            </div>
-
-            <button
-              onClick={() => setYouthNumber((pre) => pre + 1)}
-              className="button size-30 border-1 rounded-full js-up"
-            >
-              <i className="icon-plus text-10"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-15">
-        <div className="d-flex items-center justify-between">
-          <div className="text-14">
-            Children (0-12 years){" "}
-            <span className="fw-500">
-              ${(prices.childrenPrice * childrenNumber).toFixed(2)}
-            </span>
-          </div>
-
-          <div className="d-flex items-center js-counter">
-            <button
-              onClick={() =>
-                setChildrenNumber((pre) => (pre > 1 ? pre - 1 : pre))
-              }
-              className="button size-30 border-1 rounded-full js-down"
-            >
-              <i className="icon-minus text-10"></i>
-            </button>
-
-            <div className="flex-center ml-10 mr-10">
-              <div className="text-14 size-20 js-count">{childrenNumber}</div>
-            </div>
-
-            <button
-              onClick={() => setChildrenNumber((pre) => pre + 1)}
-              className="button size-30 border-1 rounded-full js-up"
-            >
-              <i className="icon-plus text-10"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <h5 className="text-18 fw-500 mb-20 mt-20">Add Extra</h5>
-
-      <div className="d-flex items-center justify-between">
-        <div className="d-flex items-center">
-          <div className="form-checkbox">
+          <hr></hr>
+          <span className="text-16 fw-500">Extras</span>
+          <div className="form-group form-checkbox">
             <input
-              checked={isExtraService ? true : false}
-              onChange={() => setisExtraService((pre) => !pre)}
               type="checkbox"
+              id="materialRent"
+              checked={extras.materialRent}
+              onChange={() => setExtras({ ...extras, materialRent: !extras.materialRent })}
+              disabled={formDisabled}
             />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon">
-                <img src="/img/icons/check.svg" alt="icon" />
-              </div>
-            </div>
+            <label htmlFor="materialRent">Material Rent <b>(20 TND)</b></label>
           </div>
-          <div className="ml-10">Add Service per booking</div>
-        </div>
 
-        <div className="text-14">$40</div>
-      </div>
-
-      <div className="d-flex justify-between mt-20">
-        <div className="d-flex">
-          <div className="form-checkbox mt-5">
+          <div className="form-group form-checkbox">
             <input
-              checked={isServicePerPerson ? true : false}
-              onChange={() => setIsServicePerPerson((pre) => !pre)}
               type="checkbox"
+              id="autoBaggageTransfer"
+              checked={extras.autoBaggageTransfer}
+              onChange={() => setExtras({ ...extras, autoBaggageTransfer: !extras.autoBaggageTransfer })}
+              disabled={formDisabled}
             />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon">
-                <img src="/img/icons/check.svg" alt="icon" />
-              </div>
-            </div>
+            <label htmlFor="autoBaggageTransfer">Auto Baggage Transfer <b>(10 TND)</b></label>
+          </div>
+          <hr></hr>
+          <div className="form-group">
+            <label>Comments</label>
+            <textarea
+              className="form-control"
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              rows="5"
+              disabled={formDisabled}
+            />
           </div>
 
-          <div className="ml-10">
-            Add Service per person
-            <div className="lh-16">
-              Adult: <span className="fw-500">$17.00</span> - Youth:{" "}
-              <span className="fw-500">$14.00</span>
-            </div>
-          </div>
-        </div>
+          <div className="total-price text-24 fw-500 mt-15">Total: <b>{totalPrice} TND</b></div>
 
-        <div className="text-14">$40</div>
-      </div>
-
-      <div className="line mt-20 mb-20"></div>
-
-      <div className="d-flex items-center justify-between">
-        <div className="text-18 fw-500">Total:</div>
-        <div className="text-18 fw-500">
-          $
-          {(
-            prices.adultPrice * adultNumber +
-            prices.youthPrice * youthNumber +
-            prices.childrenPrice * childrenNumber +
-            extraCharge * 1
-          ).toFixed(2)}
+          <button
+            className={`btn ${formDisabled ? 'btn-disabled' : 'btn-primary'} col-12 mt-20`}
+            onClick={confirmReservation}
+            disabled={formDisabled}
+          >
+            {campCanceled ? 'Camp Canceled' : campExpired ? 'Camp Expired' : alreadyReserved ? 'Already Reserved' : remainingPlaces === 0 ? 'Reservation Full' : 'Reserve Now'}
+          </button>
         </div>
       </div>
 
-      <button className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
-        Book Now
-        <i className="icon-arrow-top-right ml-10"></i>
-      </button>
+      <div className={`modal ${showConfirmModal ? 'show' : ''}`} tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Confirm Reservation</h4>
+            </div>
+            <div className="modal-body">
+              <p>Are you sure you want to confirm this reservation?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={handleConfirmNo}>No</button>
+              <button type="button" className="btn btn-primary" onClick={handleConfirmYes}>Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
+
+TourSingleSidebar.propTypes = {
+  camp: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    prix: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    groupSize: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
+  }).isRequired,
+  user: PropTypes.shape({
+    fullName: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.string,
+  }),
+};

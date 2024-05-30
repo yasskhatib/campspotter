@@ -6,10 +6,9 @@ import OthersInformation from "../OthersInformation";
 import MainInformation2 from "./MainInformation2";
 import parse, { domToReact } from 'html-react-parser';
 
-export default function SingleThree({ camp }) {
+export default function SingleThree({ camp, user }) {
   const inclusionItems = camp.inclusion.split(' - ');
 
-  // Function to render the formatted camp description with clock icons and timeline
   const renderDescription = (description) => {
     const options = {
       replace: ({ name, children }) => {
@@ -23,7 +22,6 @@ export default function SingleThree({ camp }) {
         }
       },
     };
-
     return parse(description, options);
   };
 
@@ -45,16 +43,15 @@ export default function SingleThree({ camp }) {
             <div className="row y-gap-20 justify-between items-center layout-pb-md pt-60 md:pt-30">
               <OthersInformation
                 duration={camp.duration}
-                groupSize={String(camp.groupSize)} // Convert groupSize to string
+                groupSize={String(camp.groupSize)}
                 ages={camp.ages}
                 locationMaterials={camp.locationMaterials}
+                campId={camp._id}
               />
             </div>
 
             <h2 className="text-30">Tour Overview</h2>
-            <p className="mt-20">
-              {camp.highlights}
-            </p>
+            <p className="mt-20">{camp.highlights}</p>
 
             <div className="line mt-60 mb-60"></div>
 
@@ -78,19 +75,13 @@ export default function SingleThree({ camp }) {
             </div>
 
             <h2 className="text-30 mt-60 mb-30">Camping map location</h2>
-            {/* <div className="mapTourSingle" style={{ height: '400px' }}>
-             
-             
-
-           </div>*/}
-
             <div className="line mt-60 mb-60"></div>
 
             <h2 className="text-30 pt-60">Leave a Reply</h2>
             <div className="contactForm y-gap-30 pt-30">
               <div className="row">
                 <div className="col-12">
-                  <div className="form-input ">
+                  <div className="form-input">
                     <textarea placeholder="Leave your comment here" required rows="5"></textarea>
                   </div>
                 </div>
@@ -108,7 +99,7 @@ export default function SingleThree({ camp }) {
 
           <div className="col-lg-4">
             <div className="d-flex justify-end js-pin-content">
-              <TourSingleSidebar />
+              {(!user || user.role === 'camper') && <TourSingleSidebar camp={camp} user={user} />}
             </div>
           </div>
         </div>
@@ -119,6 +110,7 @@ export default function SingleThree({ camp }) {
 
 SingleThree.propTypes = {
   camp: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     campPictureCover: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     highlights: PropTypes.string.isRequired,
@@ -129,6 +121,13 @@ SingleThree.propTypes = {
     ages: PropTypes.string.isRequired,
     locationMaterials: PropTypes.string.isRequired,
     googleMapUrl: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired, // Add this line for location
+    location: PropTypes.string.isRequired,
+    prix: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
   }).isRequired,
+  user: PropTypes.shape({
+    fullName: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.string,
+  }),
 };
