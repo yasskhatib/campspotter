@@ -1,12 +1,13 @@
-import AddTour from "@/components/dasboard/AddTour";
+import DBListinggrp from "@/components/dasboard/DBListinggrp";
+
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Add Camping - Campspotter",
+  title: "Camps List - Campspotter",
   description: "Campspotter - Adventure Made Easy!",
 };
 
-export default function DBAddTourPage() {
+export default function DBListingPage() {
   const handleLogout = () => {
     // Logic to handle logout
     localStorage.removeItem('campgrpLoggedIn');
@@ -19,7 +20,7 @@ export default function DBAddTourPage() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <AddTour onLogout={handleLogout} />
+        <DBListinggrp onLogout={handleLogout} />
       </main>
     </>
   );

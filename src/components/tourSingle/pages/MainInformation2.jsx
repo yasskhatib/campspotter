@@ -1,27 +1,34 @@
+import PropTypes from 'prop-types';
 import Stars from "@/components/common/Stars";
-import React from "react";
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-export default function MainInformation2({ tour }) {
+export default function MainInformation2({ camp }) {
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate('/camps/');
+  };
+
   return (
     <div className="">
       <div className="row x-gap-10 y-gap-10 items-center">
         <div className="col-auto">
-          <button className="button -accent-1 text-14 py-5 px-15 bg-accent-1-05 text-accent-1 rounded-200">
-            Bestseller
-          </button>
-        </div>
-        <div className="col-auto">
-          <button className="button -accent-1 text-14 py-5 px-15 bg-light-1 rounded-200">
-            Free cancellation
+          <button
+            className="button -accent-1 text-14 py-5 px-15 bg-light-1 rounded-200 d-flex align-items-center"
+            onClick={handleGoBack}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} style={{ marginRight: '8px' }} />
+             All Camps
           </button>
         </div>
       </div>
 
       <h2 className="text-40 sm:text-30 lh-14 mt-20">
-        {tour?.title.split(" ").slice(0, 7).join(" ")}
-
+        {camp?.title.split(" ").slice(0, 7).join(" ")}
         <br />
-        {tour?.title.split(" ").slice(7).join(" ")}
+        {camp?.title.split(" ").slice(7).join(" ")}
       </h2>
 
       <div className="row y-gap-20 justify-between pt-20">
@@ -30,23 +37,16 @@ export default function MainInformation2({ tour }) {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <div className="d-flex x-gap-5 pr-10">
-                  <Stars star={tour?.rating} font={12} />
+                  <Stars star={camp?.reviewScore} font={12} />
                 </div>
-                {tour?.rating} ({tour.ratingCount})
+                {camp?.reviewScore} ({camp.reviewCount} Reviews)
               </div>
             </div>
 
             <div className="col-auto">
               <div className="d-flex items-center">
                 <i className="icon-pin text-16 mr-5"></i>
-                {tour?.location}
-              </div>
-            </div>
-
-            <div className="col-auto">
-              <div className="d-flex items-center">
-                <i className="icon-reservation text-16 mr-5"></i>
-                30K+ booked
+                {camp?.emplacement}
               </div>
             </div>
           </div>
@@ -59,11 +59,6 @@ export default function MainInformation2({ tour }) {
                 <i className="icon-share flex-center text-16 mr-10"></i>
                 Share
               </a>
-
-              <a href="#" className="d-flex items-center">
-                <i className="icon-heart flex-center text-16 mr-10"></i>
-                Wishlist
-              </a>
             </div>
           </div>
         </div>
@@ -71,3 +66,15 @@ export default function MainInformation2({ tour }) {
     </div>
   );
 }
+
+MainInformation2.propTypes = {
+  camp: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    reviewScore: PropTypes.number.isRequired,
+    reviewCount: PropTypes.number,
+    emplacement: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    duration: PropTypes.number,
+    prix: PropTypes.number,
+  }).isRequired,
+};

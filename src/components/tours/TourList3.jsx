@@ -1,18 +1,25 @@
-import { speedFeatures, toursTypes } from "@/data/tourFilteringOptions";
 import Pagination from "../common/Pagination";
-import { tourDataThree } from "@/data/tours";
 import Stars from "../common/Stars";
 import Calender from "../common/dropdownSearch/Calender";
 import ToggleSidebar from "./ToggleSidebar";
 import { useState, useEffect, useRef } from "react";
-
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+// Extend dayjs with plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function TourList3() {
-  const [sortOption, setSortOption] = useState("");
-  const [ddActives, setDdActives] = useState(false);
-  const [tourTypeActive, settourTypeActive] = useState(false);
+  const [setDdActives] = useState(false);
+  const [settourTypeActive] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [camps, setCamps] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
 
@@ -37,7 +44,43 @@ export default function TourList3() {
     return () => {
       document.removeEventListener("click", handleClick);
     };
+  }, [setDdActives, settourTypeActive]);
+
+  useEffect(() => {
+    const fetchCamps = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/allCamps');
+        setCamps(response.data);
+      } catch (error) {
+        console.error('Error fetching camps:', error);
+      }
+    };
+
+    fetchCamps();
   }, []);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const getStatusLabel = (camp) => {
+    const today = dayjs().utc().startOf('day');
+    const campDate = dayjs(camp.date).utc().startOf('day');
+
+    if (!camp.status) {
+      if (campDate.isBefore(today) || campDate.isSame(today)) {
+        return <span className="status-label-red">Expired</span>;
+      } else {
+        return <span className="status-label-green">Upcoming</span>;
+      }
+    } else {
+      return <span className="status-label-black">{camp.status}</span>;
+    }
+  };
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentCamps = camps.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   return (
     <>
       <section className="layout-pb-xl">
@@ -73,109 +116,26 @@ export default function TourList3() {
                   </div>
                 </div>
 
-                <div ref={dropDownContainer2} className="col-auto">
-                  <div
-                    className={`dropdown -base -price js-dropdown js-form-dd ${
-                      tourTypeActive ? "is-active" : ""
-                    } `}
-                  >
-                    <div
-                      className="dropdown__button h-50 min-w-auto js-button"
-                      onClick={() => settourTypeActive((pre) => !pre)}
-                    >
-                      <span className="js-title">Camps Filter</span>
-                      <i className="icon-chevron-down ml-10"></i>
-                    </div>
-
-                    <div className="dropdown__menu px-30 py-30 shadow-1 border-1 js-">
-                      <h5 className="text-18 fw-500">Camps Type</h5>
-                      <div className="pt-20">
-                        <div className="d-flex flex-column y-gap-15">
-                          {toursTypes.map((elm, i) => (
-                            <div
-                              key={i}
-                              style={{ padding: "7.5px 0px" }}
-                              className="d-flex items-center"
-                            >
-                              <div className="form-checkbox ">
-                                <input type="checkbox" name="name" />
-                                <div className="form-checkbox__mark">
-                                  <div className="form-checkbox__icon">
-                                    <img
-                                      src="/img/icons/check.svg"
-                                      alt="icon"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="lh-11 ml-10">{elm}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <button className="button px-25 py-15 lh-12 -accent-1 text-accent-1 bg-accent-1-05 border-accent-1 mt-10">
-                        Apply
-                        <i className="icon-arrow-top-right text-16 ml-10"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
-            <div ref={dropDownContainer} className="col-auto">
-              <div
-                className={`dropdown -type-2 js-dropdown js-form-dd ${
-                  ddActives ? "is-active" : ""
-                } `}
-                data-main-value=""
-              >
-                <div
-                  className="dropdown__button js-button"
-                  onClick={() => setDdActives((pre) => !pre)} hidden
-                >
-                  <span>Sort by: </span>
-                  <span className="js-title">
-                    {sortOption ? sortOption : "Featured"}
-                  </span>
-                  <i className="icon-chevron-down"></i>
-                </div>
-
-                <div className="dropdown__menu js-menu-items">
-                  {speedFeatures.map((elm, i) => (
-                    <div
-                      onClick={() => {
-                        setSortOption((pre) => (pre == elm ? "" : elm));
-                        setDdActives(false);
-                      }}
-                      key={i}
-                      className="dropdown__item"
-                      data-value="fast"
-                    >
-                      {elm}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="row y-gap-30 pt-30">
-            {tourDataThree.map((elm, i) => (
-              <div key={i} className="col-lg-3 col-sm-6">
+            {currentCamps.map((camp, index) => (
+              <div key={index} className="col-lg-3 col-sm-6">
                 <Link
-                  to={`/tour-single-1/${elm.id}`}
-                  className="tourCard -type-1 py-10 px-10 border-1 rounded-12  -hover-shadow"
+                  to={`/camp/${camp._id}`}
+                  className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow"
                 >
                   <div className="tourCard__header">
                     <div className="tourCard__image ratio ratio-28:20">
                       <img
-                        src={elm.imageSrc}
-                        alt="image"
+                        src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                        alt={camp.title}
                         className="img-ratio rounded-12"
                       />
+                      {getStatusLabel(camp)}
                     </div>
 
                     <button className="tourCard__favorite">
@@ -186,32 +146,31 @@ export default function TourList3() {
                   <div className="tourCard__content px-10 pt-10">
                     <div className="tourCard__location d-flex items-center text-13 text-light-2">
                       <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
-                      {elm.location}
+                      {camp.emplacement}
                     </div>
 
                     <h3 className="tourCard__title text-16 fw-500 mt-5">
-                      <span>{elm.title}</span>
+                      <span>{camp.title}</span>
                     </h3>
 
                     <div className="tourCard__rating d-flex items-center text-13 mt-5">
                       <div className="d-flex x-gap-5">
-                        {<Stars star={elm.rating} />}
+                        <Stars star={camp.reviewScore} />
                       </div>
 
                       <span className="text-dark-1 ml-10">
-                        {elm.rating} ({elm.ratingCount})
+                        ({camp.reviewScore} Reviews)
                       </span>
                     </div>
 
                     <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
                       <div className="d-flex items-center">
                         <i className="icon-clock text-16 mr-5"></i>
-                        {elm.duration}
+                        {camp.duration} days
                       </div>
 
                       <div>
-                        From{" "}
-                        <span className="text-16 fw-500">${elm.price}</span>
+                        <span className="text-16 fw-500">{camp.prix} TND</span>
                       </div>
                     </div>
                   </div>
@@ -221,10 +180,15 @@ export default function TourList3() {
           </div>
 
           <div className="d-flex justify-center flex-column mt-60">
-            <Pagination />
+            <Pagination
+              currentPage={currentPage}
+              totalItems={camps.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              onPageChange={handlePageChange}
+            />
 
             <div className="text-14 text-center mt-20">
-              Showing results 1-30 of 1,415
+              Showing results {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, camps.length)} of {camps.length}
             </div>
           </div>
         </div>

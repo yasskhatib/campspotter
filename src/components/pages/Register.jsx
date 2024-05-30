@@ -118,7 +118,7 @@ export default function Register() {
               </div>
 
               <div className="form-input mt-30">
-                <input type="text" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
+                <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
               </div>
 
               <div className="form-input mt-30">

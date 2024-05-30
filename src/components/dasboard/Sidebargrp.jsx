@@ -5,7 +5,7 @@
                 export default function Sidebar({setSideBarOpen, onLogout}) {
   const {pathname} = useLocation();
                 return (
-                <div className="dashboard__sidebar js-dashboard-sidebar">
+                <div className="dashboard__sidebar2 js-dashboard-sidebar">
                   <div className="dashboard__sidebar_header">
                     <span
                       onClick={() => setSideBarOpen(false)}
@@ -24,7 +24,7 @@
                         key={i}
                         className={`sidebar__item ${pathname === elm.href ? "-is-active" : ""}`}
                       >
-                        {elm.id === 8 ? (
+                        {elm.id === 5 ? (
                           <a onClick={onLogout} className="sidebar__link" style={{ cursor: 'pointer' }}>
                             <i className={elm.iconClass}></i>
                             <span className="ml-10">{elm.label}</span>

@@ -1,152 +1,109 @@
-import React from "react";
+import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
 import TourSingleSidebar from "../TourSingleSidebar";
-import CommentBox from "../CommentBox";
-import Reviews from "../Reviews";
-import Rating from "../Rating";
-import Faq from "../Faq";
 import OthersInformation from "../OthersInformation";
-import Overview from "../Overview";
-import Included from "../Included";
 import MainInformation2 from "./MainInformation2";
-import Gallery3 from "../Galleries/Gallery3";
-import DateCalender from "../DateCalender";
-import Map from "@/components/tours/Map";
+import parse, { domToReact } from 'html-react-parser';
 
-export default function SingleThree({ tour }) {
+export default function SingleThree({ camp }) {
+  const inclusionItems = camp.inclusion.split(' - ');
+
+  // Function to render the formatted camp description with clock icons and timeline
+  const renderDescription = (description) => {
+    const options = {
+      replace: ({ name, children }) => {
+        if (name === 'h4') {
+          return (
+            <h4>
+              <FontAwesomeIcon icon={faClock} className="fa-clock" />
+              {domToReact(children, options)}
+            </h4>
+          );
+        }
+      },
+    };
+
+    return parse(description, options);
+  };
+
   return (
     <section className="pt-30 js-pin-container">
       <div className="container">
         <div className="row y-gap-30 justify-between">
           <div className="col-lg-8">
-            <MainInformation2 tour={tour} />
-
-            <Gallery3 />
-
+            <MainInformation2 camp={{ ...camp, duration: Number(camp.duration) }} />
+            <div className="row justify-center pt-30">
+              <div className="col-12">
+                <img
+                  src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                  alt={camp.title}
+                  className="img-cover2 rounded-12"
+                />
+              </div>
+            </div>
             <div className="row y-gap-20 justify-between items-center layout-pb-md pt-60 md:pt-30">
-              <OthersInformation />
+              <OthersInformation
+                duration={camp.duration}
+                groupSize={String(camp.groupSize)} // Convert groupSize to string
+                ages={camp.ages}
+                locationMaterials={camp.locationMaterials}
+              />
             </div>
 
-            <Overview />
+            <h2 className="text-30">Tour Overview</h2>
+            <p className="mt-20">
+              {camp.highlights}
+            </p>
 
             <div className="line mt-60 mb-60"></div>
 
-            <h2 className="text-30">What's included</h2>
-
-            <Included />
+            <h2 className="text-30">What&apos;s included</h2>
+            <div className="row mt-20">
+              {inclusionItems.map((item, index) => (
+                <div className="col-md-6" key={index}>
+                  <div className="inclusion-item">
+                    <span className="check-icon">&#10003;</span>
+                    {item}
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <div className="line mt-60 mb-60"></div>
 
             <h2 className="text-30">Itinerary</h2>
+            <div className="timeline mt-30 formatted-content">
+              {renderDescription(camp.description)}
+            </div>
 
-            <div className="mt-30">
-              <div className="roadmap">
-                <div className="roadmap__item">
-                  <div className="roadmap__iconBig">
-                    <i className="icon-pin"></i>
-                  </div>
-                  <div className="roadmap__wrap">
-                    <div className="roadmap__title">Day 1: Airport Pick Up</div>
-                  </div>
-                </div>
+            <h2 className="text-30 mt-60 mb-30">Camping map location</h2>
+            {/* <div className="mapTourSingle" style={{ height: '400px' }}>
+             
+             
 
-                <div className="roadmap__item">
-                  <div className="roadmap__icon"></div>
-                  <div className="roadmap__wrap">
-                    <div className="roadmap__title">
-                      Day 2: Temples & River Cruise
-                    </div>
-                    <div className="roadmap__content">
-                      Like on all of our trips, we can collect you from the
-                      airport when you land and take you directly to your hotel.
-                      The first Day is just a check-in Day so you have this
-                      freedom to explore the city and get settled in.
-                    </div>
-                  </div>
-                </div>
+           </div>*/}
 
-                <div className="roadmap__item">
-                  <div className="roadmap__icon"></div>
-                  <div className="roadmap__wrap">
-                    <div className="roadmap__title">
-                      Day 3: Massage &amp; Overnight Train
-                    </div>
-                  </div>
-                </div>
+            <div className="line mt-60 mb-60"></div>
 
-                <div className="roadmap__item">
-                  <div className="roadmap__icon"></div>
-                  <div className="roadmap__wrap">
-                    <div className="roadmap__title">
-                      Day 4: Khao Sok National Park
-                    </div>
-                  </div>
-                </div>
-
-                <div className="roadmap__item">
-                  <div className="roadmap__icon"></div>
-                  <div className="roadmap__wrap">
-                    <div className="roadmap__title">
-                      Day 5: Travel to Koh Phangan
-                    </div>
-                  </div>
-                </div>
-
-                <div className="roadmap__item">
-                  <div className="roadmap__icon"></div>
-                  <div className="roadmap__wrap">
-                    <div className="roadmap__title">
-                      Day 6: Morning Chill &amp; Muay Thai Lesson
-                    </div>
-                  </div>
-                </div>
-
-                <div className="roadmap__item">
-                  <div className="roadmap__iconBig">
-                    <i className="icon-flag"></i>
-                  </div>
-                  <div className="roadmap__wrap">
-                    <div className="roadmap__title">
-                      Day 7: Island Boat Trip
-                    </div>
+            <h2 className="text-30 pt-60">Leave a Reply</h2>
+            <div className="contactForm y-gap-30 pt-30">
+              <div className="row">
+                <div className="col-12">
+                  <div className="form-input ">
+                    <textarea placeholder="Leave your comment here" required rows="5"></textarea>
                   </div>
                 </div>
               </div>
+              <div className="row">
+                <div className="col-12">
+                  <button className="button -md -dark-1 bg-accent-1 text-white">
+                    Post Comment
+                    <i className="icon-arrow-top-right text-16 ml-10"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-
-            <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
-            <div className="mapTourSingle">
-              <Map />
-            </div>
-
-            <div className="line mt-60 mb-60"></div>
-
-            <h2 className="text-30">Availability Calendar</h2>
-
-            <DateCalender />
-
-            <div className="line mt-60 mb-60"></div>
-
-            <h2 className="text-30">FAQ</h2>
-
-            <div className="accordion -simple row y-gap-20 mt-30 js-accordion">
-              <Faq />
-            </div>
-
-            <div className="line mt-60 mb-60"></div>
-
-            <h2 className="text-30">Customer Reviews</h2>
-            <div className="mt-30">
-              <Rating />
-            </div>
-
-            <Reviews />
-
-            <button className="button -md -outline-accent-1 text-accent-1 mt-30">
-              See more reviews
-              <i className="icon-arrow-top-right text-16 ml-10"></i>
-            </button>
-
-            <CommentBox />
           </div>
 
           <div className="col-lg-4">
@@ -159,3 +116,19 @@ export default function SingleThree({ tour }) {
     </section>
   );
 }
+
+SingleThree.propTypes = {
+  camp: PropTypes.shape({
+    campPictureCover: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    highlights: PropTypes.string.isRequired,
+    inclusion: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    groupSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    ages: PropTypes.string.isRequired,
+    locationMaterials: PropTypes.string.isRequired,
+    googleMapUrl: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired, // Add this line for location
+  }).isRequired,
+};

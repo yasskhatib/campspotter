@@ -6503,6 +6503,20 @@ h1, h2, h3, h4, h5, h6 {
   transition: .2s;
 }
 
+.dashboard__sidebar2 {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300px;
+  max-width: calc(100vw - 80px);
+  color: white;
+  background-color: #0c845f;
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: .2s;
+}
+
 .dashboard__sidebar_header {
   display: flex;
   align-items: center;
@@ -6588,6 +6602,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dashboard.-is-sidebar-visible .dashboard__sidebar {
+  transform: none;
+}
+
+.dashboard.-is-sidebar-visible .dashboard__sidebar2 {
   transform: none;
 }
 
@@ -10970,6 +10988,12 @@ h1, h2, h3, h4, h5, h6 {
   -o-object-fit: cover;
      object-fit: cover;
 }
+.img-cover2 {
+  width: 100%;
+  height: 400px;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
 
 .img-ratio {
   position: absolute;
@@ -13909,13 +13933,11 @@ button.gm-ui-hover-effect::after {
 }
 
 .image-preview {
-  margin-top: 10px;
-  max-width: 200px;
-  /* Ensure the container does not exceed 200px */
-  overflow: hidden;
-  /* Hide overflow content */
-  border-radius: 9px;
-  /* Apply border radius to the container */
+    margin-top: 10px;
+      max-width: 100px;
+      overflow: hidden;
+      border-radius: 9px;
+      margin-bottom: 20px;
 }
 
 .img-thumbnail {
@@ -13931,3 +13953,100 @@ button.gm-ui-hover-effect::after {
   transform: scale(1.2);
   /* Zoom in effect */
 }
+
+.formatted-content h4 {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.formatted-content p {
+  margin-bottom: 1rem;
+}
+
+.formatted-content ul,
+.formatted-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  list-style: disc inside;
+  /* Ensure list markers are shown inside the list */
+}
+
+.formatted-content ul li,
+.formatted-content ol li {
+  margin-bottom: 0.5rem;
+}
+
+.formatted-content span[style*="color: var(--tw-prose-bold)"] {
+  font-weight: bold;
+}
+.formatted-content ul,
+.formatted-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  list-style: disc inside !important;
+  /* Ensure list markers are shown inside the list */
+}
+
+.formatted-content ul li,
+.formatted-content ol li {
+  margin-bottom: 0.5rem;
+  list-style-type: disc !important;
+  /* Ensure list markers are shown */
+}
+
+
+.inclusion-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.check-icon {
+  color: rgb(74, 180, 107);
+  border: 2px solid rgb(74, 180, 107);
+  border-radius: 50%;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 16px;
+  margin-right: 10px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+  border-left: 1px dashed #4b4b4b;
+}
+
+.timeline h4 {
+  position: relative;
+  padding-left: 20px;
+  margin-top: 20px;
+}
+
+.timeline h4 .fa-clock {
+  position: absolute;
+  left: -42px;
+  top: 4px;
+  background-color: #fff;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 14px;
+  color: #000000;
+}
+
+.timeline p,
+.timeline ul,
+.timeline ol {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.timeline ul,
+.timeline ol {
+  padding-left: 20px;
+}
+
