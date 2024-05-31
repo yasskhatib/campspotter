@@ -8,6 +8,9 @@ import ScrollTopBehaviour from "./components/common/ScrollTopBehavier";
 import ScrollToTop from "./components/common/ScrollToTop";
 
 import TourList3 from "./pages/tour-lists/camps";
+
+
+
 import TourSinglePage3 from "./pages/tour-singles/tour-single-3";
 
 import BookingPage from "./pages/pages/booking-pages";

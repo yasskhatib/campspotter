@@ -61,6 +61,10 @@ export default function TourList3() {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   const getStatusLabel = (camp) => {
@@ -137,10 +141,11 @@ export default function TourList3() {
                       />
                       {getStatusLabel(camp)}
                     </div>
+                    {/* <button className="tourCard__favorite">
 
-                    <button className="tourCard__favorite">
-                      <i className="icon-heart"></i>
-                    </button>
+                    <i className="icon-heart"></i>
+                    
+                    </button>*/}
                   </div>
 
                   <div className="tourCard__content px-10 pt-10">

@@ -16,7 +16,7 @@ import './CampCard.css'; // Import the CSS file
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 6;
 
 export default function DBListinggrp({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
