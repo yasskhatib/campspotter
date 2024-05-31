@@ -9,6 +9,8 @@ import ScrollToTop from "./components/common/ScrollToTop";
 
 import TourList3 from "./pages/tour-lists/camps";
 
+import GrpList from "./pages/tour-lists/groups";
+
 
 
 import TourSinglePage3 from "./pages/tour-singles/tour-single-3";
@@ -60,6 +62,10 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage1 />} />
           <Route path="/camps" element={<TourList3 />} />
+
+          <Route path="/groups" element={<GrpList />} />
+
+
           <Route path="/camp/:id" element={<TourSinglePage3 />} />
           <Route path="/booking-pages" element={<BookingPage />} />
           <Route path="/db-main" element={<DBMainPage />} />

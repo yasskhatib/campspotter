@@ -128,21 +128,24 @@ export default function Header1() {
           </div>
 
           <div className="header__right">
-            <Link to="/camps" className="ml-40">
+            <Link to="/" className="ml-30">
+              Home
+            </Link>
+            <Link to="/camps" className="ml-30">
               Camping list
             </Link>
-            <Link to="/camps" className="ml-40">
+            <Link to="/groups" className="ml-30">
               Group list
             </Link>
 
             {!isLoggedIn ? (
               <>
-                <Link to="/register" className="ml-40">
+                <Link to="/register" className="ml-30">
                   Join as Camper
                 </Link>
                 <Link
                   to="/registergrp"
-                  className="ml-40"
+                  className="ml-30"
                   style={{ fontWeight: 'bold' }}
                 >
                   Join as Group
@@ -158,13 +161,13 @@ export default function Header1() {
               <>
                 <button
                   onClick={() => navigate(dashboardLink)}
-                  className="button -sm -dark-1 bg-blue-1 rounded-200 text-white ml-40"
+                  className="button -sm -dark-1 bg-blue-1 rounded-200 text-white ml-30"
                 >
                   Hi {username}
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="button -sm -dark-1 bg-green-3 rounded-200 text-white ml-20"
+                  className="button -sm -dark-1 bg-green-3 rounded-200 text-white ml-10"
                 >
                   Logout
                 </button>

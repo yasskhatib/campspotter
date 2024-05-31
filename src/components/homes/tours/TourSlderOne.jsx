@@ -1,13 +1,38 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-import { useEffect, useState } from "react";
 import Stars from "@/components/common/Stars";
-import { tourData } from "@/data/tours";
-
 import { Link } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
-export default function TourSlderOne() {
+// Extend dayjs with plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+export default function TourSliderOne() {
+  const [topCamps, setTopCamps] = useState([]);
+
+  useEffect(() => {
+    const fetchTopCamps = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/allCamps');
+        const sixMonthsAgo = dayjs().utc().subtract(6, 'months');
+        const filteredCamps = response.data
+          .filter(camp => dayjs(camp.date).utc().isAfter(sixMonthsAgo))
+          .sort((a, b) => b.reviewScore - a.reviewScore)
+          .slice(0, 5);
+        setTopCamps(filteredCamps);
+      } catch (error) {
+        console.error('Error fetching top camps:', error);
+      }
+    };
+
+    fetchTopCamps();
+  }, []);
+
   return (
     <section className="layout-pt-xl layout-pt-sm relative">
       <div className="sectionBg -w-1530 rounded-12 bg-white"></div>
@@ -15,12 +40,8 @@ export default function TourSlderOne() {
       <div className="container">
         <div className="row justify-between items-end y-gap-10">
           <div className="col-auto">
-            <h2
-              data-aos="fade-up"
-              data-aos-delay=""
-              className="text-30 md:text-24"
-            >
-              Top 5 Camps of the Month
+            <h2 data-aos="fade-up" className="text-30 md:text-24">
+              Top 5 Camps in last 6 the Months
             </h2>
           </div>
 
@@ -28,8 +49,7 @@ export default function TourSlderOne() {
             <Link
               to={"/tour-list-1"}
               data-aos="fade-right"
-              data-aos-delay=""
-              className="buttonArrow d-flex items-center "
+              className="buttonArrow d-flex items-center"
             >
               <span>See all</span>
               <i className="icon-arrow-top-right text-16 ml-10"></i>
@@ -39,11 +59,7 @@ export default function TourSlderOne() {
 
         <div className="relative pt-40 sm:pt-20">
           <div className="overflow-hidden pb-30 js-section-slider">
-            <div
-              data-aos="fade-up"
-              data-aos-delay=""
-              className="swiper-wrapper"
-            >
+            <div data-aos="fade-up" className="swiper-wrapper">
               <Swiper
                 spaceBetween={30}
                 className="w-100"
@@ -71,21 +87,20 @@ export default function TourSlderOne() {
                   },
                 }}
               >
-                {tourData.map((elm, i) => (
+                {topCamps.map((camp, i) => (
                   <SwiperSlide key={i}>
                     <Link
-                      to={`/tour-single-1/${elm.id}`}
+                      to={`/camp/${camp._id}`}
                       className="tourCard -type-1 py-10 px-10 border-1 rounded-12 bg-white -hover-shadow"
                     >
                       <div className="tourCard__header">
                         <div className="tourCard__image ratio ratio-28:20">
                           <img
-                            src={elm.imageSrc}
-                            alt="image"
+                            src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                            alt={camp.title}
                             className="img-ratio rounded-12"
                           />
                         </div>
-
                         <button className="tourCard__favorite">
                           <i className="icon-heart"></i>
                         </button>
@@ -94,32 +109,31 @@ export default function TourSlderOne() {
                       <div className="tourCard__content px-10 pt-10">
                         <div className="tourCard__location d-flex items-center text-13 text-light-2">
                           <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
-                          {elm.location}
+                          {camp.emplacement}
                         </div>
 
                         <h3 className="tourCard__title text-16 fw-500 mt-5">
-                          <span>{elm.title}</span>
+                          <span>{camp.title}</span>
                         </h3>
 
                         <div className="tourCard__rating d-flex items-center text-13 mt-5">
                           <div className="d-flex x-gap-5">
-                            <Stars star={elm.rating} />
+                            <Stars star={camp.reviewScore} />
                           </div>
 
                           <span className="text-dark-1 ml-10">
-                            {elm.rating} ({elm.ratingCount})
+                            ({camp.reviewScore} Reviews)
                           </span>
                         </div>
 
                         <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
                           <div className="d-flex items-center">
                             <i className="icon-clock text-16 mr-5"></i>
-                            {elm.duration}
+                            {camp.duration} days
                           </div>
 
                           <div>
-                            From{" "}
-                            <span className="text-16 fw-500">${elm.price}</span>
+                            <span className="text-16 fw-500">{camp.prix} TND</span>
                           </div>
                         </div>
                       </div>

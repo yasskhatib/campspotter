@@ -1,30 +1,61 @@
-import Stars from "@/components/common/Stars";
-import { tourData } from "@/data/tours";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import Stars from '@/components/common/Stars';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
-import { Link } from "react-router-dom";
-import React from "react";
+// Extend dayjs with plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function Tour1() {
+  const [latestCamps, setLatestCamps] = useState([]);
+
+  useEffect(() => {
+    const fetchLatestCamps = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/allCamps');
+        const sortedCamps = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setLatestCamps(sortedCamps.slice(0, 8));
+      } catch (error) {
+        console.error('Error fetching latest camps:', error);
+      }
+    };
+
+    fetchLatestCamps();
+  }, []);
+
+  const getStatusLabel = (camp) => {
+    const today = dayjs().utc().startOf('day');
+    const campDate = dayjs(camp.date).utc().startOf('day');
+
+    if (!camp.status) {
+      if (campDate.isBefore(today) || campDate.isSame(today)) {
+        return <span className="status-label-red">Expired</span>;
+      } else {
+        return <span className="status-label-green">Upcoming</span>;
+      }
+    } else {
+      return <span className="status-label-black">{camp.status}</span>;
+    }
+  };
+
   return (
     <section className="layout-pt-xl layout-pb-xl">
       <div className="container">
         <div className="row justify-between items-end y-gap-10">
           <div className="col-auto">
-            <h2
-              data-aos="fade-right"
-              data-aos-delay=""
-              className="text-30 md:text-24"
-            >
+            <h2 data-aos="fade-right" className="text-30 md:text-24">
               Find Popular Camps
             </h2>
           </div>
-
           <div className="col-auto">
             <Link
-              to={"/camps"}
+              to="/camps"
               data-aos="fade-left"
-              data-aos-delay=""
-              className="buttonArrow d-flex items-center "
+              className="buttonArrow d-flex items-center"
             >
               <span>See all</span>
               <i className="icon-arrow-top-right text-16 ml-10"></i>
@@ -32,59 +63,50 @@ export default function Tour1() {
           </div>
         </div>
 
-        <div
-          data-aos="fade-up"
-          data-aos-delay=""
-          className="row y-gap-30 justify-between pt-40 sm:pt-20 mobile-css-slider -w-300"
-        >
-          {tourData.map((elm, i) => (
+        <div data-aos="fade-up" className="row y-gap-30 justify-between pt-40 sm:pt-20 mobile-css-slider -w-300">
+          {latestCamps.map((camp, i) => (
             <div key={i} className="col-lg-3 col-md-6">
               <Link
-                to={`/tour-single-1/${elm.id}`}
-                className="tourCard -type-1 py-10 px-10 border-1 rounded-12  -hover-shadow"
+                to={`/camp/${camp._id}`}
+                className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow"
               >
                 <div className="tourCard__header">
                   <div className="tourCard__image ratio ratio-28:20">
                     <img
-                      src={elm.imageSrc}
-                      alt="image"
+                      src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                      alt={camp.title}
                       className="img-ratio rounded-12"
                     />
+                    {getStatusLabel(camp)}
                   </div>
-
-                  <button className="tourCard__favorite">
-                    <i className="icon-heart"></i>
-                  </button>
                 </div>
 
                 <div className="tourCard__content px-10 pt-10">
                   <div className="tourCard__location d-flex items-center text-13 text-light-2">
                     <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
-                    {elm.location}
+                    {camp.emplacement}
                   </div>
 
                   <h3 className="tourCard__title text-16 fw-500 mt-5">
-                    <span>{elm.title}</span>
+                    <span>{camp.title}</span>
                   </h3>
 
                   <div className="tourCard__rating d-flex items-center text-13 mt-5">
                     <div className="d-flex x-gap-5">
-                      <Stars star={elm.rating} />
+                      <Stars star={camp.reviewScore} />
                     </div>
-
                     <span className="text-dark-1 ml-10">
-                      {elm.rating} ({elm.ratingCount})
+                      ({camp.reviewScore} Reviews)
                     </span>
                   </div>
 
                   <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
                     <div className="d-flex items-center">
                       <i className="icon-clock text-16 mr-5"></i>
-                      {elm.duration}
+                      {camp.duration} days
                     </div>
-
                     <div>
-                      From <span className="text-16 fw-500">${elm.price}</span>
+                      <span className="text-16 fw-500">{camp.prix} TND</span>
                     </div>
                   </div>
                 </div>

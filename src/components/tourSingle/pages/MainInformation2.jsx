@@ -21,7 +21,6 @@ export default function MainInformation2({ camp }) {
         .then(() => console.log('Successful share'))
         .catch((error) => console.log('Error sharing', error));
     } else {
-      // Fallback for browsers that do not support the Web Share API
       alert('Web Share API is not supported in your browser. Please copy the URL to share.');
     }
   };
@@ -69,6 +68,13 @@ export default function MainInformation2({ camp }) {
                 ({camp?.reviewScore} Reviews)
               </div>
             </div>
+
+            <div className="col-auto">
+              <div className="d-flex items-center">
+                <i className="icon-user text-16 mr-5"></i>
+                Created by: {camp?.campGroupName}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -97,5 +103,6 @@ MainInformation2.propTypes = {
     description: PropTypes.string,
     duration: PropTypes.number,
     prix: PropTypes.number,
+    campGroupName: PropTypes.string,
   }).isRequired,
 };

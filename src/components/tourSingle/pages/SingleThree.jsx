@@ -1,12 +1,29 @@
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import TourSingleSidebar from "../TourSingleSidebar";
 import OthersInformation from "../OthersInformation";
 import MainInformation2 from "./MainInformation2";
 import parse, { domToReact } from 'html-react-parser';
 
 export default function SingleThree({ camp, user }) {
+  const [campGroupName, setCampGroupName] = useState('');
+
+  useEffect(() => {
+    const fetchCampGroupName = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/campGroup/${camp.campgrpEmail}`);
+        setCampGroupName(response.data.name);
+      } catch (error) {
+        console.error('Error fetching camp group name:', error);
+      }
+    };
+
+    fetchCampGroupName();
+  }, [camp.campgrpEmail]);
+
   const inclusionItems = camp.inclusion.split(' - ');
 
   const renderDescription = (description) => {
@@ -30,7 +47,7 @@ export default function SingleThree({ camp, user }) {
       <div className="container">
         <div className="row y-gap-30 justify-between">
           <div className="col-lg-8">
-            <MainInformation2 camp={{ ...camp, duration: Number(camp.duration) }} />
+            <MainInformation2 camp={{ ...camp, duration: Number(camp.duration), campGroupName }} />
             <div className="row justify-center pt-30">
               <div className="col-12">
                 <img
@@ -124,6 +141,7 @@ SingleThree.propTypes = {
     location: PropTypes.string.isRequired,
     prix: PropTypes.number.isRequired,
     date: PropTypes.string.isRequired,
+    campgrpEmail: PropTypes.string.isRequired,
   }).isRequired,
   user: PropTypes.shape({
     fullName: PropTypes.string,

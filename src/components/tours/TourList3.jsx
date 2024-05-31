@@ -3,7 +3,7 @@ import Stars from "../common/Stars";
 import Calender from "../common/dropdownSearch/Calender";
 import ToggleSidebar from "./ToggleSidebar";
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from 'axios';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -18,10 +18,12 @@ export default function TourList3() {
   const [settourTypeActive] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [camps, setCamps] = useState([]);
+  const [filteredCamps, setFilteredCamps] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
+  const location = useLocation();
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -51,6 +53,7 @@ export default function TourList3() {
       try {
         const response = await axios.get('http://localhost:5000/allCamps');
         setCamps(response.data);
+        setFilteredCamps(response.data);
       } catch (error) {
         console.error('Error fetching camps:', error);
       }
@@ -58,6 +61,22 @@ export default function TourList3() {
 
     fetchCamps();
   }, []);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get('search');
+
+    if (searchQuery) {
+      const filtered = camps.filter(
+        camp =>
+          camp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          camp.emplacement.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredCamps(filtered);
+    } else {
+      setFilteredCamps(camps);
+    }
+  }, [location.search, camps]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -83,7 +102,7 @@ export default function TourList3() {
   };
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentCamps = camps.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const currentCamps = filteredCamps.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <>
@@ -125,78 +144,79 @@ export default function TourList3() {
 
           </div>
 
-          <div className="row y-gap-30 pt-30">
-            {currentCamps.map((camp, index) => (
-              <div key={index} className="col-lg-3 col-sm-6">
-                <Link
-                  to={`/camp/${camp._id}`}
-                  className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow"
-                >
-                  <div className="tourCard__header">
-                    <div className="tourCard__image ratio ratio-28:20">
-                      <img
-                        src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
-                        alt={camp.title}
-                        className="img-ratio rounded-12"
-                      />
-                      {getStatusLabel(camp)}
-                    </div>
-                    {/* <button className="tourCard__favorite">
+          {currentCamps.length === 0 ? (
+            <div className="text-center text-20">No results found for your search.</div>
+          ) : (
+            <>
+              <div className="row y-gap-30 pt-30">
+                {currentCamps.map((camp, index) => (
+                  <div key={index} className="col-lg-3 col-sm-6">
+                    <Link
+                      to={`/camp/${camp._id}`}
+                      className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow"
+                    >
+                      <div className="tourCard__header">
+                        <div className="tourCard__image ratio ratio-28:20">
+                          <img
+                            src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                            alt={camp.title}
+                            className="img-ratio rounded-12"
+                          />
+                          {getStatusLabel(camp)}
+                        </div>
+                      </div>
 
-                    <i className="icon-heart"></i>
-                    
-                    </button>*/}
+                      <div className="tourCard__content px-10 pt-10">
+                        <div className="tourCard__location d-flex items-center text-13 text-light-2">
+                          <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
+                          {camp.emplacement}
+                        </div>
+
+                        <h3 className="tourCard__title text-16 fw-500 mt-5">
+                          <span>{camp.title}</span>
+                        </h3>
+
+                        <div className="tourCard__rating d-flex items-center text-13 mt-5">
+                          <div className="d-flex x-gap-5">
+                            <Stars star={camp.reviewScore} />
+                          </div>
+
+                          <span className="text-dark-1 ml-10">
+                            ({camp.reviewScore} Reviews)
+                          </span>
+                        </div>
+
+                        <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
+                          <div className="d-flex items-center">
+                            <i className="icon-clock text-16 mr-5"></i>
+                            {camp.duration} days
+                          </div>
+
+                          <div>
+                            <span className="text-16 fw-500">{camp.prix} TND</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
                   </div>
+                ))}
+              </div>
 
-                  <div className="tourCard__content px-10 pt-10">
-                    <div className="tourCard__location d-flex items-center text-13 text-light-2">
-                      <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
-                      {camp.emplacement}
-                    </div>
+              {filteredCamps.length > ITEMS_PER_PAGE && (
+                <div className="d-flex justify-center flex-column mt-60">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalItems={filteredCamps.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    onPageChange={handlePageChange}
+                  />
 
-                    <h3 className="tourCard__title text-16 fw-500 mt-5">
-                      <span>{camp.title}</span>
-                    </h3>
-
-                    <div className="tourCard__rating d-flex items-center text-13 mt-5">
-                      <div className="d-flex x-gap-5">
-                        <Stars star={camp.reviewScore} />
-                      </div>
-
-                      <span className="text-dark-1 ml-10">
-                        ({camp.reviewScore} Reviews)
-                      </span>
-                    </div>
-
-                    <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
-                      <div className="d-flex items-center">
-                        <i className="icon-clock text-16 mr-5"></i>
-                        {camp.duration} days
-                      </div>
-
-                      <div>
-                        <span className="text-16 fw-500">{camp.prix} TND</span>
-                      </div>
-                    </div>
+                  <div className="text-14 text-center mt-20">
+                    Showing results {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, filteredCamps.length)} of {filteredCamps.length}
                   </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-
-          {camps.length > ITEMS_PER_PAGE && (
-            <div className="d-flex justify-center flex-column mt-60">
-              <Pagination
-                currentPage={currentPage}
-                totalItems={camps.length}
-                itemsPerPage={ITEMS_PER_PAGE}
-                onPageChange={handlePageChange}
-              />
-
-              <div className="text-14 text-center mt-20">
-                Showing results {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, camps.length)} of {camps.length}
-              </div>
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
