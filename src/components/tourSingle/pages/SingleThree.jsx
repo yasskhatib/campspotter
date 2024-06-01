@@ -24,6 +24,13 @@ export default function SingleThree({ camp, user }) {
     fetchCampGroupName();
   }, [camp.campgrpEmail]);
 
+  const getEmbedUrl = (iframeString) => {
+    const matches = iframeString.match(/src="([^"]+)"/);
+    return matches ? matches[1] : '';
+  };
+
+  const embedUrl = getEmbedUrl(camp.googleMapUrl);
+
   const inclusionItems = camp.inclusion.split(' - ');
 
   const renderDescription = (description) => {
@@ -92,6 +99,22 @@ export default function SingleThree({ camp, user }) {
             </div>
 
             <h2 className="text-30 mt-60 mb-30">Camping map location</h2>
+            <div className="embedded-map mt-30 mb-30">
+              {embedUrl ? (
+                <iframe
+                  src={embedUrl}
+                  width="100%"
+                  height="450"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              ) : (
+                <p>Map location is not available.</p>
+              )}
+            </div>
+
             <div className="line mt-60 mb-60"></div>
 
             <h2 className="text-30 pt-60">Leave a Reply</h2>

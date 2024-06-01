@@ -1,11 +1,16 @@
 import Pagination from "../common/Pagination";
 import ToggleSidebar from "./ToggleSidebar";
+import Stars2 from "../common/Stars2";
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import axios from 'axios';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { Button, Dialog, DialogDismiss, DialogHeading } from "@ariakit/react";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import ReactStars from 'react-stars';
+import "react-toastify/dist/ReactToastify.css";
+import './style.css'; // Import the custom CSS file
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -17,6 +22,10 @@ export default function GrpList() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campGroups, setCampGroups] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [userReview, setUserReview] = useState(null); // New state to store user review
+  const [userEmail, setUserEmail] = useState(null); // State to store user email
   const ITEMS_PER_PAGE = 8;
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
@@ -48,13 +57,55 @@ export default function GrpList() {
     const fetchCampGroups = async () => {
       try {
         const response = await axios.get('http://localhost:5000/allCampGroups');
-        setCampGroups(response.data);
+        const groups = response.data;
+
+        // Fetch ratings for each group
+        const groupsWithRatings = await Promise.all(
+          groups.map(async (group) => {
+            const reviewsResponse = await axios.get('http://localhost:5000/getGroupReviews', {
+              params: { campGrpEmail: group.email }
+            });
+            const reviews = reviewsResponse.data;
+            const totalScore = reviews.reduce((sum, review) => sum + review.score, 0);
+            const averageRating = reviews.length ? totalScore / reviews.length : 0;
+            return { ...group, averageRating, reviewsCount: reviews.length };
+          })
+        );
+
+        setCampGroups(groupsWithRatings);
       } catch (error) {
         console.error('Error fetching camp groups:', error);
       }
     };
 
     fetchCampGroups();
+  }, []);
+
+  useEffect(() => {
+    const checkUserRole = async () => {
+      const email = localStorage.getItem('userEmail');
+      if (email) {
+        console.log('User email found in localStorage:', email);
+        try {
+          const response = await axios.get('http://localhost:5000/userinfo', {
+            params: { email }
+          });
+          if (response.data) {
+            setUserEmail(email);
+            console.log('User info fetched:', response.data);
+          } else {
+            setUserEmail(null);
+          }
+        } catch (error) {
+          console.error('Error fetching user info:', error);
+          setUserEmail(null);
+        }
+      } else {
+        setUserEmail(null);
+      }
+    };
+
+    checkUserRole();
   }, []);
 
   const handlePageChange = (page) => {
@@ -65,6 +116,58 @@ export default function GrpList() {
     });
   };
 
+  const handleGroupClick = async (group) => {
+    setSelectedGroup(group);
+    setOpen(true);
+
+    if (userEmail) {
+      try {
+        const response = await axios.get('http://localhost:5000/getReview', {
+          params: { campGrpEmail: group.email, camperEmail: userEmail }
+        });
+        setUserReview(response.data);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          setUserReview(null);
+        } else {
+          console.error('Error fetching review:', error);
+        }
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+    setSelectedGroup(null);
+    setUserReview(null); // Reset user review when modal is closed
+  };
+
+  const handleViewCamps = () => {
+    // Navigate to the camps page of the selected group
+    window.location.href = `/camps/${selectedGroup._id}`;
+  };
+
+  const handleRatingChange = async (newRating) => {
+    if (!userEmail) {
+      toast.error('You need to sign in as a camper to make a rating.');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:5000/addOrUpdateReview', {
+        campGrpEmail: selectedGroup.email,
+        camperEmail: userEmail,
+        score: newRating
+      });
+
+      toast.success(`Your rating has been ${userReview ? 'updated' : 'submitted'} successfully!`);
+      setUserReview({ ...userReview, score: newRating }); // Update user review in the state
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast.error('Error submitting your review. Please try again later.');
+    }
+  };
+
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentCampGroups = campGroups.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
@@ -72,14 +175,13 @@ export default function GrpList() {
     <>
       <section className="layout-pb-xl">
         <div className="container">
-          
-
           <div className="row y-gap-30 pt-30">
             {currentCampGroups.map((group, index) => (
               <div key={index} className="col-lg-3 col-sm-6">
-                <Link
-                  to={`/group/${group._id}`}
+                <div
+                  onClick={() => handleGroupClick(group)}
                   className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow"
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="tourCard__header">
                     <div className="tourCard__image ratio ratio-28:20">
@@ -88,7 +190,6 @@ export default function GrpList() {
                         alt={group.name}
                         className="img-ratio rounded-12"
                       />
-                      {/* Add status label if necessary */}
                     </div>
                   </div>
 
@@ -99,11 +200,15 @@ export default function GrpList() {
                     </div>
 
                     <h3 className="tourCard__title text-16 fw-500 mt-5">
-                      <span>{group.name}</span>
+                      <span>Group Name: <b>{group.name}</b></span>
                     </h3>
+                    <h5 className="tourCard__title text-14 fw-300 mt-5">
+                      <span>{group.comments.substring(0, 70) + (group.comments.length > 70 ? '..' : '')}</span>
+                    </h5>
 
                     <div className="tourCard__rating d-flex items-center text-13 mt-5">
-                      {/* Add rating component if necessary */}
+                      <Stars2 star={group.averageRating} font="16" />
+                      <span className="ml-10">({group.reviewsCount} reviews)</span>
                     </div>
 
                     <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
@@ -117,7 +222,7 @@ export default function GrpList() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               </div>
             ))}
           </div>
@@ -138,10 +243,61 @@ export default function GrpList() {
           )}
         </div>
       </section>
+
+      {selectedGroup && (
+        <Dialog
+          open={open}
+          getPersistentElements={() => document.querySelectorAll(".Toastify")}
+          backdrop={<div className="custom-backdrop" />}
+          className="custom-dialog"
+        >
+          <DialogHeading className="custom-heading">
+            <i className="fas fa-info-circle"></i> {selectedGroup.name} Group
+          </DialogHeading>
+          <img src={`http://localhost:5000/uploads/${selectedGroup.picture}`} alt={selectedGroup.name} className="custom-group-image" />
+
+          <div className="custom-info">
+            <p><i className="fas fa-envelope"></i> Email: <span>{selectedGroup.email}</span></p>
+            <p><i className="fas fa-phone"></i> Phone: <span>{selectedGroup.telephone}</span></p>
+            <p><i className="fas fa-map-marker-alt"></i> Governorate: <span>{selectedGroup.governorate}</span></p>
+            <p><i className="fas fa-calendar-alt"></i> Creation: <span>{dayjs(selectedGroup.creationDate).format('YYYY')}</span></p>
+          </div>
+          <hr className="linee"></hr>
+          <div className="custom-comment-section">
+            About: <span className="txtt">{selectedGroup.comments} {" "}
+              <b><a className="social" href={selectedGroup.socialMediaLink} target="_blank" rel="noopener noreferrer">
+                Visit Facebook
+              </a></b>
+            </span>
+          </div>
+          <div className="custom-rating-section">
+            <ReactStars
+              count={5}
+              size={50}
+              color2={'#ffd700'}
+              half={false}
+              value={userReview ? userReview.score : 0} // Show user's review score if available
+              onChange={handleRatingChange}
+            />
+            {/*  {userReview && (
+              <div className="text-14 text-center mt-10">
+                You have already rated this group. Your rating: {userReview.score}
+              </div>
+            )} */}
+          </div>
+
+          <div className="custom-buttons">
+            <Button className="custom-button" onClick={handleViewCamps}>View Camps</Button>
+            <DialogDismiss className="custom-button custom-secondary" onClick={handleCloseModal}>Close</DialogDismiss>
+          </div>
+        </Dialog>
+      )}
+
       <ToggleSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
+      <ToastContainer className="custom-toast-container" position="bottom-right" theme="dark" />
     </>
   );
 }
