@@ -180,7 +180,7 @@ export default function RegisterCampgrp() {
                 <input type="number" name="telephone" placeholder="Telephone" value={formData.telephone} onChange={handleChange} required />
               </div>
 
-              <div className="form-input mt-30">
+              <div className="form-input mt-30" required>
                 <select name="governorate" value={formData.governorate} onChange={handleChange} required>
                   <option value="" disabled>Select Your Governorate</option>
                   <option value="Ariana">Ariana</option>
@@ -215,15 +215,15 @@ export default function RegisterCampgrp() {
               </div>
 
               <div className="form-input mt-30">
-                <input type="text" name="socialMediaLink" placeholder="Social Media Link" value={formData.socialMediaLink} onChange={handleChange} />
+                <input type="text" name="socialMediaLink" placeholder="Social Media Link" value={formData.socialMediaLink} onChange={handleChange} required/>
               </div>
 
               <div className="form-input mt-30">
-                <input type="text" name="comments" placeholder="Comments" value={formData.comments} onChange={handleChange} />
+                <input type="text" name="comments" placeholder="Description" value={formData.comments} onChange={handleChange} required />
               </div>
 
               <div className="form-input mt-30">
-                <input type="file" name="picture" onChange={handleChange} />
+                <input type="file" name="picture" onChange={handleChange} required/>
               </div>
 
               <div className="form-input mt-30">

@@ -6,7 +6,6 @@
 
 .camp-imagecard {
     transition: transform 0.3s ease-in-out;
-    
     display: block;
 }
 
@@ -24,7 +23,6 @@
     border-radius: 1px;
     font-size: 12px;
     background-color: rgb(62, 190, 62);
-    
 }
 
 .status-label-black {
@@ -38,6 +36,7 @@
     font-size: 12px;
     background-color: rgb(0, 0, 0);
 }
+
 .status-label-red {
     position: absolute;
     top: 10px;
@@ -50,3 +49,132 @@
     background-color: rgb(203, 46, 46);
 }
 
+.cancel-button {
+    background: none;
+    border: none;
+    color: #ff3737;
+    cursor: pointer;
+    font-size: 1.5rem;
+    margin-left: 10px;
+}
+
+.camp-card {
+    position: relative;
+}
+
+.d-flex.justify-content-between.align-items-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-btn {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    max-width: 150px;
+    flex: 1;
+}
+
+.custom-btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 7px;
+}
+
+.custom-btn-secondary {
+    background-color: #2a679c;
+    color: white;
+    border: none;
+    border-radius: 7px;
+}
+
+
+.canceltitle {
+        font-size: revert-layer;
+            font-weight: 800;
+            text-align: center;
+}
+
+.custom-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.custom-dialog-overlay.fade-in {
+    animation: fadeInBackground 0.3s ease-in-out forwards;
+}
+
+.custom-dialog-overlay.fade-out {
+    animation: fadeOutBackground 0.3s ease-in-out forwards;
+}
+
+.custom-dialog-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeInDialog 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeInBackground {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutBackground {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeInDialog {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOutDialog {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.custom-button-container {
+    display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 10px;
+        margin-top: 15px;
+}

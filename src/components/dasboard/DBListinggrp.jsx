@@ -9,6 +9,10 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { FaStopCircle } from 'react-icons/fa';
+import { Dialog, DialogDismiss, DialogHeading } from "@ariakit/react";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import './CampCard.css'; // Import the CSS file
 
@@ -22,6 +26,8 @@ export default function DBListinggrp({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [camps, setCamps] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCamp, setSelectedCamp] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
   const campgrpEmail = localStorage.getItem('campgrpEmail');
 
   useEffect(() => {
@@ -55,8 +61,60 @@ export default function DBListinggrp({ onLogout }) {
     }
   };
 
+  const isUpcoming = (camp) => {
+    const today = dayjs().utc().startOf('day');
+    const campDate = dayjs(camp.date).utc().startOf('day');
+
+    return !camp.status && (campDate.isAfter(today) || campDate.isSame(today));
+  };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  const handleCancelClick = (camp) => {
+    setSelectedCamp(camp);
+    setShowDialog(true);
+  };
+
+  const confirmCancel = async () => {
+    if (selectedCamp) {
+      try {
+        await axios.patch(`http://localhost:5000/camps/${selectedCamp._id}`, { status: 'Canceled' });
+        setCamps((prevCamps) => prevCamps.map((camp) =>
+          camp._id === selectedCamp._id ? { ...camp, status: 'Canceled' } : camp
+        ));
+        toast.success('Camp has been canceled successfully!', {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark"
+        });
+        setShowDialog(false);
+        setTimeout(() => setSelectedCamp(null), 300);
+      } catch (error) {
+        console.error('Error updating camp status:', error);
+        toast.error('Error canceling the camp!', {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark"
+        });
+      }
+    }
+  };
+
+  const closeDialog = () => {
+    setShowDialog(false);
+    setTimeout(() => setSelectedCamp(null), 300);
   };
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -64,6 +122,7 @@ export default function DBListinggrp({ onLogout }) {
 
   return (
     <>
+      <ToastContainer transition={Bounce} />
       <div className={`dashboard ${sideBarOpen ? '-is-sidebar-visible' : ''} js-dashboard`}>
         <Sidebar setSideBarOpen={setSideBarOpen} onLogout={onLogout} />
 
@@ -78,8 +137,8 @@ export default function DBListinggrp({ onLogout }) {
               <div className="row y-gap-30">
                 {currentCamps.map((camp, index) => (
                   <div key={index} className="col-lg-6">
-                    <div className="border-1 rounded-12 px-20 py-20">
-                      <div className="row x-gap-20 y-gap-20 items-center">
+                    <div className="border-1 rounded-12 px-20 py-20 camp-card">
+                      <div className="row x-gap-20 y-gap-20 items-center position-relative">
                         <div className="col-xxl-auto">
                           <div className="image-containercard col-xxl-auto">
                             <img
@@ -92,9 +151,19 @@ export default function DBListinggrp({ onLogout }) {
                         </div>
 
                         <div className="col">
-                          <div className="d-flex items-center">
-                            <i className="icon-pin mr-5"></i>
-                            {camp.emplacement}
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div className="d-flex items-center">
+                              <i className="icon-pin mr-5"></i>
+                              {camp.emplacement}
+                            </div>
+                            {isUpcoming(camp) && (
+                              <button
+                                className="cancel-button"
+                                onClick={() => handleCancelClick(camp)}
+                              >
+                                <FaStopCircle />
+                              </button>
+                            )}
                           </div>
 
                           <div className="text-18 lh-15 fw-500 mt-5">
@@ -129,7 +198,6 @@ export default function DBListinggrp({ onLogout }) {
                       </div>
                     </div>
                   </div>
-                  
                 ))}
               </div>
 
@@ -153,6 +221,28 @@ export default function DBListinggrp({ onLogout }) {
           </div>
         </div>
       </div>
+
+      <Dialog
+        aria-labelledby="custom-dialog-heading"
+        className={`custom-dialog-overlay ${showDialog ? 'fade-in' : 'fade-out'}`}
+        open={!!selectedCamp}
+        onClose={closeDialog}
+      >
+        <div className="custom-dialog-content">
+          <DialogHeading className='canceltitle' id="custom-dialog-heading">Cancel Camp</DialogHeading>
+          
+          <p>Are you sure you want to cancel this camp?</p>
+          <div className="custom-button-container">
+            <button className="custom-btn custom-btn-danger" onClick={confirmCancel}>
+              Yes
+            </button>
+            <DialogDismiss as="button" className="custom-btn custom-btn-secondary" onClick={closeDialog}>
+              No
+            </DialogDismiss>
+           
+          </div>
+        </div>
+      </Dialog>
     </>
   );
 }

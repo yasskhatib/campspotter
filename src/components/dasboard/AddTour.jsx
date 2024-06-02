@@ -150,8 +150,8 @@ export default function AddTour() {
                 <input placeholder="18-30" type="text" name="ages" value={formData.ages} onChange={handleChange} className="form-control" required />
               </div>
               <div className="form-group col-md-6">
-                <label>Google Map URL</label>
-                <input placeholder="Location on Google Map" type="url" name="googleMapUrl" value={formData.googleMapUrl} onChange={handleChange} className="form-control" required />
+                <label>Google Map Embed Link</label>
+                <input placeholder="oogle Map Embed Link" type="text" name="googleMapUrl" value={formData.googleMapUrl} onChange={handleChange} className="form-control" required />
               </div>
               <div className="form-group col-md-6">
                 <label>Price (TND)</label>

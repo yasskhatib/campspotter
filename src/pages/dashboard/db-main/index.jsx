@@ -3,7 +3,7 @@ import DBMain from "@/components/dasboard/main";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Dashboard main- Campspotter",
+  title: "Main Dashboard - Campspotter",
   description: "Campspotter - Adventure Made Easy!",
 };
 

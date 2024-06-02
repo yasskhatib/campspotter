@@ -1,4 +1,3 @@
-import React from "react";
 import Faq from "./Faq";
 import Tabs from "./Tabs";
 import Table from "./Table";
