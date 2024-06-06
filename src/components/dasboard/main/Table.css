@@ -1,0 +1,165 @@
+/* General styles for the table and other elements */
+.table-4 {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    color: #212529;
+    background-color: transparent;
+}
+
+.table-4 th,
+.table-4 td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table-4 thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table-4 tbody+tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table-4 td,
+.table-4 th {
+    white-space: nowrap;
+}
+
+/* Container for making the table responsive */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+@media (max-width: 1200px) {
+
+    .table-4 th,
+    .table-4 td {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+
+    .table-4 th,
+    .table-4 td {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-4 thead {
+        display: none;
+    }
+
+    .table-4 tr {
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .table-4 td {
+        display: block;
+        text-align: right;
+        border-top: 1px solid #dee2e6;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .table-4 td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 0.75rem;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .download-box {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .table-4 td {
+        padding: 0.4rem;
+        font-size: 0.875rem;
+    }
+
+    .table-4 td::before {
+        padding-left: 0.5rem;
+    }
+
+    .download-box {
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-4 td {
+        padding: 0.3rem;
+        font-size: 0.75rem;
+    }
+
+    .table-4 td::before {
+        padding-left: 0.25rem;
+    }
+
+    .download-box {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Adjust the padding and margin of select options */
+.custom-select option {
+    padding: 10px;
+    margin: 5px;
+}
+
+.custom-select {
+    appearance: none;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 1.5rem 0.375rem 0.75rem;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M2 0L0 2h4zM0 3l2 2 2-2"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 8px 10px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.custom-select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.download-box {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s, border-color 0.3s;
+    text-align: right;
+}
+
+.download-box:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.react-dropdown-select-input {
+    display: none !important;
+}
+
+.css-jznujr-ContentComponent {
+    padding: 5px;
+}

@@ -207,12 +207,15 @@ export default function TourSingleSidebar({ camp, user }) {
               onChange={(e) => setSelectedGovernorate(e.target.value)}
               disabled={formDisabled}
               required
+              style={{ marginTop: '10px' }}  // Corrected from 'margintop' to 'marginTop'
             >
               <option value="" disabled>Select your governorate</option>
               {governorates.map((gov, index) => (
                 <option key={index} value={gov}>{gov}</option>
               ))}
             </select>
+
+
           </div>
           <hr></hr>
           <span className="text-16 fw-500">Extras</span>
@@ -252,7 +255,7 @@ export default function TourSingleSidebar({ camp, user }) {
           <div className="total-price text-24 fw-500 mt-15">Total: <b>{totalPrice} TND</b></div>
 
           <button
-            className={`btn ${formDisabled ? 'btn-disabled' : 'btn-primary'} col-12 mt-20`}
+            className={`btn ${formDisabled ? 'btn-disabled' : 'btn-reserve'} col-12 mt-20`}
             onClick={confirmReservation}
             disabled={formDisabled}
           >

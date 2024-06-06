@@ -1,6 +1,6 @@
 import React from "react";
 import Pagination from "../common/Pagination";
-import { blogs, categories, recantBlogs, tags } from "@/data/blogs";
+import { blogs, categories, recentBlogs, tags } from "@/data/blogs";
 
 import { Link } from "react-router-dom";
 

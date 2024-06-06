@@ -1,8 +1,11 @@
+import { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Rating } from 'react-simple-star-rating';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import TourSingleSidebar from "../TourSingleSidebar";
 import OthersInformation from "../OthersInformation";
 import MainInformation2 from "./MainInformation2";
@@ -10,6 +13,12 @@ import parse, { domToReact } from 'html-react-parser';
 
 export default function SingleThree({ camp, user }) {
   const [campGroupName, setCampGroupName] = useState('');
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
+  const [visibleComments, setVisibleComments] = useState(4);
+  const [hasCommented, setHasCommented] = useState(false);
+  const toastId = useRef(null);
 
   useEffect(() => {
     const fetchCampGroupName = async () => {
@@ -21,8 +30,24 @@ export default function SingleThree({ camp, user }) {
       }
     };
 
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/comments/${camp._id}`);
+        setComments(response.data);
+        if (user) {
+          const userComment = response.data.find(cmt => cmt.camperEmail === user.email);
+          if (userComment) {
+            setHasCommented(true);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
     fetchCampGroupName();
-  }, [camp.campgrpEmail]);
+    fetchComments();
+  }, [camp.campgrpEmail, camp._id, user]);
 
   const getEmbedUrl = (iframeString) => {
     const matches = iframeString.match(/src="([^"]+)"/);
@@ -44,10 +69,89 @@ export default function SingleThree({ camp, user }) {
             </h4>
           );
         }
+
+        if (name === 'strong') {
+          return (
+            <h4>
+              <FontAwesomeIcon icon={faClock} className="fa-clock" />
+              {domToReact(children, options)}
+            </h4>
+          );
+        }
       },
     };
     return parse(description, options);
   };
+
+  const handleRating = (rate) => {
+    setRating(rate);
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleSubmitComment = async () => {
+    if (!user || user.role !== 'camper') {
+      toast.error('Please log in as a camper to leave a comment.', {
+        position: 'bottom-right',
+        theme: 'dark'
+      });
+      return;
+    }
+
+    if (!comment || rating === 0) {
+      toast.error('Rating and comment are required.', {
+        position: 'bottom-right',
+        theme: 'dark'
+      });
+      return;
+    }
+
+    if (hasCommented) {
+      toast.error('You have already commented on this camp.', {
+        position: 'bottom-right',
+        theme: 'dark'
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/addComment', {
+        campId: camp._id,
+        camperEmail: user.email,
+        camperFullName: user.fullName,
+        rating,
+        comment,
+      });
+
+      if (response.status === 201) {
+        toastId.current = toast.success('Comment submitted successfully!', {
+          position: 'bottom-right',
+          theme: 'dark',
+          autoClose: 5000,
+          onClose: () => {
+            setComment('');
+            setRating(0);
+            setComments([...comments, { camperFullName: user.fullName, rating, comment, date: new Date() }]);
+            setHasCommented(true);
+          }
+        });
+      }
+    } catch (error) {
+      toast.error('Error submitting comment.', {
+        position: 'bottom-right',
+        theme: 'dark'
+      });
+      console.error('Error submitting comment:', error);
+    }
+  };
+
+  const handleLoadMore = () => {
+    setVisibleComments(prevVisibleComments => prevVisibleComments + 4);
+  };
+
+  const visibleCommentsList = comments.slice(0, visibleComments);
 
   return (
     <section className="pt-30 js-pin-container">
@@ -93,7 +197,7 @@ export default function SingleThree({ camp, user }) {
 
             <div className="line mt-60 mb-60"></div>
 
-            <h2 className="text-30">Itinerary</h2>
+            <h2 className="text-30">Camp Program/Planning</h2>
             <div className="timeline mt-30 formatted-content">
               {renderDescription(camp.description)}
             </div>
@@ -115,26 +219,90 @@ export default function SingleThree({ camp, user }) {
               )}
             </div>
 
-            <div className="line mt-60 mb-60"></div>
+            {comments.length > 0 && (
+              <>
+                <div className="line mt-60 mb-60"></div>
+                <h2 className="text-30 pt-10">Comments</h2>
+                <div className="comments y-gap-30 pt-30">
+                  {visibleCommentsList.map((cmt, index) => (
+                    <div className="comment" key={index}>
+                      <div className="comment-header">
+                        <span className="comment-author" style={{ fontSize: '18px', fontWeight: 'bold' }}>{cmt.camperFullName}{" "}</span>
+                        <Rating
+                          initialValue={cmt.rating}
+                          size={20}
+                          readonly
+                          style={{ top: '-3px' }}
+                        />
+                      </div>
+                      <div className="comment-body">
+                        <p>{cmt.comment}</p>
+                        <span className="comment-date" style={{ fontSize: '12px' }}>{new Date(cmt.date).toLocaleDateString()}</span>
+                      </div> <div className="line mt-10 mb-10"></div>
+                    </div>
 
-            <h2 className="text-30 pt-60">Leave a Reply</h2>
-            <div className="contactForm y-gap-30 pt-30">
-              <div className="row">
-                <div className="col-12">
-                  <div className="form-input">
-                    <textarea placeholder="Leave your comment here" required rows="5"></textarea>
+                  ))}
+                </div>
+                {visibleComments < comments.length && (
+                  <div className="row">
+                    <div className="col-12"><br></br>
+                      <button
+                        className="button -dark-1 text-white"
+                        style={{
+                          backgroundColor: '#000',
+                          padding: '15px 55px',
+                          borderRadius: '5px'
+                        }}
+                        onClick={handleLoadMore}
+                      >
+                        Load More
+                        <i className="icon-arrow-top-right text-16 ml-10"></i>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+           
+
+            {user && user.role === 'camper' && !hasCommented && (
+              <>
+                <h2 className="text-30 pt-60">Rate/Leave a Reply for this Camp</h2>
+                <div className="contactForm y-gap-30 pt-30">
+                  <div className="row">
+                    <div className="col-12">
+                      <Rating onClick={handleRating} ratingValue={rating} size={40} />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="form-input">
+                        <textarea
+                          placeholder="Leave your comment here"
+                          required
+                          rows="5"
+                          value={comment}
+                          onChange={handleCommentChange}
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-12">
+                      <button
+                        className="button -md -dark-1 bg-accent-1 text-white"
+                        onClick={handleSubmitComment}
+                      >
+                        Post Comment
+                        <i className="icon-arrow-top-right text-16 ml-10"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-12">
-                  <button className="button -md -dark-1 bg-accent-1 text-white">
-                    Post Comment
-                    <i className="icon-arrow-top-right text-16 ml-10"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
 
           <div className="col-lg-4">
@@ -144,6 +312,18 @@ export default function SingleThree({ camp, user }) {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </section>
   );
 }

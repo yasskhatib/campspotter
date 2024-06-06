@@ -2,7 +2,6 @@ import BannerOne from "@/components/homes/banners/BannerOne";
 import BrandsOne from "@/components/homes/brands/BrandsOne";
 import FeaturesOne from "@/components/homes/features/FeaturesOne";
 import FeturesTwo from "@/components/homes/features/FeturesTwo";
-import TestimonialOne from "@/components/homes/testimonials/TestimonialOne";
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
 import Banner from "@/components/pages/about/Banner";
@@ -31,7 +30,6 @@ export default function AboutPage() {
         <div className="mt-60">
           <FeturesTwo />
         </div>
-        <TestimonialOne />
         <BannerOne />
         <Team />
         <BrandsOne />

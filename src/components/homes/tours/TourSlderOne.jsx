@@ -19,12 +19,26 @@ export default function TourSliderOne() {
     const fetchTopCamps = async () => {
       try {
         const response = await axios.get('http://localhost:5000/allCamps');
+        let camps = response.data;
         const sixMonthsAgo = dayjs().utc().subtract(6, 'months');
-        const filteredCamps = response.data
-          .filter(camp => dayjs(camp.date).utc().isAfter(sixMonthsAgo))
-          .sort((a, b) => b.reviewScore - a.reviewScore)
-          .slice(0, 5);
-        setTopCamps(filteredCamps);
+
+        // First filter the camps
+        camps = camps.filter(camp => dayjs(camp.date).utc().isAfter(sixMonthsAgo));
+
+        // Then fetch ratings for each camp and assign it to the camp object
+        await Promise.all(camps.map(camp =>
+          axios.get(`http://localhost:5000/campComments/rating/${camp._id}`)
+            .then(ratingResponse => {
+              camp.rating = ratingResponse.data.rating ? ratingResponse.data.rating.toFixed(1) : "0.0"; // Assign default if no rating
+            })
+            .catch(() => {
+              camp.rating = "0.0"; // Assign default if fetch fails
+            })
+        ));
+
+        // Sort by review score and take top 5
+        const sortedCamps = camps.sort((a, b) => b.reviewScore - a.reviewScore).slice(0, 5);
+        setTopCamps(sortedCamps);
       } catch (error) {
         console.error('Error fetching top camps:', error);
       }
@@ -41,13 +55,13 @@ export default function TourSliderOne() {
         <div className="row justify-between items-end y-gap-10">
           <div className="col-auto">
             <h2 data-aos="fade-up" className="text-30 md:text-24">
-              Top 5 Camps in last 6 the Months
+              Top 5 Camps in the Last 6 Months
             </h2>
           </div>
 
           <div className="col-auto">
             <Link
-              to={"/tour-list-1"}
+              to={"/camps"}
               data-aos="fade-right"
               className="buttonArrow d-flex items-center"
             >
@@ -101,9 +115,6 @@ export default function TourSliderOne() {
                             className="img-ratio rounded-12"
                           />
                         </div>
-                        <button className="tourCard__favorite">
-                          <i className="icon-heart"></i>
-                        </button>
                       </div>
 
                       <div className="tourCard__content px-10 pt-10">
@@ -118,11 +129,11 @@ export default function TourSliderOne() {
 
                         <div className="tourCard__rating d-flex items-center text-13 mt-5">
                           <div className="d-flex x-gap-5">
-                            <Stars star={camp.reviewScore} />
+                            <Stars star={parseFloat(camp.rating)} />
                           </div>
 
                           <span className="text-dark-1 ml-10">
-                            ({camp.reviewScore} Reviews)
+                            ({camp.rating} Reviews)
                           </span>
                         </div>
 

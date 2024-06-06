@@ -59,6 +59,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+
         <Routes>
           <Route path="/" element={<HomePage1 />} />
           <Route path="/camps" element={<TourList3 />} />
@@ -95,6 +96,7 @@ function App() {
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
+
         <ScrollTopBehaviour />
       </BrowserRouter>
       <ScrollToTop />

@@ -1,8 +1,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { Navigation, Pagination } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import { testimonialsTwo } from "@/data/testimonials";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TestimonialsTwo() {
   const swiperRef = useRef(null);
@@ -34,7 +34,7 @@ export default function TestimonialsTwo() {
         <div className="row justify-center text-center">
           <div className="col-auto">
             <h2 data-aos="fade-up" data-aos-delay="" className="text-30">
-              Customer Reviews
+              Our Campers Reviews
             </h2>
           </div>
         </div>

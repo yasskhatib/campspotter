@@ -126,12 +126,12 @@ export default function Profile({ onLogout }) {
             <div className="contactForm row y-gap-30">
               <div className="col-md-6">
                 <div className="form-input">
-                  <input placeholder="Fullname" type="text" name="fullName" value={userInfo.fullName} onChange={handleChange} required />
+                  <input disabled placeholder="Fullname" type="text" name="fullName" value={userInfo.fullName} onChange={handleChange} required />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-input">
-                  <input placeholder="Email" type="email" name="email" value={userInfo.email} onChange={handleChange} required />
+                  <input placeholder="Email" type="email" name="email" value={userInfo.email} onChange={handleChange} required disabled/>
                 </div>
               </div>
               <div className="col-md-6">

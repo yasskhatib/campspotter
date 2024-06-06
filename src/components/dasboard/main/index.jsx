@@ -1,36 +1,33 @@
 import { useState } from "react";
 import Sidebar from "../Sidebargrp";
 import States from "./States";
+import Statistics from "./Statistics";
 import Header from "../Header";
 import Table from "./Table";
+import PropTypes from 'prop-types';
 
-
-export default function DBMain() {
+export default function DBMain({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
+
   return (
     <>
-      <div
-        className={`dashboard ${
-          sideBarOpen ? "-is-sidebar-visible" : ""
-        } js-dashboard`}
-      >
-        <Sidebar setSideBarOpen={setSideBarOpen} />
+      <div className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}>
+        <Sidebar setSideBarOpen={setSideBarOpen} onLogout={onLogout} />
 
         <div className="dashboard__content">
           <Header setSideBarOpen={setSideBarOpen} />
 
           <div className="dashboard__content_content">
             <h1 className="text-30">Dashboard</h1>
-            <p className="">Here is your detailed dashboard to manage your camps</p>
+            <p>Here is your detailed dashboard to manage your camps</p>
 
+
+            
             <States />
-
-            <div className="row pt-30 y-gap-30">
+<br></br>
               <Table />
-
-             
-            </div>
-
+            <br></br>
+            <Statistics />
             <div className="text-center pt-30">
               © Copyright Campspotter {new Date().getFullYear()}
             </div>
@@ -40,3 +37,7 @@ export default function DBMain() {
     </>
   );
 }
+
+DBMain.propTypes = {
+  onLogout: PropTypes.func.isRequired,
+};

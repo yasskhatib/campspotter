@@ -20,11 +20,11 @@ export default function FooterOne() {
 
                 <div className="y-gap-10 mt-20">
                   <a className="d-block" href="#">
-                    Rue Iben Khaldoum, Jemmel, Monastir,
+                   Iben Khaldoun Street, Jemmel, Monastir,
                     Tunisia.
                   </a>
                   <a className="d-block" href="#">
-                    contact@campspotter.com
+                    campspotterteam@gmail.com
                   </a>
                 </div>
               </div>

@@ -1,6 +1,5 @@
 import ArticlesOne from "@/components/homes/articles/ArticlesOne";
 import SpacialOffer from "@/components/homes/others/SpacialOffer";
-import TestimonialOne from "@/components/homes/testimonials/TestimonialOne";
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
 import Hero from "@/components/pages/destinations/Hero";
@@ -26,7 +25,6 @@ export default function DestinationsPage() {
         <SpacialOffer />
         <TourSlider />
         <TourList1 />
-        <TestimonialOne />
         <Information />
         <ArticlesOne />
         <FooterOne />

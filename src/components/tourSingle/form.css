@@ -75,7 +75,18 @@
     color: white;
     border-radius: 4px;
     cursor: pointer;
-    border-radius: 9px;
+        border-radius: 12px;
+}
+
+.btn-reserve {
+    background-color: #e8961c;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 70px;
+    border-radius: 12px;
 }
 
 .btn-secondary {
@@ -194,4 +205,9 @@
     .btn-primary {
         padding: 8px 12px;
     }
+
+        .btn-reserve {
+            padding: 8px 12px;
+        }
+    
 }

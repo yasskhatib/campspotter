@@ -1,5 +1,4 @@
 import DBMain from "@/components/dasboard/main";
-
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
@@ -7,7 +6,6 @@ const metadata = {
   description: "Campspotter - Adventure Made Easy!",
 };
 
- 
 export default function DBMainPage() {
   const handleLogout = () => {
     // Logic to handle logout
@@ -16,6 +14,7 @@ export default function DBMainPage() {
     localStorage.removeItem('campgrpName');
     window.location.href = '/logingrp';
   };
+
   return (
     <>
       <MetaComponent meta={metadata} />

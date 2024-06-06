@@ -1,5 +1,4 @@
 import Pagination from "../common/Pagination";
-import Stars from "../common/Stars";
 import Calender from "../common/dropdownSearch/Calender";
 import ToggleSidebar from "./ToggleSidebar";
 import { useState, useEffect, useRef } from "react";
@@ -8,6 +7,8 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { Rating } from 'react-simple-star-rating'; 
+
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -23,6 +24,8 @@ export default function TourList3() {
   const ITEMS_PER_PAGE = 8;
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
+  const [campRatings, setCampRatings] = useState({}); // Store ratings in an object keyed by camp ID
+
   const location = useLocation();
 
   useEffect(() => {
@@ -54,6 +57,18 @@ export default function TourList3() {
         const response = await axios.get('http://localhost:5000/allCamps');
         setCamps(response.data);
         setFilteredCamps(response.data);
+
+        // Fetch ratings for all camps
+        const ratingsResponse = await Promise.all(response.data.map(camp =>
+          axios.get(`http://localhost:5000/campComments/rating/${camp._id}`).catch(() => ({ data: { rating: null } }))
+        ));
+        const ratings = ratingsResponse.reduce((acc, ratingResp, index) => {
+          const ratingValue = ratingResp.data.rating;
+          acc[response.data[index]._id] = ratingValue ? ratingValue.toFixed(1) : "0.0"; // Assign "0.0" if rating is null or undefined
+          return acc;
+        }, {});
+        setCampRatings(ratings);
+
       } catch (error) {
         console.error('Error fetching camps:', error);
       }
@@ -61,6 +76,7 @@ export default function TourList3() {
 
     fetchCamps();
   }, []);
+
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -178,11 +194,10 @@ export default function TourList3() {
 
                         <div className="tourCard__rating d-flex items-center text-13 mt-5">
                           <div className="d-flex x-gap-5">
-                            <Stars star={camp.reviewScore} />
+                            <Rating initialValue={parseFloat(campRatings[camp._id] || 0)} size={20} readonly style={{ top: '-3px' }} />
                           </div>
-
                           <span className="text-dark-1 ml-10">
-                            ({camp.reviewScore} Reviews)
+                            ({campRatings[camp._id] || 0} Reviews)
                           </span>
                         </div>
 

@@ -1,28 +1,30 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Stars from "@/components/common/Stars";
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { Rating } from 'react-simple-star-rating';
 
 export default function MainInformation2({ camp }) {
   const navigate = useNavigate();
+  const [campRating, setCampRating] = useState(0);
+
+  useEffect(() => {
+    const fetchCampRating = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/campComments/rating/${camp._id}`);
+        setCampRating(response.data.rating.toFixed(1)); // Round rating to one decimal place
+      } catch (error) {
+        console.error('Error fetching camp rating:', error);
+      }
+    };
+
+    fetchCampRating();
+  }, [camp._id]);
 
   const handleGoBack = () => {
     navigate('/camps/');
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: camp?.title,
-        text: `Check out this camp: ${camp?.title}`,
-        url: window.location.href,
-      })
-        .then(() => console.log('Successful share'))
-        .catch((error) => console.log('Error sharing', error));
-    } else {
-      alert('Web Share API is not supported in your browser. Please copy the URL to share.');
-    }
   };
 
   return (
@@ -60,32 +62,24 @@ export default function MainInformation2({ camp }) {
               </div>
             </div>
 
-            <div className="col-auto">
-              <div className="d-flex items-center">
-                <div className="d-flex x-gap-5 pr-10">
-                  <Stars star={camp?.reviewScore} font={12} />
-                </div>
-                ({camp?.reviewScore} Reviews)
-              </div>
-            </div>
+           
 
             <div className="col-auto">
               <div className="d-flex items-center">
                 <i className="icon-user text-16 mr-5"></i>
-                Created by: {camp?.campGroupName}
+                Group: {camp?.campGroupName}
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="col-auto">
-          <div className="col-auto">
-            <div className="d-flex x-gap-30 y-gap-10">
-              <button onClick={handleShare} className="d-flex items-center">
-                <i className="icon-share flex-center text-16 mr-10"></i>
-                Share
-              </button>
+            <div className="col-auto">
+              <div className="d-flex items-center">
+                <div className="d-flex x-gap-5 pr-10">
+                  <Rating initialValue={parseFloat(campRating)} size={20} readonly style={{ top: '-3px' }} />
+                </div>
+                ({campRating} Reviews)
+              </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -95,14 +89,10 @@ export default function MainInformation2({ camp }) {
 
 MainInformation2.propTypes = {
   camp: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    reviewScore: PropTypes.number.isRequired,
-    reviewCount: PropTypes.number,
     emplacement: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    duration: PropTypes.number,
-    prix: PropTypes.number,
     campGroupName: PropTypes.string,
   }).isRequired,
 };

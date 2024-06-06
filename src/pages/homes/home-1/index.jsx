@@ -3,7 +3,7 @@ import Banner from "@/components/homes/banners/Bannerfour";
 import DestinationsOne from "@/components/homes/destinations/DestinationsOne";
 import FeaturesOne from "@/components/homes/features/FeaturesOne";
 import Hero1 from "@/components/homes/heros/Hero1";
-import Testimonialstwo from "@/components/homes/testimonials/Testimonialstwo";
+import Testimonialstwo from "@/components/homes/testimonials/TestimonialsTwo";
 import Tour1 from "@/components/homes/tours/Tour1";
 import TourSlderOne from "@/components/homes/tours/TourSlderOne";
 import FooterOne from "@/components/layout/footers/FooterOne";

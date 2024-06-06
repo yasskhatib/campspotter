@@ -17,7 +17,19 @@ export default function Tour1() {
     const fetchLatestCamps = async () => {
       try {
         const response = await axios.get('http://localhost:5000/allCamps');
-        const sortedCamps = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        let camps = response.data;
+        // Fetch ratings for each camp and assign it to the camp object
+        await Promise.all(camps.map(camp =>
+          axios.get(`http://localhost:5000/campComments/rating/${camp._id}`)
+            .then(ratingResponse => {
+              camp.rating = ratingResponse.data.rating ? ratingResponse.data.rating.toFixed(1) : "0.0"; // Assign default if no rating
+            })
+            .catch(() => {
+              camp.rating = "0.0"; // Assign default if fetch fails
+            })
+        ));
+
+        const sortedCamps = camps.sort((a, b) => new Date(b.date) - new Date(a.date));
         setLatestCamps(sortedCamps.slice(0, 8));
       } catch (error) {
         console.error('Error fetching latest camps:', error);
@@ -93,10 +105,10 @@ export default function Tour1() {
 
                   <div className="tourCard__rating d-flex items-center text-13 mt-5">
                     <div className="d-flex x-gap-5">
-                      <Stars star={camp.reviewScore} />
+                      <Stars star={parseFloat(camp.rating)} />
                     </div>
                     <span className="text-dark-1 ml-10">
-                      ({camp.reviewScore} Reviews)
+                      ({camp.rating} Reviews)
                     </span>
                   </div>
 

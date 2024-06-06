@@ -129,7 +129,7 @@ export default function CampDashboard({ onLogout }) {
               </div>
               <div className="col-md-6">
                 <div className="form-input">
-                  <input placeholder="Email" type="email" name="email" value={campgrpInfo.email} onChange={handleChange} required />
+                  <input placeholder="Email" type="email" name="email" value={campgrpInfo.email} onChange={handleChange} disabled required />
                 </div>
               </div>
               <div className="col-md-6">
