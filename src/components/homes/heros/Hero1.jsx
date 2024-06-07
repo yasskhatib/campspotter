@@ -2,14 +2,14 @@ import Calender from "@/components/common/dropdownSearch/Calender";
 import Location from "@/components/common/dropdownSearch/Location";
 import TourType from "@/components/common/dropdownSearch/TourType";
 
-import React, { useEffect, useState, useRef } from "react";
+import  { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Hero1() {
   const navigate = useNavigate();
   const [currentActiveDD, setCurrentActiveDD] = useState("");
   const [location, setLocation] = useState("");
-  const [calender, setCalender] = useState("");
+  const [calender] = useState("");
   const [tourType, setTourType] = useState("");
   useEffect(() => {
     setCurrentActiveDD("");
@@ -49,12 +49,22 @@ export default function Hero1() {
           <div className="col-xl-8 col-lg-10">
             <div className="hero__content">
               <h1
-                data-aos={"fade-up"}
+                data-aos="fade-up"
                 data-aos-delay="100"
                 className="hero__title"
+                style={{
+                  fontFamily: "'CustomFont', sans-serif",
+                  fontWeight: 800,
+                  fontSize: '90px',
+                  letterSpacing: '9px',
+                  textTransform: 'none'  // This line prevents the text from being uppercase
+
+                }}
               >
-                CAMPSPOTTER
+                campspotter
               </h1>
+
+
 
               <p
                 data-aos="fade-up"

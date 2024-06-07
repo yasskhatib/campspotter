@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/fonts/ArabicRamadan-Display.otf') format('opentype');
+}
+
 .ratio {
   position: relative;
   display: block;
