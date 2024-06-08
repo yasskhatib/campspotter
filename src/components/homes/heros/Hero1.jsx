@@ -1,178 +1,134 @@
-import Calender from "@/components/common/dropdownSearch/Calender";
-import Location from "@/components/common/dropdownSearch/Location";
-import TourType from "@/components/common/dropdownSearch/TourType";
-
-import  { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from 'react';
+import './searchbar.css'; // Import your custom CSS
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 
 export default function Hero1() {
-  const navigate = useNavigate();
-  const [currentActiveDD, setCurrentActiveDD] = useState("");
-  const [location, setLocation] = useState("");
-  const [calender] = useState("");
-  const [tourType, setTourType] = useState("");
-  useEffect(() => {
-    setCurrentActiveDD("");
-  }, [location, calender, tourType, setCurrentActiveDD]);
+  const [placeholder, setPlaceholder] = useState('');
+  const placeholders = useRef([
+    'Where are you going?',
+    'Join campspotter now',
+    'Search for camping in Tunisia',
+    'You can join as a group of camping',
+    'Search and pick your first camp now..'
+  ]);
+  const placeholderIndex = useRef(0);
+  const charIndex = useRef(0);
+  const currentPlaceholder = useRef('');
+  const isDeleting = useRef(false);
 
-  const dropDownContainer = useRef();
+  const images = [
+    '/img/hero/1/bg1.png',
+    '/img/hero/1/bg2.png',
+    '/img/hero/1/bg3.png',
+    '/img/hero/1/bg4.png',
+    '/img/hero/1/bg5.png',
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
   useEffect(() => {
-    const handleClick = (event) => {
-      if (
-        dropDownContainer.current &&
-        !dropDownContainer.current.contains(event.target)
-      ) {
-        setCurrentActiveDD("");
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 7000); // Change image every 6 seconds (4 seconds visible, 2 seconds transition)
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  useEffect(() => {
+    const updatePlaceholder = () => {
+      if (isDeleting.current) {
+        if (charIndex.current > 0) {
+          currentPlaceholder.current = placeholders.current[placeholderIndex.current].substring(0, charIndex.current - 1);
+          charIndex.current--;
+          setPlaceholder(currentPlaceholder.current);
+        } else {
+          isDeleting.current = false;
+          placeholderIndex.current = (placeholderIndex.current + 1) % placeholders.current.length;
+        }
+      } else {
+        if (charIndex.current < placeholders.current[placeholderIndex.current].length) {
+          currentPlaceholder.current = placeholders.current[placeholderIndex.current].substring(0, charIndex.current + 1);
+          charIndex.current++;
+          setPlaceholder(currentPlaceholder.current);
+        } else {
+          setTimeout(() => { isDeleting.current = true; }, 1000); // Delay before starting to delete text
+        }
       }
+      setTimeout(updatePlaceholder, isDeleting.current ? 100 : 150); // Adjust timing for smoother typing
     };
 
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
+    updatePlaceholder();
   }, []);
 
+  const navigate = useNavigate(); // Get the navigate function from react-router-dom
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    const searchQuery = e.target.elements.searchInput.value.trim(); // Get the search query from the input field
+    if (searchQuery) {
+      // Redirect to the camps page with the search query
+      navigate(`/camps?search=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
-    <section className="hero -type-1">
+    <section className="hero -type-1" style={{ backgroundColor: 'white', position: 'relative' }}>
       <div className="hero__bg">
-        <img src="/img/hero/1/1.png" alt="image" />
-        <img
-          src="/img/hero/1/shape.svg"
-          alt="image"
-          style={{ height: "auto" }}
-        />
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt="background"
+            className={`bg-image ${activeIndex === index ? 'active' : ''} ${activeIndex === (index + 1) % images.length ? 'next' : ''}`}
+          />
+        ))}
       </div>
 
+      <img src="/img/hero/1/shape.svg" alt="image" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, margin: 'auto', zIndex: 1 }} />
+
       <div className="container">
-        <div className="row justify-center">
+        <div className="row justify-center" style={{ marginTop: '-35px' }}>
           <div className="col-xl-8 col-lg-10">
-            <div className="hero__content">
+            <div className="hero__content" style={{ textAlign: 'center' }}>
               <h1
                 data-aos="fade-up"
                 data-aos-delay="100"
                 className="hero__title"
                 style={{
                   fontFamily: "'CustomFont', sans-serif",
-                  fontWeight: 800,
+                  fontWeight: 600,
                   fontSize: '90px',
                   letterSpacing: '9px',
-                  textTransform: 'none'  // This line prevents the text from being uppercase
-
+                  textTransform: 'none'
                 }}
               >
                 campspotter
               </h1>
-
-
 
               <p
                 data-aos="fade-up"
                 data-aos-delay="300"
                 className="hero__text"
               >
-                Discover joy in every journey, whether it&apos;s a nearby getaway or a distant adventure,
+                Discover joy in every journey, whether it&apos;s a nearby getaway or a distant adventure,<br />
                 and find happiness anytime, anywhere.
               </p>
 
-              <div
-                ref={dropDownContainer}
-                data-aos={"fade-up"}
-                data-aos-delay="300"
-                className="mt-60 md:mt-35"
-              >
-                <div className="searchForm -type-1">
-                  <div className="searchForm__form">
-                    <div className="searchFormItem js-select-control js-form-dd">
-                      <div
-                        className="searchFormItem__button"
-                        onClick={() =>
-                          setCurrentActiveDD((pre) =>
-                            pre == "location" ? "" : "location",
-                          )
-                        }
-                      >
-                        <div className="searchFormItem__icon size-50 rounded-12 border-1 flex-center">
-                          <i className="text-20 icon-pin"></i>
-                        </div>
-                        <div className="searchFormItem__content">
-                          <h5>Where</h5>
-                          <div className="js-select-control-chosen">
-                            {location ? location : "Search destinations"}
-                          </div>
-                        </div>
-                      </div>
+              {/* Search bar added below */}
+              <form className="search-bar" data-aos="fade-up" data-aos-delay="300" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder={placeholder}
+                  name="searchInput" // Add name attribute to the input field
+                />
+                <button type="submit" className="search-button"> {/* Change button type to submit */}
+                  <svg className="search-icon" viewBox="0 0 24 24">
+                    <circle cx="10" cy="10" r="7" />
+                    <line x1="21" y1="21" x2="15" y2="15" />
+                  </svg>
+                </button>
+              </form>
 
-                      <Location
-                        setLocation={setLocation}
-                        active={currentActiveDD === "location"}
-                      />
-                    </div>
-
-                    <div className="searchFormItem js-select-control js-form-dd js-calendar">
-                      <div
-                        className="searchFormItem__button"
-                        onClick={() =>
-                          setCurrentActiveDD((pre) =>
-                            pre == "calender" ? "" : "calender",
-                          )
-                        }
-                      >
-                        <div className="searchFormItem__icon size-50 rounded-12 border-1 flex-center">
-                          <i className="text-20 icon-calendar"></i>
-                        </div>
-                        <div className="searchFormItem__content">
-                          <h5>When</h5>
-                          <div>
-                            <span className="js-first-date">
-                              <Calender
-                                active={currentActiveDD === "calender"}
-                              />
-                            </span>
-                            <span className="js-last-date"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="searchFormItem js-select-control js-form-dd">
-                      <div
-                        className="searchFormItem__button"
-                        onClick={() =>
-                          setCurrentActiveDD((pre) =>
-                            pre == "tourType" ? "" : "tourType",
-                          )
-                        }
-                      >
-                        <div className="searchFormItem__icon size-50 rounded-12 border-1 flex-center">
-                          <i className="text-20 icon-flag"></i>
-                        </div>
-                        <div className="searchFormItem__content">
-                          <h5>Tour Type</h5>
-                          <div className="js-select-control-chosen">
-                            {tourType ? tourType : "All tour"}
-                          </div>
-                        </div>
-                      </div>
-
-                      <TourType
-                        setTourType={setTourType}
-                        active={currentActiveDD === "tourType"}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="searchForm__button">
-                    <button
-                      onClick={() => navigate("/tour-list-1")}
-                      className="button -dark-1 bg-accent-1 text-white"
-                    >
-                      <i className="icon-search text-16 mr-10"></i>
-                      Search
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

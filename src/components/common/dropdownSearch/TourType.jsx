@@ -1,11 +1,10 @@
 import React from "react";
 const options = [
-  "City Tour",
-  "Hiking",
-  "Food Tour",
-  "Cultural Tours",
-  "Museums Tours",
-  "Beach Tours",
+  "1 Days",
+  "2 Days + Night",
+  "3 Days + 2 Nights",
+  "+3 Days",
+  "Select All",
 ];
 export default function TourType({ active, setTourType }) {
   return (

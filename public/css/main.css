@@ -4623,7 +4623,7 @@ h1, h2, h3, h4, h5, h6 {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  height: 302px;
+  height: 100%;
 }
 
 .searchForm.-type-1 .searchFormItemDropdown.-location .searchFormItemDropdown__item button {
@@ -4683,7 +4683,7 @@ h1, h2, h3, h4, h5, h6 {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  height: 302px;
+  height: 100%;
 }
 
 .searchForm.-type-1 .searchFormItemDropdown.-tour-type .searchFormItemDropdown__item button {

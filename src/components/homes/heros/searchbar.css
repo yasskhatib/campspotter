@@ -1,0 +1,144 @@
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes loop-animation {
+    0% {
+        stroke-dasharray: 0, 100;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 100, 0;
+        stroke-dashoffset: 0;
+    }
+
+    50.01% {
+        stroke-dasharray: 100, 0;
+        stroke-dashoffset: 0;
+    }
+
+    75% {
+        stroke-dasharray: 100, 0;
+        stroke-dashoffset: -100;
+    }
+
+    100% {
+        stroke-dasharray: 0, 100;
+        stroke-dashoffset: -100;
+    }
+}
+
+.search-bar {
+    position: relative;
+    display: inline-block;
+    margin-top: 20px;
+    width: 80%;
+    max-width: 700px;
+    background-color: white;
+    border-radius: 50px;
+}
+
+.search-input {
+    width: 100%;
+    height: 60px;
+    border-radius: 50px;
+    border: none;
+    padding: 0 60px 0 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    outline: none;
+    font-size: 15px;
+    color: #1c1c1c;
+    font-style: italic;
+    position: relative;
+}
+
+.search-input::placeholder {
+    color: rgb(132, 132, 132);
+}
+
+.search-input::after {
+    content: '|';
+    position: absolute;
+    right: 20px;
+    color: #171717;
+    /* Change cursor color to match the button */
+    animation: blink 1s step-end infinite;
+}
+
+.search-button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: #ffbf00;
+    border: none;
+    border-radius: 50%;
+    color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.search-button:hover {
+    background-color: #ffce3b;
+    transform: scale(1.1) translateY(-45%);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    animation: loop-animation 4s linear infinite;
+    stroke: white;
+    stroke-width: 2.5;
+    fill: none;
+}
+
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: slideshow 20s ease-in-out infinite;
+}
+.hero__bg {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 4s, transform 4s;
+    transform: scale(1.1);
+}
+
+.bg-image.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 1;
+}
+
+.bg-image.next {
+    z-index: 0;
+}
