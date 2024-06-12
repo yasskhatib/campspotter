@@ -39,7 +39,7 @@ export default function ArticlesThree() {
         >
           {blogs.slice(0, 3).map((elm, i) => (
             <div key={i} className="col-lg-4 col-md-6">
-              <Link to={`/blog-single/${elm.id}`} className="blogCard -type-1">
+              <Link to={`/article/${elm.id}`} className="blogCard -type-1">
                 <div className="blogCard__image ratio ratio-41:30">
                   <img
                     src={elm.image}

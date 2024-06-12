@@ -42,7 +42,7 @@ export const menuData = [
       { id: 41, label: "Blog list 1", href: "/blog-list-1" },
       { id: 42, label: "Blog list 2", href: "/blog-list-2" },
       { id: 43, label: "Blog list 3", href: "/blog-list-3" },
-      { id: 44, label: "Blog single", href: "/blog-single/2" },
+      { id: 44, label: "Blog single", href: "/article/2" },
     ],
   },
   {

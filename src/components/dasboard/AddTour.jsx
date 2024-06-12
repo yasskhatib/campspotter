@@ -151,7 +151,7 @@ export default function AddTour() {
               </div>
               <div className="form-group col-md-6">
                 <label>Google Map Embed Link</label>
-                <input placeholder="oogle Map Embed Link" type="text" name="googleMapUrl" value={formData.googleMapUrl} onChange={handleChange} className="form-control" required />
+                <input placeholder="Google Map Embed Link" type="text" name="googleMapUrl" value={formData.googleMapUrl} onChange={handleChange} className="form-control" required />
               </div>
               <div className="form-group col-md-6">
                 <label>Price (TND)</label>

@@ -1,93 +1,105 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import axios from 'axios';
 import Pagination from "../common/Pagination";
-import { blogs, continents } from "@/data/blogs";
-
 import { Link } from "react-router-dom";
 
-export default function BlogList1() {
-  const [currentActiveTab, setCurrentActiveTab] = useState("All Guide");
+// Consider moving this to a separate constants file if used across multiple components.
+export const continents = [
+  "All Blogs",
+  "Camping",
+  "Tour",
+  "News",
+];
+
+function BlogList1() {
+  const [blogs, setBlogs] = useState([]);
+  const [currentActiveTab, setCurrentActiveTab] = useState("All Blogs");
   const [filteredItems, setFilteredItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
+  const [totalItems, setTotalItems] = useState(0);
+
   useEffect(() => {
-    if (currentActiveTab == "All Guide") {
+    axios.get('http://localhost:5000/blogs')
+      .then(response => {
+        setBlogs(response.data);
+        setTotalItems(response.data.length);
+      })
+      .catch(error => console.error('Failed to fetch blogs:', error));
+  }, []);
+
+  useEffect(() => {
+    if (currentActiveTab === "All Blogs") {
       setFilteredItems(blogs);
     } else {
-      setFilteredItems([
-        ...blogs.filter((elm) => elm.continent == currentActiveTab),
-      ]);
+      setFilteredItems(blogs.filter(blog => blog.type === currentActiveTab));
     }
-  }, [currentActiveTab, setFilteredItems]);
+    setCurrentPage(1);
+  }, [currentActiveTab, blogs]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const getImageUrl = (imagePath) => {
+    return `http://localhost:5000/${imagePath}`;
+  };
 
   return (
     <section className="layout-pt-md layout-pb-xl">
       <div className="container">
         <div className="tabs -pills-3 pt-30 js-tabs">
           <div className="tabs__controls row x-gap-10 y-gap-10 justify-center js-tabs-controls">
-            {continents.map((elm, i) => (
-              <div
-                key={i}
-                className="col-auto"
-                onClick={() => setCurrentActiveTab(elm)}
-              >
+            {continents.map((continent, i) => (
+              <div key={i} className="col-auto">
                 <button
-                  className={`" tabs__button fw-500 rounded-200 js-tabs-button ${
-                    currentActiveTab == elm ? "is-tab-el-active" : ""
-                  } `}
-                  data-tab-target=".-tab-item-1"
+                  className={`tabs__button fw-500 rounded-200 ${currentActiveTab === continent ? "is-tab-el-active" : ""}`}
+                  onClick={() => setCurrentActiveTab(continent)}
                 >
-                  {elm}
+                  {continent}
                 </button>
               </div>
             ))}
           </div>
-
-          <div className="tabs__content pt-30 js-tabs-content">
-            <div className="tabs__pane -tab-item-1 is-tab-el-active">
-              <div className="row y-gap-30">
-                {filteredItems.map((elm, i) => (
-                  <div key={i} className="col-lg-4 col-md-6">
-                    <Link
-                      to={`blog-single/${elm.id}`}
-                      className="blogCard -type-1"
-                    >
-                      <div className="blogCard__image ratio ratio-41:30">
-                        <img
-                          src={elm.image}
-                          alt="image"
-                          className="img-ratio rounded-12"
-                        />
-
-                        {elm.badge && (
-                          <div className="blogCard__badge">{elm.badge}</div>
-                        )}
-                      </div>
-
-                      <div className="blogCard__content mt-30">
-                        <div className="blogCard__info text-14">
-                          <div className="lh-13">{elm.date}</div>
-                          <div className="blogCard__line"></div>
-                          <div className="lh-13">By {elm.author}</div>
-                        </div>
-
-                        <h3 className="blogCard__title text-18 fw-500 mt-10">
-                          {elm.title}
-                        </h3>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div className="d-flex justify-center flex-column mt-60">
-          <Pagination />
-
-          <div className="text-14 text-center mt-20">
-            Showing results 1-30 of 1,415
-          </div>
+        <div className="row y-gap-30" style={{ marginTop: '30px' }}>
+          {currentItems.map((blog, index) => (
+            <div key={index} className="col-lg-4 col-md-6">
+              <Link to={`../article/${blog._id}`} className="blogCard -type-1">
+                <div className="blogCard__image ratio ratio-41:30">
+                  <img src={getImageUrl(blog.coverImage)} alt="Blog Cover" className="img-ratio rounded-12" />
+                  {blog.type && <div className="blogCard__badge">{blog.type}</div>}
+                </div>
+                <div className="blogCard__content mt-30">
+                  <div className="blogCard__info text-14">
+                    <div className="lh-13">{new Date(blog.date).toLocaleDateString()}</div>
+                    <div className="blogCard__line"></div>
+                    <div className="lh-13">By {blog.creatorName || "Anonymous"}</div>
+                  </div>
+                  <h3 className="blogCard__title text-18 fw-500 mt-10">{blog.title}</h3>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+        <br></br><br></br>
+        <Pagination
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={totalItems}
+          onPageChange={handlePageChange}
+        />
+        <div className="text-14 text-center mt-20">
+          Showing results {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, totalItems)} of {totalItems}
         </div>
       </div>
     </section>
   );
 }
+
+export default BlogList1;

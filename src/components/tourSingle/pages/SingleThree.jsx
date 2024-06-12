@@ -126,17 +126,23 @@ export default function SingleThree({ camp, user }) {
       });
 
       if (response.status === 201) {
+
+
         toastId.current = toast.success('Comment submitted successfully!', {
           position: 'bottom-right',
           theme: 'dark',
-          autoClose: 5000,
+          autoClose: 3000,
           onClose: () => {
+        
             setComment('');
             setRating(0);
-            setComments([...comments, { camperFullName: user.fullName, rating, comment, date: new Date() }]);
             setHasCommented(true);
+            setComments([...comments, { camperFullName: user.fullName, rating, comment, date: new Date() }]);
+
           }
         });
+
+     
       }
     } catch (error) {
       toast.error('Error submitting comment.', {

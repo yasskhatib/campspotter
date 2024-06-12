@@ -24,7 +24,7 @@
                         key={i}
                         className={`sidebar__item ${pathname === elm.href ? "-is-active" : ""}`}
                       >
-                        {elm.id === 7 ? (
+                        {elm.id === 8 ? (
                           <a onClick={onLogout} className="sidebar__link" style={{ cursor: 'pointer' }}>
                             <i className={elm.iconClass}></i>
                             <span className="ml-10">{elm.label}</span>

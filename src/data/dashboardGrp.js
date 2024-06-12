@@ -43,10 +43,16 @@ export const sidebarItems = [
   },
   {
     id: 7,
+    href: "/db-add-blog",
+    iconClass: "icon-pencil text-26",
+    label: "Blog",
+  },
+  {
+    id: 8,
     href: "#",
     iconClass: "icon-logout text-26",
     label: "Logout",
-  },
+  }
 ];
 
 

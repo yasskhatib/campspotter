@@ -23,14 +23,18 @@ import DBListingPage from "./pages/dashboard/db-listing";
 import DBListinggrp from "./pages/dashboard/db-listing-grp";
 
 import DBAddTourPage from "./pages/dashboard/db-add-tour";
+
+import DBAddBlogPage from "./pages/dashboard/db-add-blog";
+
+
 import DBFavoritesPage from "./pages/dashboard/db-favorites";
 import DBMessagesPage from "./pages/dashboard/db-messages";
 import DBProfilePage from "./pages/dashboard/db-profile";
 
-import BlogListPage1 from "./pages/blogs/blog-list-1";
-import BlogListPage2 from "./pages/blogs/blog-list-2";
-import BlogListPage3 from "./pages/blogs/blog-list-3";
-import BlogSinglePage from "./pages/blogs/blog-single";
+import BlogListPage1 from "./pages/blogs/blog";
+
+import BlogSinglePage from "./pages/blogs/article";
+
 import DestinationsPage from "./pages/pages/destinations";
 import AboutPage from "./pages/pages/about";
 import HelpCenterPage from "./pages/pages/help-center";
@@ -74,14 +78,19 @@ function App() {
           <Route path="/db-listing" element={<DBListingPage />} />
           <Route path="/db-listing-grp" element={<DBListinggrp />} />
           <Route path="/db-add-tour" element={<DBAddTourPage />} />
+
+          <Route path="/db-add-blog" element={<DBAddBlogPage />} />
+          
           <Route path="/db-favorites" element={<DBFavoritesPage />} />
           <Route path="/db-messages" element={<DBMessagesPage />} />
           <Route path="/db-profile" element={<DBProfilePage />} />
           <Route path="/campgrp-dashboard" element={<DBCampgrpProfilePage />} />
-          <Route path="/blog-list-1" element={<BlogListPage1 />} />
-          <Route path="/blog-list-2" element={<BlogListPage2 />} />
-          <Route path="/blog-list-3" element={<BlogListPage3 />} />
-          <Route path="/blog-single/:id" element={<BlogSinglePage />} />
+          <Route path="/blog" element={<BlogListPage1 />} />
+
+
+          <Route path="/article/:id" element={<BlogSinglePage />} />
+
+
           <Route path="/destinations" element={<DestinationsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help-center" element={<HelpCenterPage />} />

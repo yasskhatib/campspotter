@@ -86,6 +86,8 @@ export default function Header1() {
 
   return (
     <>
+    
+
       <header
         className={`header -type-1 js-header ${addClass ? "-is-sticky" : ""}`}
       >

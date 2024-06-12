@@ -55,7 +55,7 @@ export const pages = [
       { id: 521, title: "Blog list 1", href: "/blog-list-1" },
       { id: 522, title: "Blog list 2", href: "/blog-list-2" },
       { id: 523, title: "Blog list 3", href: "/blog-list-3" },
-      { id: 524, title: "Blog single", href: "/blog-single/4" },
+      { id: 524, title: "Blog single", href: "/article/4" },
     ],
   },
   { id: 53, title: "Destinations", href: "/destinations" },

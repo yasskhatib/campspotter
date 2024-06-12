@@ -5656,6 +5656,12 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 1px solid #E7E6E6;
 }
 
+.publiclinks
+{
+  border: 1px solid white;
+    border-radius: 15px;
+    background-color: #027853;
+}
 .sidebar.-type-2 .sidebar__search {
   position: relative;
   width: 100%;
@@ -10706,6 +10712,12 @@ h1, h2, h3, h4, h5, h6 {
   background-color: rgba(74, 67, 196, 0.03);
 }
 
+.bg-darkk {
+  background-color: rgba(0, 0, 0, 1);
+  color: white;
+  font-family: math;
+}
+
 .text-white {
   color: var(--color-white);
 }
@@ -14054,3 +14066,45 @@ button.gm-ui-hover-effect::after {
 .timeline ol {
   padding-left: 20px;
 }
+/* Add these styles to your CSS file */
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=arial]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=arial]::before {
+  content: 'Arial';
+  font-family: 'Arial';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=comic-sans]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=comic-sans]::before {
+  content: 'Comic Sans';
+  font-family: 'Comic Sans MS';
+}
+
+/* Define similar styles for other fonts as needed */
+
+/* Define styles for font sizes */
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before {
+  content: 'Small';
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before {
+  content: 'Large';
+}
+
+/* Define similar styles for other sizes as needed */
+
+.topmg
+{
+    margin-top: 45px; }
+  
+
+        .ql-container {
+          resize: vertical;
+          overflow: auto;
+          min-height: 150px;
+          /* Set minimum height for the editor */
+          max-height: 500px;
+          /* Set maximum height for the editor */
+          margin-bottom: 20px;
+        }
