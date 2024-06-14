@@ -7,7 +7,7 @@ export default function ArticlesTwo() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch("http://localhost:5000/latestblogs");
+        const response = await fetch("http://localhost:5000/latestblogs?status=approved&limit=3");
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

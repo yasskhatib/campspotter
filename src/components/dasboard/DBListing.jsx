@@ -16,7 +16,7 @@ dayjs.extend(timezone);
 
 const ITEMS_PER_PAGE = 8;
 
-export default function DBListing({ user }) {
+export default function DBListing({ user, onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,12 +62,12 @@ export default function DBListing({ user }) {
 
   return (
     <div className={`dashboard ${sideBarOpen ? '-is-sidebar-visible' : ''} js-dashboard`}>
-      <Sidebar setSideBarOpen={setSideBarOpen} />
+      <Sidebar setSideBarOpen={setSideBarOpen} onLogout={onLogout} />
       <div className="dashboard__content">
         <Header setSideBarOpen={setSideBarOpen} />
         <div className="dashboard__content_content">
           <h1 className="text-30">My Listings</h1>
-          <p>{user ? user.fullName : 'Loading...'}: visited camps</p>
+          <p>{user ? user.fullName : 'Loading...'}: Reserved camps</p>
 
           <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
             <div className="row y-gap-30">
@@ -168,4 +168,8 @@ DBListing.propTypes = {
     governorate: PropTypes.string,
     telephone: PropTypes.string,
   }),
+};
+
+DBListing.propTypes = {
+  onLogout: PropTypes.func.isRequired,
 };

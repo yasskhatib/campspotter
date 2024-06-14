@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import CommentBox from "./CommentBox";
 import LoadingSpinner from "@/components/common/LoadingSpinner"; // Ensure the path is correct
 
 export default function BlogSingle({ setBlogTitle }) {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
+  const [showMessage, setShowMessage] = useState(false); // New state to manage the visibility of the message
+  const navigate = useNavigate(); // Use useNavigate hook for redirection
 
   useEffect(() => {
     if (!id) return;
@@ -18,13 +22,18 @@ export default function BlogSingle({ setBlogTitle }) {
           const updatedContent = modifyContent(response.data.articleText);
           setBlog({ ...response.data, articleText: updatedContent });
         } else {
-          console.log("Blog is not approved or not found");
+          setShowMessage(true); // Show the not approved message
+            navigate('/404');
         }
       })
       .catch(error => {
-        console.error('Failed to fetch blog:', error);
+        toast.info("Article not approved");
+        setShowMessage(true); // Show the not approved message
+        setTimeout(() => {
+          navigate('/blog');
+        }, 2000);
       });
-  }, [id, setBlogTitle]);  // Add setBlogTitle to dependency array
+  }, [id, setBlogTitle, navigate]);
 
   // Function to modify iframe sizes, style blockquotes and pre tags
   const modifyContent = (htmlString) => {
@@ -32,7 +41,7 @@ export default function BlogSingle({ setBlogTitle }) {
     const doc = parser.parseFromString(htmlString, "text/html");
 
     // Adjust iframe dimensions
-    const iframes = document.querySelectorAll("iframe");
+    const iframes = doc.querySelectorAll("iframe");
     iframes.forEach(iframe => {
       iframe.style.width = "100%";
       // Default to desktop view
@@ -43,16 +52,16 @@ export default function BlogSingle({ setBlogTitle }) {
       if (window.innerWidth <= 768) {
         iframe.style.height = "calc(100vw / 16 * 9)";
       }
-    // Optionally, update dimensions on resize
-    window.addEventListener('resize', () => {
-      iframes.forEach(iframe => {
-        if (window.innerWidth <= 768) {
-          iframe.style.height = "calc(100vw / 16 * 9)";
-        } else {
-          iframe.style.height = "calc(50vw / 16 * 9)";
-        }
+      // Optionally, update dimensions on resize
+      window.addEventListener('resize', () => {
+        iframes.forEach(iframe => {
+          if (window.innerWidth <= 768) {
+            iframe.style.height = "calc(100vw / 16 * 9)";
+          } else {
+            iframe.style.height = "calc(50vw / 16 * 9)";
+          }
+        });
       });
-    });
     });
 
     // Style blockquotes
@@ -96,25 +105,23 @@ export default function BlogSingle({ setBlogTitle }) {
       }
     });
 
-
-
     // Add classes to em tags
-    const ems = doc.querySelectorAll("em");
-    ems.forEach(em => {
-      em.style.display = "flex";
-      em.style.border = "dashed 0.5px black";
-      em.style.borderRadius = "8px";
-      em.style.padding = "10px";
-      em.style.lineHeight = "25px";
-      em.style.marginTop = "15px";
-    });
+    // const ems = doc.querySelectorAll("em");
+   //  ems.forEach(em => {
+    //   em.style.display = "flex";
+     //  em.style.border = "dashed 0.5px black";
+     //  em.style.borderRadius = "8px";
+    //   em.style.padding = "10px";
+    //   em.style.lineHeight = "25px";
+     //  em.style.marginTop = "15px";
+   //  });
 
     // Modify img tags
     const imgs = doc.querySelectorAll("img");
     imgs.forEach(img => {
       const imgLink = img.src;
       const imgAlt = img.alt;
-      img.outerHTML = `<div class="col-md-12"><img src="${imgLink}" alt="${imgAlt}" class="rounded-8"></div><br></br>`;
+      img.outerHTML = `<div class=" img-zoom col-md-12"><img src="${imgLink}" alt="${imgAlt}" class="rounded-8"></div><br></br>`;
     });
 
     return doc.body.innerHTML; // Return the modified HTML as a string
@@ -132,11 +139,9 @@ export default function BlogSingle({ setBlogTitle }) {
     </div>
   `;
 
-
-  // Generate styled blockquote HTML
+  // Generate styled pre HTML
   const generateStyledPre = (content) => `
     <div class="blockquote bg-darkk rounded-12 px-30 py-30 mt-20">
-     
       <div class="blockquote__text">${content}</div>
     </div>
   `;
@@ -162,51 +167,72 @@ export default function BlogSingle({ setBlogTitle }) {
         </div>
       );
     } else {
-      return <p>No valid tags available or incorrect format.</p>;
+      return <p></p>;
     }
   };
 
-
-
   return (
     <>
+      <ToastContainer theme="dark" /> {/* Set the theme to dark */}
+      {showMessage && (
+        <div className="not-approved-message">
+          Article Not Approved, page will be redirected back
+        </div>
+      )}
+
       <section className="hero -type-1 -min-2">
         <div className="hero__bg">
           <img src={`http://localhost:5000/${blog.coverImage}`} alt="Cover" />
+          <img className="shapesvg" src="/img/hero/1/shape.svg" alt="image" style={{ height: 'auto' }} />
+          <div className="gradient-overlay"></div>
+        </div>
+        <div className="container">
+          <div className="row justify-center">
+            <div className="col-xl-12">
+              <div className="hero__content">
+                <h1 className="hero__title" style={{ fontFamily: 'Merienda, cursive' }}>{blog.title}</h1>
+                <p className="hero__text">
+                  {blog.description}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
+
+
+
+
+
+
       <section className="layout-pt-md layout-pb-xl">
+      
         <div className="container">
           <div className="row y-gap-30 justify-center">
             <div className="col-lg-8">
-              <h2 className="text-30 md:text-24">{blog.title}</h2>
-              <p className="mt-20">{blog.description}</p>
-
-              <div className="line mt-20 mb-50"></div>
+              
               <div className="mt-20" dangerouslySetInnerHTML={{ __html: blog.articleText }} />
 
               <div className="row y-gap-15 justify-between items-center pt-20">
                 <div className="col-auto">
                   {/* Example of social media icons layout */}
                   <div className="d-flex x-gap-10">
-                
-                      <div>
-                        <a href="#" className="button -accent-1 size-40 flex-center bg-accent-1-05 rounded-full">
-                          <i className="icon-facebook text-14"></i>
-                        </a>
-                      </div>
-                      <div>
-                        <a href="#" className="button -accent-1 size-40 flex-center bg-accent-1-05 rounded-full">
-                          <i className="icon-twitter text-14"></i>
-                        </a>
-                      </div>
-                      <div>
-                        <a href="#" className="button -accent-1 size-40 flex-center bg-accent-1-05 rounded-full">
-                          <i className="icon-instagram text-14"></i>
-                        </a>
-                      </div>
-                
+                    <div>
+                      <a href="#" className="button -accent-1 size-40 flex-center bg-accent-1-05 rounded-full">
+                        <i className="icon-facebook text-14"></i>
+                      </a>
+                    </div>
+                    <div>
+                      <a href="#" className="button -accent-1 size-40 flex-center bg-accent-1-05 rounded-full">
+                        <i className="icon-twitter text-14"></i>
+                      </a>
+                    </div>
+                    <div>
+                      <a href="#" className="button -accent-1 size-40 flex-center bg-accent-1-05 rounded-full">
+                        <i className="icon-instagram text-14"></i>
+                      </a>
+                    </div>
                     {/* More social icons... */}
                   </div>
                 </div>
@@ -230,9 +256,8 @@ export default function BlogSingle({ setBlogTitle }) {
                   </div>
                 </div>
               </div>
-              
-              <div className="line mt-60 mb-60"></div>
 
+              <div className="line mt-60 mb-60"></div>
 
               <CommentBox />
             </div>

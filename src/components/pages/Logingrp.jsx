@@ -127,7 +127,7 @@ export default function Logingrp() {
       <div className="container">
         <div className="row justify-center">
           <div className="col-xl-6 col-lg-7 col-md-9">
-            <div className="text-center mb-60 md:mb-30" style={{ color: 'white' }}>
+            <div className="text-center mb-20 md:mb-20" style={{ color: 'white' }}>
               <h1 className="text-60" style={{ color: 'white' }}>Log In for Camping Group</h1>
               <div className="mt-5">
                 Don&apos;t have an account?{" "}

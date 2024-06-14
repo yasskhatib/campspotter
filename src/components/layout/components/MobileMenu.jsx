@@ -50,7 +50,7 @@ export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
       <div onClick={() => setMobileMenuOpen(false)} className="menu__overlay js-menu-button"></div>
       <div className="menu__container">
         <div className="menu__header">
-          <h4>Main Menu</h4>
+          <h4>Menu</h4>
           <button onClick={() => setMobileMenuOpen(false)} className="js-menu-button">
             <i className="icon-cross text-10"></i>
           </button>
@@ -85,11 +85,7 @@ export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
         </div>
 
         <div className="menu__footer">
-          <i className="icon-headphone text-50"></i>
-          <div className="text-20 lh-12 fw-500 mt-20">
-            <div>Speak to our expert at</div>
-            <div className="text-accent-1">58-627-255</div>
-          </div>
+          
           <div className="d-flex items-center x-gap-10 pt-30">
             {socialMediaLinks.map((link, i) => (
               <div key={i}>

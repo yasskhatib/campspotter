@@ -37,11 +37,21 @@ export default function DBListingPage() {
     description: "Campspotter - Adventure Made Easy!",
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('fullName');
+    localStorage.removeItem('governorate');
+    localStorage.removeItem('telephone');
+    navigate('/login');
+  };
+
+
   return (
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <DBListing user={user} />
+        <DBListing user={user} onLogout={handleLogout} />
       </main>
     </>
   );

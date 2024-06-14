@@ -35,7 +35,6 @@ import BlogListPage1 from "./pages/blogs/blog";
 
 import BlogSinglePage from "./pages/blogs/article";
 
-import DestinationsPage from "./pages/pages/destinations";
 import AboutPage from "./pages/pages/about";
 import HelpCenterPage from "./pages/pages/help-center";
 import TermsPage from "./pages/pages/terms";
@@ -91,7 +90,6 @@ function App() {
           <Route path="/article/:id" element={<BlogSinglePage />} />
 
 
-          <Route path="/destinations" element={<DestinationsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help-center" element={<HelpCenterPage />} />
           <Route path="/terms" element={<TermsPage />} />

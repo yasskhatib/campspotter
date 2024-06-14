@@ -6,8 +6,9 @@ import Sidebar from "./Sidebargrp";
 import Header from "./Header";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import PropTypes from "prop-types";
 
-export default function AddTour() {
+export default function AddTour({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const navigate = useNavigate(); // Updated to useNavigate
   const [formData, setFormData] = useState({
@@ -113,7 +114,7 @@ export default function AddTour() {
       <div
         className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
       >
-        <Sidebar setSideBarOpen={setSideBarOpen} />
+        <Sidebar setSideBarOpen={setSideBarOpen} onLogout={onLogout} />
 
         <div className="dashboard__content">
           <Header setSideBarOpen={setSideBarOpen} />
@@ -205,3 +206,6 @@ export default function AddTour() {
     </>
   );
 }
+AddTour.propTypes = {
+  onLogout: PropTypes.func.isRequired,
+};

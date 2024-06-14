@@ -81,26 +81,16 @@ export default function Hero1() {
             className={`bg-image ${activeIndex === index ? 'active' : ''} ${activeIndex === (index + 1) % images.length ? 'next' : ''}`}
           />
         ))}
+        <img src="/img/hero/1/shape.svg" alt="image" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, margin: 'auto', zIndex: 1 }} />
+
       </div>
 
-      <img src="/img/hero/1/shape.svg" alt="image" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, margin: 'auto', zIndex: 1 }} />
 
       <div className="container">
-        <div className="row justify-center" style={{ marginTop: '-35px' }}>
+        <div className="row justify-center searchh" style={{ marginTop: '-35px' }}>
           <div className="col-xl-8 col-lg-10">
             <div className="hero__content" style={{ textAlign: 'center' }}>
-              <h1
-                data-aos="fade-up"
-                data-aos-delay="100"
-                className="hero__title"
-                style={{
-                  fontFamily: "'CustomFont', sans-serif",
-                  fontWeight: 600,
-                  fontSize: '90px',
-                  letterSpacing: '9px',
-                  textTransform: 'none'
-                }}
-              >
+              <h1 data-aos="fade-up" data-aos-delay="100" className="hero__title aos-init aos-animate">
                 campspotter
               </h1>
 

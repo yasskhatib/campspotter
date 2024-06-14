@@ -161,7 +161,7 @@ export const bookingData = [
     endDate: "11 April 2023",
     numberOfPeople: "2 People",
     cost: "$392.89",
-    status: "Approved",
+    status: "Pending",
   },
   {
     id: 2,

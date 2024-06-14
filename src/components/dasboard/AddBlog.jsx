@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from "./Sidebargrp";
@@ -6,6 +6,8 @@ import Header from "./Header";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
+import PropTypes from "prop-types";
+
 
 const modules = {
   toolbar: {
@@ -44,7 +46,7 @@ const modules = {
   }
 };
 
-export default function AddBlog() {
+export default function AddBlog({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [formData, setFormData] = useState({
     title: "",
@@ -53,8 +55,14 @@ export default function AddBlog() {
     creatorName: "",
     articleText: "",
     coverImage: null,
-    tags: ""
+    tags: "",
+    status: "pending" // Default status
   });
+
+  useEffect(() => {
+    const campgrpEmail = localStorage.getItem('campgrpEmail');
+    setFormData(formData => ({ ...formData, campgrpEmail }));
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -80,7 +88,7 @@ export default function AddBlog() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.title || !formData.description || !formData.articleText || !formData.coverImage) {
+    if (!formData.title || !formData.description || !formData.articleText || !formData.coverImage || !formData.campgrpEmail) {
       toast.error("All required fields must be filled, and an image must be uploaded.");
       return;
     }
@@ -92,6 +100,11 @@ export default function AddBlog() {
         data.append(key, formData[key]);
       }
     });
+
+    // Log the form data for debugging
+    for (let pair of data.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
 
     try {
       const response = await axios.post('http://localhost:5000/api/blogs', data, {
@@ -109,7 +122,9 @@ export default function AddBlog() {
           creatorName: "",
           articleText: "",
           coverImage: null,
-          tags: ""
+          tags: "",
+          campgrpEmail: localStorage.getItem('campgrpEmail'), // Reset to the value from localStorage
+          status: "pending" // Reset status to default
         });
       } else {
         toast.error('Failed to add blog');
@@ -122,7 +137,7 @@ export default function AddBlog() {
   return (
     <>
       <div className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}>
-        <Sidebar setSideBarOpen={setSideBarOpen} />
+        <Sidebar setSideBarOpen={setSideBarOpen} onLogout={onLogout} />
         <div className="dashboard__content">
           <Header setSideBarOpen={setSideBarOpen} />
           <div className="dashboard__content_content">
@@ -195,3 +210,6 @@ export default function AddBlog() {
     </>
   );
 }
+AddBlog.propTypes = {
+  onLogout: PropTypes.func.isRequired,
+};

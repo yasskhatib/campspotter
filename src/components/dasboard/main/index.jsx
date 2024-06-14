@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Sidebar from "../Sidebargrp";
 import States from "./States";
-import Statistics from "./Statistics";
 import Header from "../Header";
 import Table from "./Table";
+import DbBooking from "../DbBooking";
 import PropTypes from 'prop-types';
 
 export default function DBMain({ onLogout }) {
@@ -27,7 +27,8 @@ export default function DBMain({ onLogout }) {
 <br></br>
               <Table />
             <br></br>
-            <Statistics />
+
+            <DbBooking />
             <div className="text-center pt-30">
               © Copyright Campspotter {new Date().getFullYear()}
             </div>

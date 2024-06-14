@@ -1,133 +1,166 @@
-import  { useState } from "react";
-import Sidebar from "./Sidebargrp";
-import Header from "./Header";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Pagination from "../common/Pagination";
-import { bookingData } from "@/data/dashboard";
+import { Dialog, DialogDismiss, DialogHeading } from "@ariakit/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const tabs = ["Approved", "Pending", "Cancelled"];
 export default function DbBooking() {
-  const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [currentTab, setcurrentTab] = useState("Approved");
+  const [bookingData, setBookingData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState(null);
+  const itemsPerPage = 4;
+  const campgrpEmail = localStorage.getItem("campgrpEmail");
+
+  useEffect(() => {
+    // Fetch data from the backend
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/blogs?email=${campgrpEmail}`);
+        const sortedData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setBookingData(sortedData);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+    fetchData();
+  }, [campgrpEmail]);
+
+  const handleDelete = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/blogs/${selectedBlog}/cancel`);
+      setBookingData(bookingData.map(blog => blog._id === selectedBlog ? { ...blog, status: "Cancelled" } : blog));
+      toast.dark("Article was cancelled");
+    } catch (error) {
+      console.error("Error updating status", error);
+      toast.error("Error cancelling the article");
+    } finally {
+      setShowDialog(false);
+      setSelectedBlog(null);
+    }
+  };
+
+  const openDialog = (id) => {
+    setSelectedBlog(id);
+    setShowDialog(true);
+  };
+
+  const closeDialog = () => {
+    setShowDialog(false);
+    setSelectedBlog(null);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = bookingData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div
-      className={`dashboard ${
-        sideBarOpen ? "-is-sidebar-visible" : ""
-      } js-dashboard`}
-    >
-      <Sidebar setSideBarOpen={setSideBarOpen} />
+    <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-10">
+      <div className="text-28 fw-600 mb-3">
+        <h4>Blog Articles</h4>
+      </div>
+      <div className="tabs__content js-tabs-content">
+        <div className="tabs__pane -tab-item-1 is-tab-el-active">
+          <div className="overflowAuto">
+            <table className="tableTest mb-30">
+              <thead className="bg-light-1 rounded-12">
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                  <th>Creator</th>
+                  <th>Status</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
 
-      <div className="dashboard__content">
-        <Header setSideBarOpen={setSideBarOpen} />
-
-        <div className="dashboard__content_content">
-          <h1 className="text-30">My Booking</h1>
-          <p className="">Lorem ipsum dolor sit amet, consectetur.</p>
-
-          <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
-            <div className="tabs -underline-2 js-tabs">
-              <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
-                {tabs.map((elm, i) => (
-                  <div
-                    key={i}
-                    className="col-auto"
-                    onClick={() => setcurrentTab(elm)}
-                  >
-                    <button
-                      className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${
-                        elm == currentTab ? "is-tab-el-active" : ""
-                      }`}
-                    >
-                      {elm}
-                    </button>
-                  </div>
+              <tbody>
+                {currentItems.map((elm, i) => (
+                  <tr key={i} className={elm.status === "approved" ? "clickable" : ""}>
+                    <td>{indexOfFirstItem + i + 1}</td>
+                    <td className="min-w-300">
+                      <div className="d-flex items-center">
+                        <img className="iconblog" src={`http://localhost:5000/${elm.coverImage}`} alt="image" />
+                        <div className="ml-20">
+                          <span onClick={() => elm.status === "approved" && window.open(`http://localhost:5173/article/${elm._id}`, "_blank")} style={{ cursor: elm.status === "approved" ? "pointer" : "default" }}>
+                            {elm.title.length > 60 ? `${elm.title.slice(0, 60)}...` : elm.title}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{elm.type}</td>
+                    <td>{new Date(elm.date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}</td>
+                    <td>{elm.creatorName || "Anonyme"}</td>
+                    <td>
+                      <div
+                        className={`circle ${elm.status === "approved"
+                          ? "text-purple-1"
+                          : elm.status === "pending"
+                            ? "text-yellow-1"
+                            : "text-red-2"
+                          } `}
+                      >
+                        {elm.status}
+                      </div>
+                    </td>
+                    <td>
+                      {elm.status === "approved" ? (
+                        <div className="d-flex items-center">
+                          <button onClick={(e) => { e.stopPropagation(); openDialog(elm._id); }} className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
+                            <i className="icon-delete text-14"></i>
+                          </button>
+                        </div>
+                      ) : null}
+                    </td>
+                  </tr>
                 ))}
-              </div>
-
-              <div className="tabs__content js-tabs-content">
-                <div className="tabs__pane -tab-item-1 is-tab-el-active">
-                  <div className="overflowAuto">
-                    <table className="tableTest mb-30">
-                      <thead className="bg-light-1 rounded-12">
-                        <tr>
-                          <th>ID</th>
-                          <th>Title</th>
-                          <th>Start date</th>
-                          <th>End date</th>
-                          <th>Details</th>
-                          <th>Price</th>
-                          <th>Status</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {bookingData
-                          .filter((elm) => elm.status == currentTab)
-                          .map((elm, i) => (
-                            <tr key={i}>
-                              <td>{elm.orderNumber}</td>
-
-                              <td className="min-w-300">
-                                <div className="d-flex items-center">
-                                  <img src={elm.imageUrl} alt="image" />
-                                  <div className="ml-20">{elm.title}</div>
-                                </div>
-                              </td>
-
-                              <td>{elm.startDate}</td>
-
-                              <td>{elm.endDate}</td>
-
-                              <td>{elm.numberOfPeople}</td>
-
-                              <td>{elm.cost}</td>
-
-                              <td>
-                                <div
-                                  className={`circle ${
-                                    elm.status == "Approved"
-                                      ? "text-purple-1"
-                                      : elm.status == "Pending"
-                                      ? "text-yellow-1"
-                                      : "text-red-2"
-                                  } `}
-                                >
-                                  {elm.status}
-                                </div>
-                              </td>
-
-                              <td>
-                                <div className="d-flex items-center">
-                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                    <i className="icon-pencil text-14"></i>
-                                  </button>
-
-                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                    <i className="icon-delete text-14"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <Pagination />
-
-                  <div className="text-14 text-center mt-20">
-                    Showing results 1-30 of 1,415
-                  </div>
-                </div>
-              </div>
-            </div>
+              </tbody>
+            </table>
           </div>
 
-          <div className="text-center pt-30">
-            © Copyright Campspotter {new Date().getFullYear()}
+          <Pagination
+            currentPage={currentPage}
+            totalItems={bookingData.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+
+          <div className="text-14 text-center mt-20">
+            Showing results {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, bookingData.length)} of {bookingData.length}
           </div>
         </div>
       </div>
+
+      <Dialog
+        aria-labelledby="custom-dialog-heading"
+        className={`custom-dialog-overlay ${showDialog ? 'fade-in' : 'fade-out'}`}
+        open={showDialog}
+        onClose={closeDialog}
+      >
+        <div className="custom-dialog-content">
+          <DialogHeading className='canceltitle' id="custom-dialog-heading">Cancel Blog</DialogHeading>
+          <p>
+            Are you sure you want to cancel this blog <br />
+            article permanently?
+          </p>
+
+          <div className="custom-button-container">
+            <button className="custom-btn custom-btn-danger" onClick={handleDelete}>
+              Yes
+            </button>
+            <DialogDismiss as="button" className="custom-btn custom-btn-secondary" onClick={closeDialog}>
+              No
+            </DialogDismiss>
+          </div>
+        </div>
+      </Dialog>
+      <ToastContainer />
     </div>
   );
 }

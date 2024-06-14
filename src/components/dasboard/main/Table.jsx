@@ -6,6 +6,7 @@ import { ToastContainer, toast, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaDownload, FaPrint } from 'react-icons/fa';
 import QRCode from 'qrcode';
+import Pagination from '../../common/Pagination';
 import './Table.css'; // Make sure to create and import this CSS file for custom styles
 import Select from 'react-dropdown-select';
 
@@ -13,7 +14,8 @@ export default function Table() {
   const [camps, setCamps] = useState([]);
   const [selectedCamp, setSelectedCamp] = useState('');
   const [reservations, setReservations] = useState([]);
-  const [visibleReservations, setVisibleReservations] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const campgrpEmail = localStorage.getItem('campgrpEmail');
@@ -55,7 +57,9 @@ export default function Table() {
               }
             })
           );
-          setReservations(reservationsWithUserInfo);
+          // Sort reservations by date (newest first)
+          const sortedReservations = reservationsWithUserInfo.sort((a, b) => new Date(b.reservationDate) - new Date(a.reservationDate));
+          setReservations(sortedReservations);
         } catch (error) {
           console.error('Failed to fetch reservations:', error);
         }
@@ -67,7 +71,7 @@ export default function Table() {
 
   const handleCampChange = (selected) => {
     setSelectedCamp(selected[0].value);
-    setVisibleReservations(5); // Reset visible reservations when camp changes
+    setCurrentPage(1); // Reset to the first page when camp changes
   };
 
   const handleRowClick = async (reservation) => {
@@ -104,10 +108,10 @@ export default function Table() {
   const formatSelectedExtras = (extras) => {
     const formattedExtras = [];
     if (extras.materialRent) {
-      formattedExtras.push("Material");
+      formattedExtras.push("M");
     }
     if (extras.autoBaggageTransfer) {
-      formattedExtras.push("Transfer");
+      formattedExtras.push("T");
     }
     if (formattedExtras == "") {
       formattedExtras.push("");
@@ -193,87 +197,104 @@ export default function Table() {
     window.open(doc.output('bloburl'), '_blank');
   };
 
-  const showMore = () => {
-    setVisibleReservations(prev => prev + 5);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = reservations.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const getCampLabel = (camp) => {
+    const today = new Date();
+    const campDate = new Date(camp.date);
+    let status = camp.status === 'Canceled' ? ' - Canceled' : campDate < today ? ' - Expired' : '';
+    return `${camp.title}${status}`;
   };
 
   return (
     <div className="col-xl-12 col-lg-12 col-md-6">
-    <div className="rounded-12 bg-white shadow-2 px-30 py-30 h-full">
-      <div className="col-lg-12">
-        <div className="text-28 fw-600 mb-3">
-          <h4>Reservations</h4>
-        </div>
-        <div className="mb-3">
-          <Select
-            options={camps.map(camp => ({ label: camp.title, value: camp._id }))}
-            onChange={handleCampChange}
-            values={camps.filter(camp => camp._id === selectedCamp).map(camp => ({ label: camp.title, value: camp._id }))}
-          />
-        </div>
-        <div className="mb-3">
-          <b>Number of Reservations:</b> {reservations.length}
-        </div>
+      <div className="rounded-12 bg-white shadow-2 px-30 py-30 h-full">
+        <div className="col-lg-12">
+          <div className="text-28 fw-600 mb-3">
+            <h4>Reservations</h4>
+          </div>
+          <div className="mb-3">
+            <Select
+              options={camps.map(camp => ({ label: getCampLabel(camp), value: camp._id }))}
+              onChange={handleCampChange}
+              values={camps.filter(camp => camp._id === selectedCamp).map(camp => ({ label: getCampLabel(camp), value: camp._id }))}
+            />
+          </div>
+          <div className="mb-3">
+            <b>Number of Reservations:</b> {reservations.length}
+          </div>
 
-        <div className="table-responsive">
-          <table className="table-4 w-1/1">
-            <thead style={{ color: 'white', backgroundColor: '#eb662b' }}>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Date</th>
-                <th>Extras</th>
-                <th>Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservations.slice(0, visibleReservations).map((reservation, index) => (
-                <tr key={index} onClick={() => handleRowClick(reservation)} style={{ cursor: 'pointer' }}>
-                  <td data-label="#"> {index + 1}</td>
-                  <td data-label="Name">{reservation.name}</td>
-                  <td data-label="Email">{reservation.email}</td>
-                  <td data-label="Phone">{reservation.phone}</td>
-                  <td data-label="Date">{new Date(reservation.reservationDate).toLocaleDateString()}</td>
-                  <td data-label="Extras">{formatSelectedExtras(reservation.selectedExtras)}</td>
-                  <td data-label="Price">{reservation.totalPrice}</td>
+          <div className="table-responsive">
+            <table className="table-4 w-1/1">
+              <thead style={{ color: 'white', backgroundColor: '#eb662b' }}>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Date</th>
+                  <th>Extras</th>
+                  <th>Price</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {currentItems.map((reservation, index) => (
+                  <tr key={index} onClick={() => handleRowClick(reservation)} style={{ cursor: 'pointer' }}>
+                    <td data-label="#"> {indexOfFirstItem + index + 1}</td>
+                    <td data-label="Name">{reservation.name}</td>
+                    <td data-label="Email">{reservation.email}</td>
+                    <td data-label="Phone">{reservation.phone}</td>
+                    <td data-label="Date">{new Date(reservation.reservationDate).toLocaleDateString()}</td>
+                    <td data-label="Extras">{formatSelectedExtras(reservation.selectedExtras)}</td>
+                    <td data-label="Price" style={{ fontWeight: 'bold' }}>{reservation.totalPrice}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        {visibleReservations < reservations.length && (
-          <div className="text-center mt-3">
-            <span onClick={showMore} className="show-more-link" style={{ cursor: 'pointer', color: '#eb662b', fontWeight: 500 }}>Show More</span>
+          <Pagination
+            currentPage={currentPage}
+            totalItems={reservations.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+
+          <div className="text-14 text-center mt-20">
+            Showing results {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, reservations.length)} of {reservations.length}
           </div>
-        )}
-        {reservations.length > 0 && (
-          <div className="text-right mt-3">
-            <span className="download-box" onClick={downloadPDF} style={{ cursor: 'pointer', marginRight: '10px' }}>
-              <FaDownload /> Download as PDF
-            </span>
-            <span className="download-box" onClick={printPDF} style={{ cursor: 'pointer' }}>
-              <FaPrint /> Print Document
-            </span>
-          </div>
-        )}
+
+          {reservations.length > 0 && (
+            <div className="text-right mt-3">
+              <span className="download-box" onClick={downloadPDF} style={{ cursor: 'pointer', marginRight: '10px' }}>
+                <FaDownload /> Download as PDF
+              </span>
+              <span className="download-box" onClick={printPDF} style={{ cursor: 'pointer' }}>
+                <FaPrint /> Print Document
+              </span>
+            </div>
+          )}
+        </div>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={7000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          transition={Flip}
+        />
       </div>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={7000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition={Flip}
-      />
-    </div>
     </div>
   );
 }
