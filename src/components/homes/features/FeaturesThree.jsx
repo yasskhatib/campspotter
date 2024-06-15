@@ -13,7 +13,6 @@ export default function FeaturesThree() {
             </h2>
           </div>
         </div>
-
         <div
           data-aos="fade-up"
           data-aos-delay=""
