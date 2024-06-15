@@ -3673,6 +3673,45 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+
+.hero.-type-1 .hero__title {
+  font-family: CustomFont, sans-serif;
+  font-weight: 600;
+  letter-spacing: 9px;
+  text-transform: none;
+  font-size: 90px;
+  line-height: 1.2;
+  color: white;
+}
+
+@media only screen and (max-width: 600px) {
+  .hero.-type-1 .hero__title {
+    font-size: 60px;
+    letter-spacing: 3px;
+  }
+}
+
+@media only screen and (min-width: 601px) and (max-width: 768px) {
+  .hero.-type-1 .hero__title {
+    font-size: 50px;
+    letter-spacing: 5px;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  .hero.-type-1 .hero__title {
+    font-size: 90px;
+    letter-spacing: 7px;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .hero.-type-1 .hero__title {
+    font-size: 90px;
+    letter-spacing: 9px;
+  }
+}
+
 .hero.-type-3 .hero__filter {
   position: relative;
   z-index: 1;
@@ -14275,3 +14314,37 @@ button.gm-ui-hover-effect::after {
 }
 
 
+.htt {
+  font-family: CustomFont, sans-serif;
+  font-weight: 600;
+  letter-spacing: 9px;
+  text-transform: none;
+  font-size: 50px;
+  line-height: 1.2;
+  color: white;
+      letter-spacing: 0px;
+}
+
+@media only screen and (max-width: 600px) {
+  .htt {
+    font-size: 40px;
+  }
+}
+
+@media only screen and (min-width: 601px) and (max-width: 768px) {
+  .htt {
+    font-size: 30px;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  .htt {
+    font-size: 50px;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .htt {
+    font-size: 50px;
+  }
+}

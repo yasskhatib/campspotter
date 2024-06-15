@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './form.css'; // Import the custom CSS file
-import LoadingSpinner from "@/components/common/LoadingSpinner"; // Ensure the path is correct
+import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 export default function TourSingleSidebar({ camp, user }) {
   const [extras, setExtras] = useState({ materialRent: false, autoBaggageTransfer: false });
@@ -18,6 +18,7 @@ export default function TourSingleSidebar({ camp, user }) {
   const [alreadyReserved, setAlreadyReserved] = useState(false);
   const [campExpired, setCampExpired] = useState(false);
   const [campCanceled, setCampCanceled] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const checkReservationStatus = async () => {
@@ -64,6 +65,8 @@ export default function TourSingleSidebar({ camp, user }) {
       setCampCanceled(true);
       setFormDisabled(true);
     }
+
+    setLoading(false); // Set loading to false once data is fetched
   }, [camp, user]);
 
   useEffect(() => {
@@ -166,8 +169,8 @@ export default function TourSingleSidebar({ camp, user }) {
     setShowConfirmModal(false);
   };
 
-  if (!camp) {
-    return <LoadingSpinner />;
+  if (loading) {
+    return <LoadingSpinner2 />;
   }
 
   return (

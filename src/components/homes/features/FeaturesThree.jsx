@@ -9,7 +9,7 @@ export default function FeaturesThree() {
         <div className="row justify-center text-center">
           <div className="col-auto">
             <h2 data-aos="fade-left" data-aos-delay="" className="text-30">
-              Why choose Tourz
+              Why choose CampSpotter
             </h2>
           </div>
         </div>

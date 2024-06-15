@@ -7,8 +7,8 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { Rating } from 'react-simple-star-rating'; 
-
+import { Rating } from 'react-simple-star-rating';
+import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -25,6 +25,7 @@ export default function TourList3() {
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
   const [campRatings, setCampRatings] = useState({}); // Store ratings in an object keyed by camp ID
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const location = useLocation();
 
@@ -71,12 +72,13 @@ export default function TourList3() {
 
       } catch (error) {
         console.error('Error fetching camps:', error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
     fetchCamps();
   }, []);
-
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -119,6 +121,10 @@ export default function TourList3() {
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentCamps = filteredCamps.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>

@@ -7,6 +7,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -14,6 +15,7 @@ dayjs.extend(timezone);
 
 export default function TourSliderOne() {
   const [topCamps, setTopCamps] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchTopCamps = async () => {
@@ -41,6 +43,8 @@ export default function TourSliderOne() {
         setTopCamps(sortedCamps);
       } catch (error) {
         console.error('Error fetching top camps:', error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -74,84 +78,90 @@ export default function TourSliderOne() {
         <div className="relative pt-40 sm:pt-20">
           <div className="overflow-hidden pb-30 js-section-slider">
             <div data-aos="fade-up" className="swiper-wrapper">
-              <Swiper
-                spaceBetween={30}
-                className="w-100"
-                pagination={{
-                  el: ".pbutton1",
-                  clickable: true,
-                }}
-                navigation={{
-                  prevEl: ".prev1",
-                  nextEl: ".next1",
-                }}
-                modules={[Navigation, Pagination]}
-                breakpoints={{
-                  500: {
-                    slidesPerView: 1,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                  },
-                  1024: {
-                    slidesPerView: 3,
-                  },
-                  1200: {
-                    slidesPerView: 4,
-                  },
-                }}
-              >
-                {topCamps.map((camp, i) => (
-                  <SwiperSlide key={i}>
-                    <Link
-                      to={`/camp/${camp._id}`}
-                      className="tourCard -type-1 py-10 px-10 border-1 rounded-12 bg-white -hover-shadow"
-                    >
-                      <div className="tourCard__header">
-                        <div className="tourCard__image ratio ratio-28:20">
-                          <img
-                            src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
-                            alt={camp.title}
-                            className="img-ratio rounded-12"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="tourCard__content px-10 pt-10">
-                        <div className="tourCard__location d-flex items-center text-13 text-light-2">
-                          <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
-                          {camp.emplacement}
-                        </div>
-
-                        <h3 className="tourCard__title text-16 fw-500 mt-5">
-                          <span>{camp.title}</span>
-                        </h3>
-
-                        <div className="tourCard__rating d-flex items-center text-13 mt-5">
-                          <div className="d-flex x-gap-5">
-                            <Stars star={parseFloat(camp.rating)} />
-                          </div>
-
-                          <span className="text-dark-1 ml-10">
-                            ({camp.rating} Reviews)
-                          </span>
-                        </div>
-
-                        <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
-                          <div className="d-flex items-center">
-                            <i className="icon-clock text-16 mr-5"></i>
-                            {camp.duration} days
-                          </div>
-
-                          <div>
-                            <span className="text-16 fw-500">{camp.prix} TND</span>
+              {loading ? (
+                <div className="spinner-section">
+                  <LoadingSpinner2 />
+                </div>
+              ) : (
+                <Swiper
+                  spaceBetween={30}
+                  className="w-100"
+                  pagination={{
+                    el: ".pbutton1",
+                    clickable: true,
+                  }}
+                  navigation={{
+                    prevEl: ".prev1",
+                    nextEl: ".next1",
+                  }}
+                  modules={[Navigation, Pagination]}
+                  breakpoints={{
+                    500: {
+                      slidesPerView: 1,
+                    },
+                    768: {
+                      slidesPerView: 2,
+                    },
+                    1024: {
+                      slidesPerView: 3,
+                    },
+                    1200: {
+                      slidesPerView: 4,
+                    },
+                  }}
+                >
+                  {topCamps.map((camp, i) => (
+                    <SwiperSlide key={i}>
+                      <Link
+                        to={`/camp/${camp._id}`}
+                        className="tourCard -type-1 py-10 px-10 border-1 rounded-12 bg-white -hover-shadow"
+                      >
+                        <div className="tourCard__header">
+                          <div className="tourCard__image ratio ratio-28:20">
+                            <img
+                              src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                              alt={camp.title}
+                              className="img-ratio rounded-12"
+                            />
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+
+                        <div className="tourCard__content px-10 pt-10">
+                          <div className="tourCard__location d-flex items-center text-13 text-light-2">
+                            <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
+                            {camp.emplacement}
+                          </div>
+
+                          <h3 className="tourCard__title text-16 fw-500 mt-5">
+                            <span>{camp.title}</span>
+                          </h3>
+
+                          <div className="tourCard__rating d-flex items-center text-13 mt-5">
+                            <div className="d-flex x-gap-5">
+                              <Stars star={parseFloat(camp.rating)} />
+                            </div>
+
+                            <span className="text-dark-1 ml-10">
+                              ({camp.rating} Reviews)
+                            </span>
+                          </div>
+
+                          <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
+                            <div className="d-flex items-center">
+                              <i className="icon-clock text-16 mr-5"></i>
+                              {camp.duration} days
+                            </div>
+
+                            <div>
+                              <span className="text-16 fw-500">{camp.prix} TND</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
             </div>
           </div>
 

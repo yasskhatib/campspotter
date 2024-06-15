@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 export default function ArticlesTwo() {
   const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -15,6 +17,8 @@ export default function ArticlesTwo() {
         setBlogs(data);
       } catch (error) {
         console.error("Failed to fetch blogs:", error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -45,28 +49,34 @@ export default function ArticlesTwo() {
         </div>
 
         <div className="row y-gap-30 pt-40 sm:pt-20">
-          {blogs.map((blog, i) => (
-            <div key={i} className="col-lg-4 col-md-6">
-              <Link to={`/article/${blog._id}`} className="blogCard -type-1">
-                <div className="blogCard__image ratio ratio-41:30">
-                  <img src={`http://localhost:5000/${blog.coverImage}`} alt="image" className="img-ratio rounded-12" />
-                  <div className="blogCard__badge">{blog.type}</div>
-                </div>
-
-                <div className="blogCard__content mt-30">
-                  <div className="blogCard__info text-14">
-                    <div className="lh-13 text-white">{formatDate(blog.date)}</div>
-                    <div className="blogCard__line"></div>
-                    <div className="lh-13 text-white">By {blog.creatorName ? blog.creatorName : 'Anonymous'}</div>
+          {loading ? (
+            <div className="spinner-section">
+              <LoadingSpinner2 />
+            </div>
+          ) : (
+            blogs.map((blog, i) => (
+              <div key={i} className="col-lg-4 col-md-6">
+                <Link to={`/article/${blog._id}`} className="blogCard -type-1">
+                  <div className="blogCard__image ratio ratio-41:30">
+                    <img src={`http://localhost:5000/${blog.coverImage}`} alt="image" className="img-ratio rounded-12" />
+                    <div className="blogCard__badge">{blog.type}</div>
                   </div>
 
-                  <h3 className="blogCard__title text-white text-18 fw-500 mt-10">
-                    {blog.title}
-                  </h3>
-                </div>
-              </Link>
-            </div>
-          ))}
+                  <div className="blogCard__content mt-30">
+                    <div className="blogCard__info text-14">
+                      <div className="lh-13 text-white">{formatDate(blog.date)}</div>
+                      <div className="blogCard__line"></div>
+                      <div className="lh-13 text-white">By {blog.creatorName ? blog.creatorName : 'Anonymous'}</div>
+                    </div>
+
+                    <h3 className="blogCard__title text-white text-18 fw-500 mt-10">
+                      {blog.title}
+                    </h3>
+                  </div>
+                </Link>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>

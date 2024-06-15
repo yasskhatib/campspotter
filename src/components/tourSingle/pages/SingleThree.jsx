@@ -10,6 +10,7 @@ import TourSingleSidebar from "../TourSingleSidebar";
 import OthersInformation from "../OthersInformation";
 import MainInformation2 from "./MainInformation2";
 import parse, { domToReact } from 'html-react-parser';
+import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 export default function SingleThree({ camp, user }) {
   const [campGroupName, setCampGroupName] = useState('');
@@ -18,6 +19,7 @@ export default function SingleThree({ camp, user }) {
   const [comments, setComments] = useState([]);
   const [visibleComments, setVisibleComments] = useState(4);
   const [hasCommented, setHasCommented] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
   const toastId = useRef(null);
 
   useEffect(() => {
@@ -42,6 +44,8 @@ export default function SingleThree({ camp, user }) {
         }
       } catch (error) {
         console.error('Error fetching comments:', error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -126,23 +130,17 @@ export default function SingleThree({ camp, user }) {
       });
 
       if (response.status === 201) {
-
-
         toastId.current = toast.success('Comment submitted successfully!', {
           position: 'bottom-right',
           theme: 'dark',
           autoClose: 3000,
           onClose: () => {
-        
             setComment('');
             setRating(0);
             setHasCommented(true);
             setComments([...comments, { camperFullName: user.fullName, rating, comment, date: new Date() }]);
-
           }
         });
-
-     
       }
     } catch (error) {
       toast.error('Error submitting comment.', {
@@ -158,6 +156,10 @@ export default function SingleThree({ camp, user }) {
   };
 
   const visibleCommentsList = comments.slice(0, visibleComments);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <section className="pt-30 js-pin-container">
@@ -246,7 +248,6 @@ export default function SingleThree({ camp, user }) {
                         <span className="comment-date" style={{ fontSize: '12px' }}>{new Date(cmt.date).toLocaleDateString()}</span>
                       </div> <div className="line mt-10 mb-10"></div>
                     </div>
-
                   ))}
                 </div>
                 {visibleComments < comments.length && (
@@ -269,8 +270,6 @@ export default function SingleThree({ camp, user }) {
                 )}
               </>
             )}
-
-           
 
             {user && user.role === 'camper' && !hasCommented && (
               <>

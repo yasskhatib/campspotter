@@ -17,11 +17,11 @@ export default function Hero1() {
   const isDeleting = useRef(false);
 
   const images = [
-    '/img/hero/1/bg1.png',
-    '/img/hero/1/bg2.png',
-    '/img/hero/1/bg3.png',
-    '/img/hero/1/bg4.png',
-    '/img/hero/1/bg5.png',
+    '/img/hero/1/bg1.jpg',
+    '/img/hero/1/bg2.jpg',
+    '/img/hero/1/bg3.jpg',
+    '/img/hero/1/bg4.jpg',
+    '/img/hero/1/bg5.jpg',
   ];
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -90,13 +90,13 @@ export default function Hero1() {
         <div className="row justify-center searchh" style={{ marginTop: '-35px' }}>
           <div className="col-xl-8 col-lg-10">
             <div className="hero__content" style={{ textAlign: 'center' }}>
-              <h1 data-aos="fade-up" data-aos-delay="100" className="hero__title aos-init aos-animate">
+              <h1 data-aos="fade-up" className="hero__title">
                 campspotter
               </h1>
 
+
               <p
                 data-aos="fade-up"
-                data-aos-delay="300"
                 className="hero__text"
               >
                 Discover joy in every journey, whether it&apos;s a nearby getaway or a distant adventure,<br />
@@ -104,7 +104,7 @@ export default function Hero1() {
               </p>
 
               {/* Search bar added below */}
-              <form className="search-bar" data-aos="fade-up" data-aos-delay="300" onSubmit={handleSubmit}>
+              <form className="search-bar" data-aos="fade-up" data-aos-delay="200" onSubmit={handleSubmit}>
                 <input
                   type="text"
                   className="search-input"

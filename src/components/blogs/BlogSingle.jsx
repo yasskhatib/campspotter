@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CommentBox from "./CommentBox";
-import LoadingSpinner from "@/components/common/LoadingSpinner"; // Ensure the path is correct
+import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 export default function BlogSingle({ setBlogTitle }) {
   const { id } = useParams();
@@ -190,7 +190,7 @@ export default function BlogSingle({ setBlogTitle }) {
           <div className="row justify-center">
             <div className="col-xl-12">
               <div className="hero__content">
-                <h1 className="hero__title" style={{ fontFamily: 'Merienda, cursive' }}>{blog.title}</h1>
+                <h1 className="htt" style={{ fontFamily: 'Merienda, cursive' }}>{blog.title}</h1>
                 <p className="hero__text">
                   {blog.description}
                 </p>

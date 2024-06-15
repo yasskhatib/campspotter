@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaDownload, FaPrint } from 'react-icons/fa';
 import QRCode from 'qrcode';
 import Pagination from '../../common/Pagination';
+import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 import './Table.css'; // Make sure to create and import this CSS file for custom styles
 import Select from 'react-dropdown-select';
 
@@ -15,6 +16,8 @@ export default function Table() {
   const [selectedCamp, setSelectedCamp] = useState('');
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true); // Add loading state for initial data fetch
+  const [loadingReservations, setLoadingReservations] = useState(false); // Add loading state for reservations
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -34,6 +37,8 @@ export default function Table() {
         }
       } catch (error) {
         console.error('Failed to fetch camps:', error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -44,6 +49,7 @@ export default function Table() {
     if (selectedCamp) {
       // Fetch reservations for the selected camp
       const fetchReservations = async () => {
+        setLoadingReservations(true); // Start loading reservations
         try {
           const reservationResponse = await axios.get(`http://localhost:5000/api/fetch-reservations?campId=${selectedCamp}`);
           const reservationsWithUserInfo = await Promise.all(
@@ -62,6 +68,8 @@ export default function Table() {
           setReservations(sortedReservations);
         } catch (error) {
           console.error('Failed to fetch reservations:', error);
+        } finally {
+          setLoadingReservations(false); // Set loading to false once data is fetched
         }
       };
 
@@ -80,11 +88,7 @@ export default function Table() {
       const userData = response.data;
       toast.info(
         <div>
-          <p style={{ width: '300px', color: 'white' }}>Full Name: {userData.fullName}</p>
-          <p style={{ width: '300px', color: 'white' }}>Email: {userData.email}</p>
-          <p style={{ width: '300px', color: 'white' }}>Governorate: {userData.governorate}</p>
-          <p style={{ width: '300px', color: 'white' }}>Telephone: {userData.telephone}</p>
-          <hr></hr>
+          <p style={{ width: '300px', color: 'white' }}>{userData.fullName}{" - "}{userData.governorate}</p>
           <p style={{ width: '300px', color: 'white' }}>Comment: {reservation.comments}</p>
         </div>,
         {
@@ -219,81 +223,95 @@ export default function Table() {
           <div className="text-28 fw-600 mb-3">
             <h4>Reservations</h4>
           </div>
-          <div className="mb-3">
-            <Select
-              options={camps.map(camp => ({ label: getCampLabel(camp), value: camp._id }))}
-              onChange={handleCampChange}
-              values={camps.filter(camp => camp._id === selectedCamp).map(camp => ({ label: getCampLabel(camp), value: camp._id }))}
-            />
-          </div>
-          <div className="mb-3">
-            <b>Number of Reservations:</b> {reservations.length}
-          </div>
-
-          <div className="table-responsive">
-            <table className="table-4 w-1/1">
-              <thead style={{ color: 'white', backgroundColor: '#eb662b' }}>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Date</th>
-                  <th>Extras</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((reservation, index) => (
-                  <tr key={index} onClick={() => handleRowClick(reservation)} style={{ cursor: 'pointer' }}>
-                    <td data-label="#"> {indexOfFirstItem + index + 1}</td>
-                    <td data-label="Name">{reservation.name}</td>
-                    <td data-label="Email">{reservation.email}</td>
-                    <td data-label="Phone">{reservation.phone}</td>
-                    <td data-label="Date">{new Date(reservation.reservationDate).toLocaleDateString()}</td>
-                    <td data-label="Extras">{formatSelectedExtras(reservation.selectedExtras)}</td>
-                    <td data-label="Price" style={{ fontWeight: 'bold' }}>{reservation.totalPrice}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalItems={reservations.length}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-          />
-
-          <div className="text-14 text-center mt-20">
-            Showing results {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, reservations.length)} of {reservations.length}
-          </div>
-
-          {reservations.length > 0 && (
-            <div className="text-right mt-3">
-              <span className="download-box" onClick={downloadPDF} style={{ cursor: 'pointer', marginRight: '10px' }}>
-                <FaDownload /> Download as PDF
-              </span>
-              <span className="download-box" onClick={printPDF} style={{ cursor: 'pointer' }}>
-                <FaPrint /> Print Document
-              </span>
+          {loading ? (
+            <div className="spinner-section">
+              <LoadingSpinner2 />
             </div>
+          ) : (
+            <>
+              <div className="mb-3">
+                <Select
+                  options={camps.map(camp => ({ label: getCampLabel(camp), value: camp._id }))}
+                  onChange={handleCampChange}
+                  values={camps.filter(camp => camp._id === selectedCamp).map(camp => ({ label: getCampLabel(camp), value: camp._id }))}
+                />
+              </div>
+              <div className="mb-3">
+                <b>Number of Reservations:</b> {reservations.length}
+              </div>
+
+              <div className="table-responsive">
+                {loadingReservations ? (
+                  <div className="spinner-section">
+                    <LoadingSpinner2 />
+                  </div>
+                ) : (
+                  <table className="table-4 w-1/1">
+                    <thead style={{ color: 'white', backgroundColor: '#eb662b' }}>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Date</th>
+                        <th>Extras</th>
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentItems.map((reservation, index) => (
+                        <tr key={index} onClick={() => handleRowClick(reservation)} style={{ cursor: 'pointer' }}>
+                          <td data-label="#"> {indexOfFirstItem + index + 1}</td>
+                          <td data-label="Name">{reservation.name}</td>
+                          <td data-label="Email">{reservation.email}</td>
+                          <td data-label="Phone">{reservation.phone}</td>
+                          <td data-label="Date">{new Date(reservation.reservationDate).toLocaleDateString()}</td>
+                          <td data-label="Extras">{formatSelectedExtras(reservation.selectedExtras)}</td>
+                          <td data-label="Price" style={{ fontWeight: 'bold' }}>{reservation.totalPrice}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              <Pagination
+                currentPage={currentPage}
+                totalItems={reservations.length}
+                itemsPerPage={itemsPerPage}
+                onPageChange={handlePageChange}
+              />
+
+              <div className="text-14 text-center mt-20">
+                Showing results {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, reservations.length)} of {reservations.length}
+              </div>
+
+              {reservations.length > 0 && (
+                <div className="text-right mt-3">
+                  <span className="download-box" onClick={downloadPDF} style={{ cursor: 'pointer', marginRight: '10px' }}>
+                    <FaDownload /> Download as PDF
+                  </span>
+                  <span className="download-box" onClick={printPDF} style={{ cursor: 'pointer' }}>
+                    <FaPrint /> Print Document
+                  </span>
+                </div>
+              )}
+            </>
           )}
+          <ToastContainer
+            position="bottom-center"
+            autoClose={7000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            transition={Flip}
+          />
         </div>
-        <ToastContainer
-          position="bottom-center"
-          autoClose={7000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-          transition={Flip}
-        />
       </div>
     </div>
   );

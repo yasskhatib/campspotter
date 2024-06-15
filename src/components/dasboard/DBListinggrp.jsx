@@ -13,6 +13,7 @@ import { FaStopCircle } from 'react-icons/fa';
 import { Dialog, DialogDismiss, DialogHeading } from "@ariakit/react";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
 
 import './CampCard.css'; // Import the CSS file
 
@@ -28,6 +29,7 @@ export default function DBListinggrp({ onLogout }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCamp, setSelectedCamp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
   const campgrpEmail = localStorage.getItem('campgrpEmail');
 
   useEffect(() => {
@@ -40,6 +42,8 @@ export default function DBListinggrp({ onLogout }) {
         setCamps(response.data);
       } catch (error) {
         console.error('Error fetching camps:', error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -134,85 +138,93 @@ export default function DBListinggrp({ onLogout }) {
             <p className="">Here are all the camps you have created.</p>
 
             <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
-              <div className="row y-gap-30">
-                {currentCamps.map((camp, index) => (
-                  <div key={index} className="col-lg-6">
-                    <div className="border-1 rounded-12 px-20 py-20 camp-card">
-                      <div className="row x-gap-20 y-gap-20 items-center position-relative">
-                        <div className="col-xxl-auto">
-                          <div className="image-containercard col-xxl-auto">
-                            <img
-                              src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
-                              alt={camp.title}
-                              className="camp-imagecard size-200 w-1/1 object-cover rounded-12"
-                            />
-                            {getStatusLabel(camp)}
-                          </div>
-                        </div>
-
-                        <div className="col">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex items-center">
-                              <i className="icon-pin mr-5"></i>
-                              {camp.emplacement}
-                            </div>
-                            {isUpcoming(camp) && (
-                              <button
-                                className="cancel-button"
-                                onClick={() => handleCancelClick(camp)}
-                              >
-                                <FaStopCircle />
-                              </button>
-                            )}
-                          </div>
-
-                          <div className="text-18 lh-15 fw-500 mt-5">
-                            <Link to={`/camp/${camp._id}`}>{camp.title}</Link>
-                          </div>
-
-                          <div className="d-flex items-center mt-5">
-                            <div className="d-flex x-gap-5 text-yellow-2 mr-10">
-                              <Stars star={camp.reviewScore} />
-                            </div>
-                            <div>({camp.reviewScore} reviews)</div>
-                          </div>
-
-                          <div className="row y-gap-15 justify-between items-end pt-5">
-                            <div className="col-auto">
-                              <div className="d-flex items-center">
-                                <i className="icon-clock mr-5"></i>
-                                <div className="text-14">{camp.duration} days</div>
+              {loading ? (
+                <div className="spinner-section">
+                  <LoadingSpinner2 />
+                </div>
+              ) : (
+                <>
+                  <div className="row y-gap-30">
+                    {currentCamps.map((camp, index) => (
+                      <div key={index} className="col-lg-6">
+                        <div className="border-1 rounded-12 px-20 py-20 camp-card">
+                          <div className="row x-gap-20 y-gap-20 items-center position-relative">
+                            <div className="col-xxl-auto">
+                              <div className="image-containercard col-xxl-auto">
+                                <img
+                                  src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                                  alt={camp.title}
+                                  className="camp-imagecard size-200 w-1/1 object-cover rounded-12"
+                                />
+                                {getStatusLabel(camp)}
                               </div>
                             </div>
 
-                            <div className="col-auto">
-                              <div className="text-right md:text-left">
-                                <div className="lh-14"></div>
-                                <span className="text-20 fw-500">
-                                  {camp.prix} DT
-                                </span>
+                            <div className="col">
+                              <div className="d-flex justify-content-between align-items-center">
+                                <div className="d-flex items-center">
+                                  <i className="icon-pin mr-5"></i>
+                                  {camp.emplacement}
+                                </div>
+                                {isUpcoming(camp) && (
+                                  <button
+                                    className="cancel-button"
+                                    onClick={() => handleCancelClick(camp)}
+                                  >
+                                    <FaStopCircle />
+                                  </button>
+                                )}
+                              </div>
+
+                              <div className="text-18 lh-15 fw-500 mt-5">
+                                <Link to={`/camp/${camp._id}`}>{camp.title}</Link>
+                              </div>
+
+                              <div className="d-flex items-center mt-5">
+                                <div className="d-flex x-gap-5 text-yellow-2 mr-10">
+                                  <Stars star={camp.reviewScore} />
+                                </div>
+                                <div>({camp.reviewScore} reviews)</div>
+                              </div>
+
+                              <div className="row y-gap-15 justify-between items-end pt-5">
+                                <div className="col-auto">
+                                  <div className="d-flex items-center">
+                                    <i className="icon-clock mr-5"></i>
+                                    <div className="text-14">{camp.duration} days</div>
+                                  </div>
+                                </div>
+
+                                <div className="col-auto">
+                                  <div className="text-right md:text-left">
+                                    <div className="lh-14"></div>
+                                    <span className="text-20 fw-500">
+                                      {camp.prix} DT
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-30">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={camps.length}
+                      itemsPerPage={ITEMS_PER_PAGE}
+                      onPageChange={handlePageChange}
+                    />
+
+                    <div className="text-14 text-center mt-20">
+                      Showing results {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, camps.length)} of {camps.length}
                     </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="mt-30">
-                <Pagination
-                  currentPage={currentPage}
-                  totalItems={camps.length}
-                  itemsPerPage={ITEMS_PER_PAGE}
-                  onPageChange={handlePageChange}
-                />
-
-                <div className="text-14 text-center mt-20">
-                  Showing results {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, camps.length)} of {camps.length}
-                </div>
-              </div>
+                </>
+              )}
             </div>
 
             <div className="text-center pt-30">
@@ -230,7 +242,7 @@ export default function DBListinggrp({ onLogout }) {
       >
         <div className="custom-dialog-content">
           <DialogHeading className='canceltitle' id="custom-dialog-heading">Cancel Camp</DialogHeading>
-          
+
           <p>Are you sure you want to cancel this camp?</p>
           <div className="custom-button-container">
             <button className="custom-btn custom-btn-danger" onClick={confirmCancel}>
@@ -239,7 +251,7 @@ export default function DBListinggrp({ onLogout }) {
             <DialogDismiss as="button" className="custom-btn custom-btn-secondary" onClick={closeDialog}>
               No
             </DialogDismiss>
-           
+
           </div>
         </div>
       </Dialog>

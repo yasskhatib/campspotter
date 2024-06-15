@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import Pagination from "../common/Pagination";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 // Consider moving this to a separate constants file if used across multiple components.
 export const continents = [
@@ -18,14 +19,19 @@ function BlogList1() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
   const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     axios.get('http://localhost:5000/blogs')
       .then(response => {
         setBlogs(response.data);
         setTotalItems(response.data.length);
+        setLoading(false); // Set loading to false once data is fetched
       })
-      .catch(error => console.error('Failed to fetch blogs:', error));
+      .catch(error => {
+        console.error('Failed to fetch blogs:', error);
+        setLoading(false); // Set loading to false on error
+      });
   }, []);
 
   useEffect(() => {
@@ -48,6 +54,10 @@ function BlogList1() {
   const getImageUrl = (imagePath) => {
     return `http://localhost:5000/${imagePath}`;
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <section className="layout-pt-md layout-pb-xl">

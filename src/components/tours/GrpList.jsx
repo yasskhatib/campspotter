@@ -11,6 +11,7 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 import ReactStars from 'react-stars';
 import "react-toastify/dist/ReactToastify.css";
 import './style.css'; // Import the custom CSS file
+import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -29,6 +30,7 @@ export default function GrpList() {
   const ITEMS_PER_PAGE = 8;
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -75,6 +77,9 @@ export default function GrpList() {
         setCampGroups(groupsWithRatings);
       } catch (error) {
         console.error('Error fetching camp groups:', error);
+      }
+      finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -170,7 +175,9 @@ export default function GrpList() {
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentCampGroups = campGroups.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
+  if (loading) {
+    return <LoadingSpinner />;
+  }
   return (
     <>
       <section className="layout-pb-xl">

@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import Stars from '../common/Stars';
+import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
 import './CampCard.css'; // Import the CSS file
 
 dayjs.extend(utc);
@@ -20,6 +21,7 @@ export default function DBListing({ user, onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -32,6 +34,8 @@ export default function DBListing({ user, onLogout }) {
         setReservations(response.data);
       } catch (error) {
         console.error('Error fetching reservations:', error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -70,73 +74,79 @@ export default function DBListing({ user, onLogout }) {
           <p>{user ? user.fullName : 'Loading...'}: Reserved camps</p>
 
           <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
-            <div className="row y-gap-30">
-              {currentReservations.length > 0 ? (
-                currentReservations.map((reservation, index) => {
-                  const camp = reservation.campId; // Ensure we access the populated camp data
-                  return (
-                    <div key={index} className="col-lg-6">
-                      <div className="border-1 rounded-12 px-20 py-20">
-                        <div className="row x-gap-20 y-gap-20 items-center">
-                          <div className="col-xxl-auto">
-                            <div className="image-containercard col-xxl-auto">
-                              {camp.campPictureCover ? (
-                                <img
-                                  src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
-                                  alt={camp.title}
-                                  className="camp-imagecard size-200 w-1/1 object-cover rounded-12"
-                                />
-                              ) : (
-                                <div className="no-image-placeholder">No Image</div>
-                              )}
-                              {getStatusLabel(camp)}
-                            </div>
-                          </div>
-
-                          <div className="col">
-                            <div className="d-flex items-center">
-                              <i className="icon-pin mr-5"></i>
-                              {camp.emplacement}
-                            </div>
-
-                            <div className="text-18 lh-15 fw-500 mt-5">
-                              <Link to={`/camp/${camp._id}`}>{camp.title}</Link>
-                            </div>
-
-                            <div className="d-flex items-center mt-5">
-                              <div className="d-flex x-gap-5 text-yellow-2 mr-10">
-                                <Stars star={camp.reviewScore} />
+            {loading ? (
+              <div className="spinner-section">
+                <LoadingSpinner2 />
+              </div>
+            ) : (
+              <div className="row y-gap-30">
+                {currentReservations.length > 0 ? (
+                  currentReservations.map((reservation, index) => {
+                    const camp = reservation.campId; // Ensure we access the populated camp data
+                    return (
+                      <div key={index} className="col-lg-6">
+                        <div className="border-1 rounded-12 px-20 py-20">
+                          <div className="row x-gap-20 y-gap-20 items-center">
+                            <div className="col-xxl-auto">
+                              <div className="image-containercard col-xxl-auto">
+                                {camp.campPictureCover ? (
+                                  <img
+                                    src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                                    alt={camp.title}
+                                    className="camp-imagecard size-200 w-1/1 object-cover rounded-12"
+                                  />
+                                ) : (
+                                  <div className="no-image-placeholder">No Image</div>
+                                )}
+                                {getStatusLabel(camp)}
                               </div>
-                              <div>({camp.reviewScore} reviews)</div>
                             </div>
 
-                            <div className="row y-gap-15 justify-between items-end pt-5">
-                              <div className="col-auto">
-                                <div className="d-flex items-center">
-                                  <i className="icon-clock mr-5"></i>
-                                  <div className="text-14">{camp.duration} days</div>
+                            <div className="col">
+                              <div className="d-flex items-center">
+                                <i className="icon-pin mr-5"></i>
+                                {camp.emplacement}
+                              </div>
+
+                              <div className="text-18 lh-15 fw-500 mt-5">
+                                <Link to={`/camp/${camp._id}`}>{camp.title}</Link>
+                              </div>
+
+                              <div className="d-flex items-center mt-5">
+                                <div className="d-flex x-gap-5 text-yellow-2 mr-10">
+                                  <Stars star={camp.reviewScore} />
                                 </div>
+                                <div>({camp.reviewScore} reviews)</div>
                               </div>
 
-                              <div className="col-auto">
-                                <div className="text-right md:text-left">
-                                  <div className="lh-14"></div>
-                                  <span className="text-20 fw-500">
-                                    {camp.prix} DT
-                                  </span>
+                              <div className="row y-gap-15 justify-between items-end pt-5">
+                                <div className="col-auto">
+                                  <div className="d-flex items-center">
+                                    <i className="icon-clock mr-5"></i>
+                                    <div className="text-14">{camp.duration} days</div>
+                                  </div>
+                                </div>
+
+                                <div className="col-auto">
+                                  <div className="text-right md:text-left">
+                                    <div className="lh-14"></div>
+                                    <span className="text-20 fw-500">
+                                      {camp.prix} DT
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div>No reservations found.</div>
-              )}
-            </div>
+                    );
+                  })
+                ) : (
+                  <div>No reservations found.</div>
+                )}
+              </div>
+            )}
 
             <div className="mt-30">
               <Pagination
@@ -168,8 +178,5 @@ DBListing.propTypes = {
     governorate: PropTypes.string,
     telephone: PropTypes.string,
   }),
-};
-
-DBListing.propTypes = {
   onLogout: PropTypes.func.isRequired,
 };
