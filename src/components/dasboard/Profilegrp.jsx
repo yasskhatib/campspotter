@@ -200,7 +200,7 @@ export default function CampDashboard({ onLogout }) {
                     </div>
                   </div>
 
-                  <div className="col-lg-6">
+                  <div className="col-lg-12">
                     <div className="form-input">
                       <textarea placeholder="Comments" rows="4" name="comments" value={campgrpInfo.comments} onChange={handleChange} required></textarea>
                     </div>
