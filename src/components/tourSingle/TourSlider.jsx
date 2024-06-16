@@ -3,9 +3,9 @@ import { Navigation, Pagination } from "swiper/modules";
 import Stars from "../common/Stars";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from 'axios';
 import dayjs from 'dayjs';
 import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
+import axiosInstance from '../../axiosInstance'; // Import the Axios instance
 
 export default function TourSlider() {
   const [camps, setCamps] = useState([]);
@@ -14,7 +14,7 @@ export default function TourSlider() {
   useEffect(() => {
     const fetchCamps = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/allCamps'); // Fetch all camps
+        const response = await axiosInstance.get('/allCamps');
         const upcomingCamps = response.data
           .filter(camp => dayjs(camp.date).isAfter(dayjs())) // Filter for future dates
           .sort((a, b) => dayjs(a.date) - dayjs(b.date)) // Sort by date
@@ -89,7 +89,7 @@ export default function TourSlider() {
                         <div className="tourCard__header">
                           <div className="tourCard__image ratio ratio-28:20">
                             <img
-                              src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                              src={camp.campPictureCover}
                               alt={camp.title}
                               className="img-ratio rounded-12"
                             />
