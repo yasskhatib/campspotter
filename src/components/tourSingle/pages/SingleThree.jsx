@@ -198,7 +198,7 @@ export default function SingleThree({ camp, user }) {
               {inclusionItems.map((item, index) => (
                 <div className="col-md-6" key={index}>
                   <div className="inclusion-item">
-                    <span className="check-icon">&#10003;</span>
+                    <i className="icon-check flex-center text-10 size-24 rounded-full text-green-2 bg-green-1 mr-15"></i>
                     {item}
                   </div>
                 </div>
