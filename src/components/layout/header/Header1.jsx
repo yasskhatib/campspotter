@@ -85,6 +85,16 @@ export default function Header1() {
     navigate('/');
   };
 
+  const handleMobileProfileClick = () => {
+    if (localStorage.getItem('loggedIn')) {
+      navigate('/db-profile');
+    } else if (localStorage.getItem('campgrpLoggedIn')) {
+      navigate('/campgrp-dashboard');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <>
       <header
@@ -118,14 +128,12 @@ export default function Header1() {
               <i className="icon-search text-18"></i>
             </button>
 
-            {!isLoggedIn && (
-              <button
-                onClick={() => pageNavigate("/login")}
-                className="d-flex ml-20"
-              >
-                <i className="icon-person text-18"></i>
-              </button>
-            )}
+            <button
+              onClick={handleMobileProfileClick}
+              className="d-flex ml-20"
+            >
+              <i className="icon-person text-18"></i>
+            </button>
           </div>
 
           <div className="header__right">

@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function BannerFour() {
   return (
     <section className="layout-pt-xxl layout-pb-xxl relative">
@@ -13,7 +11,7 @@ export default function BannerFour() {
             <h2
               data-aos="fade-up"
               data-aos-delay=""
-              className="text-70 md:text-40 sm:text-30 text-white fw-700"
+              className="text-40 md:text-30 sm:text-20 text-white fw-600"
             >
               Simplify Camping, Amplify Fun!
             </h2>
