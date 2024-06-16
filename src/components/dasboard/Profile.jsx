@@ -195,8 +195,8 @@ export default function Profile({ onLogout }) {
                     <input placeholder="Old password" type="password" name="oldPassword" value={passwords.oldPassword} onChange={handlePasswordChange} required />
                   </div>
                 </div>
-              
-              <div className="row">
+              </div>
+              <div className="row y-gap-30">
                 <div className="col-md-6">
                   <div className="form-input">
                     <input placeholder="New password" type="password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordChange} required />
@@ -207,7 +207,6 @@ export default function Profile({ onLogout }) {
                   <div className="form-input">
                     <input placeholder="Confirm new password" type="password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} required />
                   </div>
-                </div>
                 </div>
               </div>
               <div className="row">
