@@ -1,5 +1,5 @@
 import Article from "@/components/homes/articles/Article";
-import Banner from "@/components/homes/banners/Bannerfour";
+import Banner from "@/components/homes/banners/Bannere";
 import DestinationsOne from "@/components/homes/destinations/DestinationsOne";
 import FeaturesOne from "@/components/homes/features/FeaturesThree";
 import Hero1 from "@/components/homes/heros/Hero1";
