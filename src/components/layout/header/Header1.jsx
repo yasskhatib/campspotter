@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import HeaderSerch from "../components/HeaderSerch";
-import MobileMenu from "../components/MobileMenu";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import HeaderSerch from "../components/HeaderSerch";
+import MobileMenu from "../components/MobileMenu";
 
 export default function Header1() {
   const navigate = useNavigate();
@@ -28,8 +28,8 @@ export default function Header1() {
   const fetchCampgrpName = async (email) => {
     try {
       const response = await axiosInstance.get(`/campgrpInfo?email=${email}`);
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) { // Check if the response status is 200
+        const data = response.data;
         localStorage.setItem('campgrpName', data.name);
         return data.name;
       } else {
@@ -87,8 +87,6 @@ export default function Header1() {
 
   return (
     <>
-    
-
       <header
         className={`header -type-1 js-header ${addClass ? "-is-sticky" : ""}`}
       >
