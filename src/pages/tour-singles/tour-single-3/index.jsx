@@ -6,8 +6,8 @@ import SingleThree from "@/components/tourSingle/pages/SingleThree";
 import MetaComponent from "@/components/common/MetaComponent";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../../axiosInstance'; // Import the Axios instance
 
 const truncateTitle = (title, wordLimit = 10) => {
   const words = title.split(' ');
@@ -34,7 +34,7 @@ export default function TourSinglePage3() {
     } else if (campgrpLoggedIn) {
       const campgrpEmail = localStorage.getItem('campgrpEmail');
       try {
-        const response = await axios.get(`http://localhost:5000/campgrpInfo?email=${campgrpEmail}`);
+        const response = await axiosInstance.get(`/campgrpInfo?email=${campgrpEmail}`);
         if (response.data) {
           const { name } = response.data;
           setUser({ fullName: name, email: campgrpEmail, role: 'campgrp' });
@@ -48,7 +48,7 @@ export default function TourSinglePage3() {
   useEffect(() => {
     const fetchCamp = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/camp/${id}`);
+        const response = await axiosInstance.get(`/camp/${id}`);
         setCamp(response.data);
         const truncatedTitle = truncateTitle(response.data.title);
         setPageTitle(`${truncatedTitle} -Campspotter`);

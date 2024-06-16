@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CommentBox from "./CommentBox";
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../../axiosInstance'; // Import the Axios instance
 
 export default function BlogSingle({ setBlogTitle }) {
   const { id } = useParams();
@@ -15,7 +15,7 @@ export default function BlogSingle({ setBlogTitle }) {
   useEffect(() => {
     if (!id) return;
 
-    axios.get(`http://localhost:5000/api/blogs/${id}`)
+    axiosInstance.get(`/api/blogs/${id}`)
       .then(response => {
         if (response.data.status === "approved") {
           setBlogTitle(response.data.title);  // Update the page title
@@ -182,7 +182,7 @@ export default function BlogSingle({ setBlogTitle }) {
 
       <section className="hero -type-1 -min-2">
         <div className="hero__bg">
-          <img src={`http://localhost:5000/${blog.coverImage}`} alt="Cover" />
+          <img src={blog.coverImage} alt="Cover" />
           <img className="shapesvg" src="/img/hero/1/shape.svg" alt="image" style={{ height: 'auto' }} />
           <div className="gradient-overlay"></div>
         </div>
