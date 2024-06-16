@@ -33,11 +33,11 @@ export default function Header1() {
         localStorage.setItem('campgrpName', data.name);
         return data.name;
       } else {
-        console.error('Failed to fetch camping group info');
+
         return null;
       }
     } catch (error) {
-      console.error('Error fetching camping group info:', error);
+
       return null;
     }
   };

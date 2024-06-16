@@ -148,7 +148,7 @@ export default function Login() {
             <div className="text-center mb-20 md:mb-20" style={{ color: 'white' }}>
               <h1 className="text-60" style={{ color: 'white' }}>Log-In for Camper</h1>
               <div className="mt-5">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link to="/register" className="text-accent-1" style={{ color: '#ffff' }}>
                   Sign Up!
                 </Link>
@@ -179,7 +179,7 @@ export default function Login() {
               </div>
 
               <div className="row y-ga-10 justify-between items-center pt-30">
-                <div className="col-auto">
+                <div className="col-auto" hidden>
                   <div className="d-flex items-center">
                     <div className="form-checkbox">
                       <input

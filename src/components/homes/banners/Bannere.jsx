@@ -18,7 +18,7 @@ export default function BannerFour() {
             <p
               data-aos="fade-up"
               data-aos-delay=""
-              className="text-white mt-20"
+              className="text-white mt-10"
             >
               Join Us: Embark on Unforgettable Adventures with Camp Spotter!
               <br className="md:d-none" /> Explore the Great Outdoors with Ease!

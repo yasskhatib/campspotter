@@ -1,6 +1,5 @@
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
-import PageHeader from "@/components/tourSingle/PageHeader";
 import TourSlider from "@/components/tourSingle/TourSlider";
 import SingleThree from "@/components/tourSingle/pages/SingleThree";
 import MetaComponent from "@/components/common/MetaComponent";
