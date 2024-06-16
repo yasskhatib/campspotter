@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import HeaderSerch from "../components/HeaderSerch";
 import MobileMenu from "../components/MobileMenu";
 import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from './axiosInstance'; // Import the Axios instance
+import axiosInstance from '../../axiosInstance'; // Import the Axios instance
 
 export default function Header1() {
   const navigate = useNavigate();
