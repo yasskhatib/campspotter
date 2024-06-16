@@ -9,6 +9,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { Rating } from 'react-simple-star-rating';
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../../axiosInstance'; // Import the Axios instance
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -55,13 +56,13 @@ export default function TourList3() {
   useEffect(() => {
     const fetchCamps = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/allCamps');
+        const response = await axiosInstance.get('/allCamps'); // Updated line
         setCamps(response.data);
         setFilteredCamps(response.data);
 
         // Fetch ratings for all camps
         const ratingsResponse = await Promise.all(response.data.map(camp =>
-          axios.get(`http://localhost:5000/campComments/rating/${camp._id}`).catch(() => ({ data: { rating: null } }))
+          axiosInstance.get(`/campComments/rating/${camp._id}`).catch(() => ({ data: { rating: null } })) // Updated line
         ));
         const ratings = ratingsResponse.reduce((acc, ratingResp, index) => {
           const ratingValue = ratingResp.data.rating;
@@ -180,7 +181,7 @@ export default function TourList3() {
                       <div className="tourCard__header">
                         <div className="tourCard__image ratio ratio-28:20">
                           <img
-                            src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                            src={camp.campPictureCover} // Updated line
                             alt={camp.title}
                             className="img-ratio rounded-12"
                           />
