@@ -5,6 +5,7 @@ import Header from "./Header";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
+import axiosInstance from '@/components/axiosInstance'; // Ensure correct path
 
 export default function Profile({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -28,9 +29,9 @@ export default function Profile({ onLogout }) {
 
   const fetchUserInfo = async (email) => {
     try {
-      const response = await fetch(`http://localhost:5000/userinfo?email=${email}`);
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get(`/userinfo?email=${email}`);
+      if (response.status === 200) {
+        const data = response.data;
         setUserInfo({
           fullName: data.fullName,
           email: data.email,
@@ -66,14 +67,8 @@ export default function Profile({ onLogout }) {
   const handleSaveChanges = async () => {
     setLoading(true); // Set loading to true when saving changes
     try {
-      const response = await fetch(`http://localhost:5000/updateProfile`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userInfo),
-      });
-      if (response.ok) {
+      const response = await axiosInstance.post(`/updateProfile`, userInfo);
+      if (response.status === 200) {
         toast.success('Profile updated successfully');
       } else {
         toast.error('Failed to update profile');
@@ -98,14 +93,12 @@ export default function Profile({ onLogout }) {
     }
     setLoading(true); // Set loading to true when changing password
     try {
-      const response = await fetch(`http://localhost:5000/changePassword`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: userInfo.email, oldPassword, newPassword }),
+      const response = await axiosInstance.post(`/changePassword`, {
+        email: userInfo.email,
+        oldPassword,
+        newPassword
       });
-      if (response.ok) {
+      if (response.status === 200) {
         toast.success('Password changed successfully');
         setPasswords({
           oldPassword: "",

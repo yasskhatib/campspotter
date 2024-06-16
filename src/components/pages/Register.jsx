@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import  { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '@/components/axiosInstance'; // Ensure correct path
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -48,14 +49,8 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
+      const response = await axiosInstance.post('/register', formData);
+      if (response.status === 200) {
         toast.success('User registered successfully', {
           position: "bottom-right",
           autoClose: 7000,
@@ -73,8 +68,7 @@ export default function Register() {
           password: '',
         });
       } else {
-        const errorMessage = await response.text();
-        toast.error(errorMessage, {
+        toast.error(response.data.message, {
           position: "bottom-right",
           autoClose: 7000,
           hideProgressBar: false,

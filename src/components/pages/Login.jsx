@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -35,17 +36,11 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await axiosInstance.post('/login', formData);
 
-      const data = await response.json();
+      const data = response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         localStorage.setItem('fullName', data.fullName);
         toast.success('Login successful', {
           position: "bottom-right",
@@ -108,10 +103,10 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/forgotPassword?email=${formData.email}`);
-      const data = await response.json();
+      const response = await axiosInstance.get(`/forgotPassword?email=${formData.email}`);
+      const data = response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         toast.success(data.message, {
           position: "bottom-right",
           autoClose: 5000,

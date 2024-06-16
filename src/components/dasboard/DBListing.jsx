@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -11,6 +10,7 @@ import timezone from 'dayjs/plugin/timezone';
 import Stars from '../common/Stars';
 import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
 import './CampCard.css'; // Import the CSS file
+import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -27,7 +27,7 @@ export default function DBListing({ user, onLogout }) {
     const fetchReservations = async () => {
       try {
         const email = localStorage.getItem('userEmail');
-        const response = await axios.get('http://localhost:5000/api/reservations', {
+        const response = await axiosInstance.get('/api/reservations', {
           params: { email },
         });
         console.log('Fetched reservations:', response.data); // Log the fetched data

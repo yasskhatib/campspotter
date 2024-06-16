@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function Logingrp() {
   const [formData, setFormData] = useState({
@@ -22,17 +23,10 @@ export default function Logingrp() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/loginCampgrp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await axiosInstance.post('/loginCampgrp', formData);
+      const data = response.data;
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         localStorage.setItem('campgrpLoggedIn', true);
         localStorage.setItem('campgrpEmail', formData.email);
         toast.success('Login successful', {
@@ -85,10 +79,10 @@ export default function Logingrp() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/forgotPasswordCampgrp?email=${formData.email}`);
-      const data = await response.json();
+      const response = await axiosInstance.get(`/forgotPasswordCampgrp?email=${formData.email}`);
+      const data = response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         toast.success(data.message, {
           position: "bottom-right",
           autoClose: 5000,

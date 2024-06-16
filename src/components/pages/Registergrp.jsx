@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '@/components/axiosInstance'; // Ensure correct path
 
 export default function RegisterCampgrp() {
   const [formData, setFormData] = useState({
@@ -43,6 +44,7 @@ export default function RegisterCampgrp() {
       });
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,12 +98,9 @@ export default function RegisterCampgrp() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/registerCampgrp', {
-        method: 'POST',
-        body: formDataToSend,
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const response = await axiosInstance.post('/registerCampgrp', formDataToSend);
+      const data = response.data;
+      if (response.status === 200) {
         toast.success(data.message, {
           position: "bottom-right",
           autoClose: 7000,
@@ -147,6 +146,7 @@ export default function RegisterCampgrp() {
       });
     }
   };
+
 
   return (
     <section className="mt-header layout-pt-lg layout-pb-lg bg-img3">
