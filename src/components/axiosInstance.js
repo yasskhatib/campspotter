@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-console.log('API Base URL:', process.env.REACT_APP_API_BASE_URL);
-
 const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_BASE_URL,
+    baseURL: 'https://campbackend-production.up.railway.app', // Directly set the base URL
 });
 
 export default axiosInstance;
