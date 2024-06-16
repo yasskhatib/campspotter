@@ -4,7 +4,7 @@ import PageHeader from "@/components/tourSingle/PageHeader";
 import TourSlider from "@/components/tourSingle/TourSlider";
 import SingleThree from "@/components/tourSingle/pages/SingleThree";
 import MetaComponent from "@/components/common/MetaComponent";
-import { useParams } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
@@ -65,7 +65,9 @@ export default function TourSinglePage3() {
     document.title = pageTitle;
   }, [pageTitle]);
 
-
+  if (!camp) {
+    return <Redirect to="/camps" />; // Redirect to /camps if camp is null
+  }
 
   return (
     <>
