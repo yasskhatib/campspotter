@@ -11,10 +11,7 @@ export default function ArticlesTwo() {
     const fetchBlogs = async () => {
       try {
         const response = await axiosInstance.get("/latestblogs?status=approved&limit=3"); // Updated line
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
+        const data = response.data;
         setBlogs(data);
       } catch (error) {
         console.error("Failed to fetch blogs:", error);
