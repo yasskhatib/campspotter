@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import LoadingSpinner2 from '@/components/common/LoadingSpinner2'; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axios from 'axios'; // Use axios directly
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -18,11 +18,11 @@ export default function Tour1() {
   useEffect(() => {
     const fetchLatestCamps = async () => {
       try {
-        const response = await axiosInstance.get('/allCamps');
+        const response = await axios.get('https://campbackend-production.up.railway.app/allCamps'); // Direct API link
         let camps = response.data;
         // Fetch ratings for each camp and assign it to the camp object
         await Promise.all(camps.map(camp =>
-          axiosInstance.get(`/campComments/rating/${camp._id}`)
+          axios.get(`https://campbackend-production.up.railway.app/campComments/rating/${camp._id}`) // Direct API link
             .then(ratingResponse => {
               camp.rating = ratingResponse.data.rating ? ratingResponse.data.rating.toFixed(1) : "0.0"; // Assign default if no rating
             })
@@ -127,7 +127,7 @@ export default function Tour1() {
                         {camp.duration} days
                       </div>
                       <div>
-                        <span className="text-16 fw-500">{camp.prix} TND</span>
+                        <span className="text-16 fw-500">{camp.prix} TND}</span>
                       </div>
                     </div>
                   </div>
