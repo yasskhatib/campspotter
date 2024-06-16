@@ -59,8 +59,7 @@ export default function DBCampgrpProfilePage() {
         localStorage.removeItem('campgrpEmail');
         navigate('/logingrp');
     };
-    console.log('campergrpLoggedIn:', localStorage.getItem('campgrpLoggedIn'));
-    console.log('camperLoggedIn:', localStorage.getItem('loggedIn'));
+
 
     const metadata = {
         title: `${campgrpInfo.name} Dashboard - Campspotter`,
