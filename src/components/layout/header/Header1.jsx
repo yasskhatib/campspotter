@@ -187,6 +187,7 @@ export default function Header1() {
       <MobileMenu
         setMobileMenuOpen={setMobileMenuOpen}
         mobileMenuOpen={mobileMenuOpen}
+        isLoggedIn={isLoggedIn}
       />
     </>
   );

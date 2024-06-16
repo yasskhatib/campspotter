@@ -29,6 +29,9 @@ export default function Logingrp() {
       if (response.status === 200) {
         localStorage.setItem('campgrpLoggedIn', true);
         localStorage.setItem('campgrpEmail', formData.email);
+
+        console.log('camperLoggedIn:', localStorage.getItem('campgrpLoggedIn'));
+
         toast.success('Login successful', {
           position: "bottom-right",
           autoClose: 5000,

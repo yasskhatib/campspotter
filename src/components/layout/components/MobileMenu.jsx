@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 const socialMediaLinks = [
   { id: 1, class: "icon-facebook", href: "#" },
@@ -8,7 +9,7 @@ const socialMediaLinks = [
   { id: 4, class: "icon-linkedin", href: "#" },
 ];
 
-export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
+export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen, isLoggedIn }) {
   const [activeSub, setActiveSub] = useState("");
   const { pathname } = useLocation();
 
@@ -16,14 +17,14 @@ export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
     { label: "Home", href: "/" },
     { label: "Camps List", href: "/camps" },
     { label: "Group List", href: "/groups" },
-    {
+    !isLoggedIn && {
       label: "Sign Up",
       submenu: [
         { label: "Camp Group", href: "/registergrp" },
         { label: "Camper", href: "/register" }
       ]
     },
-    {
+    !isLoggedIn && {
       label: "Sign In",
       submenu: [
         { label: "Camp Group", href: "/logingrp" },
@@ -34,7 +35,7 @@ export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
     { label: "About", href: "/about" },
     { label: "Terms", href: "/terms" },
     { label: "Help Center", href: "/help-center" },
-  ];
+  ].filter(Boolean);
 
   return (
     <div
@@ -85,7 +86,7 @@ export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
         </div>
 
         <div className="menu__footer">
-          
+
           <div className="d-flex items-center x-gap-10 pt-30">
             {socialMediaLinks.map((link, i) => (
               <div key={i}>
@@ -100,3 +101,9 @@ export default function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
     </div>
   );
 }
+
+MobileMenu.propTypes = {
+  mobileMenuOpen: PropTypes.bool.isRequired,
+  setMobileMenuOpen: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+};

@@ -17,14 +17,11 @@ export default function Logincampgrp() {
     const camperLoggedIn = localStorage.getItem('loggedIn');
     const campgrpLoggedIn = localStorage.getItem('campgrpLoggedIn');
 
-    console.log('camperLoggedIn:', camperLoggedIn);
-    console.log('campgrpLoggedIn:', campgrpLoggedIn);
+    
 
     if (campgrpLoggedIn) {
-      console.log('Redirecting to campgrp-dashboard');
       navigate('/campgrp-dashboard');
     } else if (camperLoggedIn) {
-      console.log('Redirecting to db-profile');
       navigate('/db-profile');
     }
   }, [navigate]);
