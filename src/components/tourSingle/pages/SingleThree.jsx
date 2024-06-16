@@ -165,7 +165,7 @@ export default function SingleThree({ camp, user }) {
   return (
     <section className="pt-30 js-pin-container">
       <div className="container">
-        <div className="row y-gap-30 justify-between">
+        <div className="row mt-20 y-gap-30 justify-between">
           <div className="col-lg-8">
             <MainInformation2 camp={{ ...camp, duration: Number(camp.duration), campGroupName }} />
             <div className="row justify-center pt-30">
