@@ -66,7 +66,7 @@ export default function TourSinglePage3() {
   }, [pageTitle]);
 
   if (!camp) {
-    history.push('/camps'); // Redirect to /camps if camp is null and loading is false
+    return <LoadingSpinner />;
   }
 
   return (

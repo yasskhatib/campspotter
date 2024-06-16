@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from 'axios';
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 import Pagination from "../common/Pagination";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
@@ -22,7 +22,7 @@ function BlogList1() {
   const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    axios.get('http://localhost:5000/blogs')
+    axiosInstance.get('/blogs')
       .then(response => {
         setBlogs(response.data);
         setTotalItems(response.data.length);
@@ -52,7 +52,7 @@ function BlogList1() {
   };
 
   const getImageUrl = (imagePath) => {
-    return `http://localhost:5000/${imagePath}`;
+    return imagePath;
   };
 
   if (loading) {
