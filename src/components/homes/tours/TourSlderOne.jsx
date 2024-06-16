@@ -3,11 +3,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import Stars from "@/components/common/Stars";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../api/axiosInstance'; // Import the Axios instance
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -20,7 +20,7 @@ export default function TourSliderOne() {
   useEffect(() => {
     const fetchTopCamps = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/allCamps');
+        const response = await axiosInstance.get('/allCamps'); // Updated line
         let camps = response.data;
         const sixMonthsAgo = dayjs().utc().subtract(6, 'months');
 
@@ -29,7 +29,7 @@ export default function TourSliderOne() {
 
         // Then fetch ratings for each camp and assign it to the camp object
         await Promise.all(camps.map(camp =>
-          axios.get(`http://localhost:5000/campComments/rating/${camp._id}`)
+          axiosInstance.get(`/campComments/rating/${camp._id}`) // Updated line
             .then(ratingResponse => {
               camp.rating = ratingResponse.data.rating ? ratingResponse.data.rating.toFixed(1) : "0.0"; // Assign default if no rating
             })
@@ -119,7 +119,7 @@ export default function TourSliderOne() {
                         <div className="tourCard__header">
                           <div className="tourCard__image ratio ratio-28:20">
                             <img
-                              src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                              src={camp.campPictureCover} // Updated line
                               alt={camp.title}
                               className="img-ratio rounded-12"
                             />

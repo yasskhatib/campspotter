@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import HeaderSerch from "../components/HeaderSerch";
 import MobileMenu from "../components/MobileMenu";
 import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from './axiosInstance'; // Import the Axios instance
 
 export default function Header1() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function Header1() {
 
   const fetchCampgrpName = async (email) => {
     try {
-      const response = await fetch(`http://localhost:5000/campgrpInfo?email=${email}`);
+      const response = await axiosInstance.get(`/campgrpInfo?email=${email}`);
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem('campgrpName', data.name);

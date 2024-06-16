@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../api/axiosInstance'; // Import the Axios instance
 
 export default function ArticlesTwo() {
   const [blogs, setBlogs] = useState([]);
@@ -9,7 +10,7 @@ export default function ArticlesTwo() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch("http://localhost:5000/latestblogs?status=approved&limit=3");
+        const response = await axiosInstance.get("/latestblogs?status=approved&limit=3"); // Updated line
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -58,7 +59,7 @@ export default function ArticlesTwo() {
               <div key={i} className="col-lg-4 col-md-6">
                 <Link to={`/article/${blog._id}`} className="blogCard -type-1">
                   <div className="blogCard__image ratio ratio-41:30">
-                    <img src={`http://localhost:5000/${blog.coverImage}`} alt="image" className="img-ratio rounded-12" />
+                    <img src={blog.coverImage} alt="image" className="img-ratio rounded-12" /> {/* Updated line */}
                     <div className="blogCard__badge">{blog.type}</div>
                   </div>
 
