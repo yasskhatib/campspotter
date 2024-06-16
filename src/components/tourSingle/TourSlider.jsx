@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import dayjs from 'dayjs';
 import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function TourSlider() {
   const [camps, setCamps] = useState([]);
