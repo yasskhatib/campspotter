@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 
 export default function States() {
@@ -15,10 +15,10 @@ export default function States() {
     const fetchData = async () => {
       try {
         const [reviewRes, reservationsRes, campsRes, revenueRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/reviews/stats`, { params: { email: campgrpEmail } }),
-          axios.get(`http://localhost:5000/api/reservations/stats`, { params: { email: campgrpEmail } }),
-          axios.get(`http://localhost:5000/api/camps/stats`, { params: { email: campgrpEmail } }),
-          axios.get(`http://localhost:5000/api/revenue/stats`, { params: { email: campgrpEmail } })
+          axiosInstance.get(`/api/reviews/stats`, { params: { email: campgrpEmail } }),
+          axiosInstance.get(`/api/reservations/stats`, { params: { email: campgrpEmail } }),
+          axiosInstance.get(`/api/camps/stats`, { params: { email: campgrpEmail } }),
+          axiosInstance.get(`/api/revenue/stats`, { params: { email: campgrpEmail } })
         ]);
         setReviews({ score: reviewRes.data.averageScore, count: reviewRes.data.totalReviews });
         setReservations({ total: reservationsRes.data.total, month: reservationsRes.data.thisMonth });

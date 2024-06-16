@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ToastContainer, toast, Flip } from 'react-toastify';
@@ -10,6 +9,7 @@ import Pagination from '../../common/Pagination';
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
 import './Table.css'; // Make sure to create and import this CSS file for custom styles
 import Select from 'react-dropdown-select';
+import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 
 export default function Table() {
   const [camps, setCamps] = useState([]);
@@ -30,7 +30,7 @@ export default function Table() {
     // Fetch camps
     const fetchCamps = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/camps?campgrpEmail=${encodeURIComponent(campgrpEmail)}`);
+        const response = await axiosInstance.get(`/api/camps?campgrpEmail=${encodeURIComponent(campgrpEmail)}`);
         setCamps(response.data);
         if (response.data.length > 0) {
           setSelectedCamp(response.data[0]._id);
@@ -51,11 +51,11 @@ export default function Table() {
       const fetchReservations = async () => {
         setLoadingReservations(true); // Start loading reservations
         try {
-          const reservationResponse = await axios.get(`http://localhost:5000/api/fetch-reservations?campId=${selectedCamp}`);
+          const reservationResponse = await axiosInstance.get(`/api/fetch-reservations?campId=${selectedCamp}`);
           const reservationsWithUserInfo = await Promise.all(
             reservationResponse.data.map(async (reservation) => {
               try {
-                const userResponse = await axios.get(`http://localhost:5000/api/user-info?email=${encodeURIComponent(reservation.email)}`);
+                const userResponse = await axiosInstance.get(`/api/user-info?email=${encodeURIComponent(reservation.email)}`);
                 return { ...reservation, phone: userResponse.data.telephone, governorate: userResponse.data.governorate };
               } catch (error) {
                 console.error('Failed to fetch user info for reservation:', reservation.email, error);
@@ -84,7 +84,7 @@ export default function Table() {
 
   const handleRowClick = async (reservation) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/user-info?email=${encodeURIComponent(reservation.email)}`);
+      const response = await axiosInstance.get(`/api/user-info?email=${encodeURIComponent(reservation.email)}`);
       const userData = response.data;
       toast.info(
         <div>
@@ -128,7 +128,7 @@ export default function Table() {
     const selectedCampData = camps.find(camp => camp._id === selectedCamp);
     const campTitle = selectedCampData?.title || 'Selected Camp';
     const campDate = selectedCampData?.date ? new Date(selectedCampData.date).toLocaleDateString() : 'Date not available';
-    const campLink = `http://localhost:5173/camp/${selectedCamp}`; // Generate the camp's direct link
+    const campLink = `${window.location.origin}/camp/${selectedCamp}`; // Generate the camp's direct link
     const qrCodeDataUrl = await QRCode.toDataURL(campLink); // Generate QR code
 
     const doc = new jsPDF('p', 'mm', 'a4');
