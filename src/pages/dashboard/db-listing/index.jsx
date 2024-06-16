@@ -2,6 +2,7 @@ import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DBListing from "@/components/dasboard/DBListing";
 import MetaComponent from "@/components/common/MetaComponent";
+import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 
 export default function DBListingPage() {
   const [user, setUser] = useState(null);
@@ -17,10 +18,9 @@ export default function DBListingPage() {
     const fetchUserData = async () => {
       const email = localStorage.getItem('userEmail');
       try {
-        const response = await fetch(`http://localhost:5000/userinfo?email=${email}`);
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
+        const response = await axiosInstance.get(`/userinfo?email=${email}`);
+        if (response.status === 200) {
+          setUser(response.data);
         } else {
           console.error('Failed to fetch user data');
         }
@@ -28,6 +28,7 @@ export default function DBListingPage() {
         console.error('Error fetching user data:', error);
       }
     };
+
 
     fetchUserData();
   }, [navigate]);
