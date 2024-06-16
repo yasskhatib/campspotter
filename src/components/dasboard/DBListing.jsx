@@ -91,7 +91,7 @@ export default function DBListing({ user, onLogout }) {
                               <div className="image-containercard col-xxl-auto">
                                 {camp.campPictureCover ? (
                                   <img
-                                    src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                                    src={camp.campPictureCover}
                                     alt={camp.title}
                                     className="camp-imagecard size-200 w-1/1 object-cover rounded-12"
                                   />

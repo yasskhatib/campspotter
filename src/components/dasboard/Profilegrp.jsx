@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function CampDashboard({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -35,9 +36,9 @@ export default function CampDashboard({ onLogout }) {
 
   const fetchCampgrpInfo = async (email) => {
     try {
-      const response = await fetch(`http://localhost:5000/campgrpInfo?email=${email}`);
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get(`/campgrpInfo?email=${email}`);
+      if (response.status === 200) {
+        const data = response.data;
         setCampgrpInfo({
           name: data.name,
           email: data.email,
@@ -92,12 +93,9 @@ export default function CampDashboard({ onLogout }) {
         formDataToSend.append(key, campgrpInfo[key]);
       }
 
-      const response = await fetch(`http://localhost:5000/updateCampgrpinfos`, {
-        method: 'POST',
-        body: formDataToSend,
-      });
+      const response = await axiosInstance.post('/updateCampgrpinfos', formDataToSend);
 
-      if (response.ok) {
+      if (response.status === 200) {
         toast.success('Profile updated successfully');
       } else {
         toast.error('Failed to update profile');
