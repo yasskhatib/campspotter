@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +10,7 @@ import OthersInformation from "../OthersInformation";
 import MainInformation2 from "./MainInformation2";
 import parse, { domToReact } from 'html-react-parser';
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../../axiosInstance'; // Import the Axios instance
 
 export default function SingleThree({ camp, user }) {
   const [campGroupName, setCampGroupName] = useState('');
@@ -25,7 +25,7 @@ export default function SingleThree({ camp, user }) {
   useEffect(() => {
     const fetchCampGroupName = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/campGroup/${camp.campgrpEmail}`);
+        const response = await axiosInstance.get(`/campGroup/${camp.campgrpEmail}`); // Updated line
         setCampGroupName(response.data.name);
       } catch (error) {
         console.error('Error fetching camp group name:', error);
@@ -34,7 +34,7 @@ export default function SingleThree({ camp, user }) {
 
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/comments/${camp._id}`);
+        const response = await axiosInstance.get(`/comments/${camp._id}`); // Updated line
         setComments(response.data);
         if (user) {
           const userComment = response.data.find(cmt => cmt.camperEmail === user.email);
@@ -121,13 +121,14 @@ export default function SingleThree({ camp, user }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/addComment', {
+      const response = await axiosInstance.post('/addComment', {
         campId: camp._id,
         camperEmail: user.email,
         camperFullName: user.fullName,
         rating,
         comment,
-      });
+      }); // Updated line
+
 
       if (response.status === 201) {
         toastId.current = toast.success('Comment submitted successfully!', {
@@ -170,10 +171,11 @@ export default function SingleThree({ camp, user }) {
             <div className="row justify-center pt-30">
               <div className="col-12">
                 <img
-                  src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                  src={camp.campPictureCover}
                   alt={camp.title}
                   className="img-cover2 rounded-12"
                 />
+
               </div>
             </div>
             <div className="row y-gap-20 justify-between items-center layout-pb-md pt-60 md:pt-30">

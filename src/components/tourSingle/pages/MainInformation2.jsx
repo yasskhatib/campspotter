@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
+import axiosInstance from '../../axiosInstance'; // Import the Axios instance
 
 export default function MainInformation2({ camp }) {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function MainInformation2({ camp }) {
   useEffect(() => {
     const fetchCampRating = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/campComments/rating/${camp._id}`);
+        const response = await axiosInstance.get(`/campComments/rating/${camp._id}`); // Updated line
         setCampRating(response.data.rating.toFixed(1)); // Round rating to one decimal place
       } catch (error) {
         console.error('Error fetching camp rating:', error);

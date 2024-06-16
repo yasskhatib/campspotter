@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './form.css'; // Import the custom CSS file
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../axiosInstance'; // Import the Axios instance
 
 export default function TourSingleSidebar({ camp, user }) {
   const [extras, setExtras] = useState({ materialRent: false, autoBaggageTransfer: false });
@@ -23,9 +23,10 @@ export default function TourSingleSidebar({ camp, user }) {
   useEffect(() => {
     const checkReservationStatus = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/check-reservation', {
+        const response = await axiosInstance.get('/check-reservation', { // Updated line
           params: { campId: camp._id, userEmail: user.email }
         });
+
         if (response.data.reserved) {
           setAlreadyReserved(true);
           setFormDisabled(true);
@@ -37,9 +38,10 @@ export default function TourSingleSidebar({ camp, user }) {
 
     const fetchRemainingPlaces = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/camp-reservations', {
+        const response = await axiosInstance.get('/camp-reservations', { // Updated line
           params: { campId: camp._id }
         });
+
         setRemainingPlaces(camp.groupSize - response.data.reservations);
         if (response.data.reservations >= camp.groupSize) {
           setFormDisabled(true);
@@ -79,7 +81,7 @@ export default function TourSingleSidebar({ camp, user }) {
   }, [extras, camp]);
 
   const handleReservation = async () => {
-    const reservationPromise = axios.post('http://localhost:5000/reserve', {
+    const reservationPromise = axiosInstance.post('/reserve', { // Updated line
       reservationId: new Date().getTime(),
       campId: camp._id,
       campName: camp.title,
@@ -91,6 +93,7 @@ export default function TourSingleSidebar({ camp, user }) {
       selectedExtras: extras,
       comments,
     });
+
 
     toast.promise(reservationPromise, {
       pending: 'Processing your reservation...',

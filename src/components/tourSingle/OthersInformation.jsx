@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faUsers, faBirthdayCake, faFire } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'; // Import the Axios instance
 
 export default function OthersInformation({ duration, groupSize, ages, locationMaterials, campId }) {
   const [remainingPlaces, setRemainingPlaces] = useState(null);
@@ -10,9 +10,10 @@ export default function OthersInformation({ duration, groupSize, ages, locationM
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/camp-reservations', {
+        const response = await axiosInstance.get('/camp-reservations', { // Updated line
           params: { campId }
         });
+
         setRemainingPlaces(groupSize - response.data.reservations);
       } catch (error) {
         console.error('Error fetching reservations:', error);
@@ -78,9 +79,10 @@ export default function OthersInformation({ duration, groupSize, ages, locationM
 }
 
 OthersInformation.propTypes = {
-  duration: PropTypes.string.isRequired,
-  groupSize: PropTypes.string.isRequired,
+  duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
+  groupSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
   ages: PropTypes.string.isRequired,
   locationMaterials: PropTypes.string.isRequired,
   campId: PropTypes.string.isRequired,
 };
+
