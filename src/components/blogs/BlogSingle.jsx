@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CommentBox from "./CommentBox";
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function BlogSingle({ setBlogTitle }) {
   const { id } = useParams();

@@ -10,7 +10,7 @@ import OthersInformation from "../OthersInformation";
 import MainInformation2 from "./MainInformation2";
 import parse, { domToReact } from 'html-react-parser';
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function SingleThree({ camp, user }) {
   const [campGroupName, setCampGroupName] = useState('');

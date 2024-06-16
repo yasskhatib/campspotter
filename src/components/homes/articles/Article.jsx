@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function ArticlesTwo() {
   const [blogs, setBlogs] = useState([]);

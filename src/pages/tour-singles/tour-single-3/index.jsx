@@ -7,7 +7,7 @@ import MetaComponent from "@/components/common/MetaComponent";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 const truncateTitle = (title, wordLimit = 10) => {
   const words = title.split(' ');

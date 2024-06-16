@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
