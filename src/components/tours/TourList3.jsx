@@ -9,7 +9,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { Rating } from 'react-simple-star-rating';
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
-import axiosInstance from '../../axiosInstance'; // Import the Axios instance
+import axiosInstance from '../axiosInstance'; // Import the Axios instance
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
