@@ -48,6 +48,8 @@ export default function DBProfilePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('loggedIn');
+    localStorage.removeItem('campgrpLoggedIn');
+
     localStorage.removeItem('userEmail');
     localStorage.removeItem('fullName');
     localStorage.removeItem('governorate');
