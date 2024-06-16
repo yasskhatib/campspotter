@@ -74,7 +74,6 @@ export default function TourSinglePage3() {
       <MetaComponent meta={{ title: pageTitle, description: "Campspotter - Adventure Made Easy!" }} />
       <main>
         <Header1 />
-        <PageHeader />
         <SingleThree camp={camp} user={user} />
         <TourSlider />
         <FooterOne />
