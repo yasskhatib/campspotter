@@ -126,7 +126,7 @@ export default function CampDashboard({ onLogout }) {
                 {campgrpInfo.picture && (
                   <div className="image-preview">
                     <img
-                      src={`http://localhost:5000/uploads/${campgrpInfo.picture}`}
+                      src={campgrpInfo.picture}
                       alt="Profile"
                       className="img-thumbnail"
                     />

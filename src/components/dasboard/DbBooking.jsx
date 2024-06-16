@@ -5,6 +5,7 @@ import { Dialog, DialogDismiss, DialogHeading } from "@ariakit/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner2 from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 
 export default function DbBooking() {
   const [bookingData, setBookingData] = useState([]);
@@ -19,7 +20,7 @@ export default function DbBooking() {
     // Fetch data from the backend
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/blogs?email=${campgrpEmail}`);
+        const response = await axiosInstance.get(`/api/blogs?email=${campgrpEmail}`);
         const sortedData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setBookingData(sortedData);
       } catch (error) {
@@ -31,9 +32,10 @@ export default function DbBooking() {
     fetchData();
   }, [campgrpEmail]);
 
+
   const handleDelete = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/blogs/${selectedBlog}/cancel`);
+      await axiosInstance.put(`/api/blogs/${selectedBlog}/cancel`);
       setBookingData(bookingData.map(blog => blog._id === selectedBlog ? { ...blog, status: "Cancelled" } : blog));
       toast.dark("Article was cancelled");
     } catch (error) {
@@ -44,6 +46,7 @@ export default function DbBooking() {
       setSelectedBlog(null);
     }
   };
+
 
   const openDialog = (id) => {
     setSelectedBlog(id);
@@ -95,11 +98,15 @@ export default function DbBooking() {
                       <td>{indexOfFirstItem + i + 1}</td>
                       <td className="min-w-300">
                         <div className="d-flex items-center">
-                          <img className="iconblog" src={`http://localhost:5000/${elm.coverImage}`} alt="image" />
+                          <img className="iconblog" src={elm.coverImage} alt="image" />
                           <div className="ml-20">
-                            <span onClick={() => elm.status === "approved" && window.open(`http://localhost:5173/article/${elm._id}`, "_blank")} style={{ cursor: elm.status === "approved" ? "pointer" : "default" }}>
+                            <span
+                              onClick={() => elm.status === "approved" && window.open(`${window.location.origin}/article/${elm._id}`, "_blank")}
+                              style={{ cursor: elm.status === "approved" ? "pointer" : "default" }}
+                            >
                               {elm.title.length > 60 ? `${elm.title.slice(0, 60)}...` : elm.title}
                             </span>
+
                           </div>
                         </div>
                       </td>

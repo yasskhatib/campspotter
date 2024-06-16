@@ -7,6 +7,7 @@ import Header from "./Header";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import PropTypes from "prop-types";
+import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 
 export default function AddTour({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -51,12 +52,9 @@ export default function AddTour({ onLogout }) {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/addCamp', {
-        method: 'POST',
-        body: data,
-      });
+      const response = await axiosInstance.post('/addCamp', data);
 
-      if (response.ok) {
+      if (response.status === 201) {
         toast.success('Camp added successfully', {
           position: "bottom-right",
           autoClose: 5000,
@@ -108,6 +106,7 @@ export default function AddTour({ onLogout }) {
       });
     }
   };
+
 
   return (
     <>

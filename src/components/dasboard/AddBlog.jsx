@@ -5,7 +5,7 @@ import Sidebar from "./Sidebargrp";
 import Header from "./Header";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
+import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 import PropTypes from "prop-types";
 
 
@@ -107,7 +107,7 @@ export default function AddBlog({ onLogout }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/blogs', data, {
+      const response = await axiosInstance.post('/api/blogs', data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -133,6 +133,7 @@ export default function AddBlog({ onLogout }) {
       toast.error(`Error: ${error.response ? error.response.data.error : error.message}`);
     }
   };
+
 
   return (
     <>

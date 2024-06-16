@@ -3,7 +3,6 @@ import Pagination from '../common/Pagination';
 import Sidebar from './Sidebargrp';
 import Header from './Header';
 import Stars from '../common/Stars';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
@@ -14,6 +13,7 @@ import { Dialog, DialogDismiss, DialogHeading } from "@ariakit/react";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingSpinner2 from '../common/LoadingSpinner2'; // Ensure the path is correct
+import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 
 import './CampCard.css'; // Import the CSS file
 
@@ -35,7 +35,7 @@ export default function DBListinggrp({ onLogout }) {
   useEffect(() => {
     const fetchCamps = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/campsByCampgrp', {
+        const response = await axiosInstance.get('/campsByCampgrp', {
           params: { email: campgrpEmail },
         });
         console.log('Fetched camps:', response.data); // Debug fetched data
@@ -49,6 +49,7 @@ export default function DBListinggrp({ onLogout }) {
 
     fetchCamps();
   }, [campgrpEmail]);
+
 
   const getStatusLabel = (camp) => {
     const today = dayjs().utc().startOf('day');
@@ -84,7 +85,7 @@ export default function DBListinggrp({ onLogout }) {
   const confirmCancel = async () => {
     if (selectedCamp) {
       try {
-        await axios.patch(`http://localhost:5000/camps/${selectedCamp._id}`, { status: 'Canceled' });
+        await axiosInstance.patch(`/camps/${selectedCamp._id}`, { status: 'Canceled' });
         setCamps((prevCamps) => prevCamps.map((camp) =>
           camp._id === selectedCamp._id ? { ...camp, status: 'Canceled' } : camp
         ));
@@ -115,6 +116,7 @@ export default function DBListinggrp({ onLogout }) {
       }
     }
   };
+
 
   const closeDialog = () => {
     setShowDialog(false);
@@ -152,7 +154,7 @@ export default function DBListinggrp({ onLogout }) {
                             <div className="col-xxl-auto">
                               <div className="image-containercard col-xxl-auto">
                                 <img
-                                  src={`http://localhost:5000/uploads/${camp.campPictureCover}`}
+                                  src={camp.campPictureCover}
                                   alt={camp.title}
                                   className="camp-imagecard size-200 w-1/1 object-cover rounded-12"
                                 />
