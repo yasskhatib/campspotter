@@ -1,4 +1,4 @@
-import ArticlesThree from "@/components/homes/articles/Articlestwo";
+import Article from "@/components/homes/articles/Article";
 import Banner from "@/components/homes/banners/Bannerfour";
 import DestinationsOne from "@/components/homes/destinations/DestinationsOne";
 import FeaturesOne from "@/components/homes/features/FeaturesThree";
@@ -31,7 +31,7 @@ export default function HomePage1() {
       <br></br>
       <Testimonialstwo />
       <br></br>
-      <ArticlesThree />
+      <Article />
       <br></br>
       <FooterOne />
     </main>
