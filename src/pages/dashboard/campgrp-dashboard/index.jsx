@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CampgrpProfile from "@/components/dasboard/Profilegrp";
 import MetaComponent from "@/components/common/MetaComponent";
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function DBCampgrpProfilePage() {
     const [campgrpInfo, setCampgrpInfo] = useState({
@@ -29,9 +30,9 @@ export default function DBCampgrpProfilePage() {
 
     const fetchCampgrpInfo = async (email) => {
         try {
-            const response = await fetch(`http://localhost:5000/campgrpInfo?email=${email}`);
-            if (response.ok) {
-                const data = await response.json();
+            const response = await axiosInstance.get(`/campgrpInfo?email=${email}`);
+            if (response.status === 200) {
+                const data = response.data;
                 setCampgrpInfo({
                     name: data.name,
                     email: data.email,

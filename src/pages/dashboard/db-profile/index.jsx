@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Profile from "@/components/dasboard/Profile";
 import MetaComponent from "@/components/common/MetaComponent";
+import axiosInstance from '@/components/axiosInstance'; // Import the Axios instance
 
 export default function DBProfilePage() {
   const [userInfo, setUserInfo] = useState({
@@ -25,9 +26,9 @@ export default function DBProfilePage() {
 
   const fetchUserInfo = async (email) => {
     try {
-      const response = await fetch(`http://localhost:5000/userinfo?email=${email}`);
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get(`/userinfo?email=${email}`);
+      if (response.status === 200) {
+        const data = response.data;
         setUserInfo({
           fullName: data.fullName,
           email: data.email,
@@ -37,11 +38,11 @@ export default function DBProfilePage() {
         // Display alert with user information
       } else {
         console.error('Failed to fetch user info');
-        navigate('/login'); // Redirect to loginCampgrp if no camp group user is logged in
-
+        navigate('/login'); // Redirect to login if user info fetch fails
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
+      navigate('/login'); // Redirect to login on error
     }
   };
 
