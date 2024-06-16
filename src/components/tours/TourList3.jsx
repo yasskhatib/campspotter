@@ -3,7 +3,6 @@ import Calender from "../common/dropdownSearch/Calender";
 import ToggleSidebar from "./ToggleSidebar";
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import axios from 'axios';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';

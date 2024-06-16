@@ -2,7 +2,6 @@ import Pagination from "../common/Pagination";
 import ToggleSidebar from "./ToggleSidebar";
 import Stars2 from "../common/Stars2";
 import { useState, useEffect, useRef } from "react";
-import axios from 'axios';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -12,6 +11,7 @@ import ReactStars from 'react-stars';
 import "react-toastify/dist/ReactToastify.css";
 import './style.css'; // Import the custom CSS file
 import LoadingSpinner from "@/components/common/LoadingSpinner2"; // Ensure the path is correct
+import axiosInstance from '../axiosInstance'; // Import the Axios instance
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -58,15 +58,16 @@ export default function GrpList() {
   useEffect(() => {
     const fetchCampGroups = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/allCampGroups');
+        const response = await axiosInstance.get('/allCampGroups'); // Updated line
         const groups = response.data;
 
         // Fetch ratings for each group
         const groupsWithRatings = await Promise.all(
           groups.map(async (group) => {
-            const reviewsResponse = await axios.get('http://localhost:5000/getGroupReviews', {
+            const reviewsResponse = await axiosInstance.get('/getGroupReviews', { // Updated line
               params: { campGrpEmail: group.email }
             });
+
             const reviews = reviewsResponse.data;
             const totalScore = reviews.reduce((sum, review) => sum + review.score, 0);
             const averageRating = reviews.length ? totalScore / reviews.length : 0;
@@ -92,9 +93,10 @@ export default function GrpList() {
       if (email) {
         console.log('User email found in localStorage:', email);
         try {
-          const response = await axios.get('http://localhost:5000/userinfo', {
+          const response = await axiosInstance.get('/userinfo', { // Updated line
             params: { email }
           });
+
           if (response.data) {
             setUserEmail(email);
             console.log('User info fetched:', response.data);
@@ -127,9 +129,10 @@ export default function GrpList() {
 
     if (userEmail) {
       try {
-        const response = await axios.get('http://localhost:5000/getReview', {
+        const response = await axiosInstance.get('/getReview', { // Updated line
           params: { campGrpEmail: group.email, camperEmail: userEmail }
         });
+
         setUserReview(response.data);
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -159,11 +162,12 @@ export default function GrpList() {
     }
 
     try {
-      await axios.post('http://localhost:5000/addOrUpdateReview', {
+      await axiosInstance.post('/addOrUpdateReview', { // Updated line
         campGrpEmail: selectedGroup.email,
         camperEmail: userEmail,
         score: newRating
       });
+
 
       toast.success(`Your rating has been ${userReview ? 'updated' : 'submitted'} successfully!`);
       setUserReview({ ...userReview, score: newRating }); // Update user review in the state
@@ -192,11 +196,8 @@ export default function GrpList() {
                 >
                   <div className="tourCard__header">
                     <div className="tourCard__image ratio ratio-28:20">
-                      <img
-                        src={`http://localhost:5000/uploads/${group.picture}`}
-                        alt={group.name}
-                        className="img-ratio rounded-12"
-                      />
+                      <img src={group.picture} alt={group.name} className="img-ratio rounded-12" />
+
                     </div>
                   </div>
 
@@ -261,7 +262,8 @@ export default function GrpList() {
           <DialogHeading className="custom-heading">
             <i className="fas fa-info-circle"></i> {selectedGroup.name} Group
           </DialogHeading>
-          <img src={`http://localhost:5000/uploads/${selectedGroup.picture}`} alt={selectedGroup.name} className="custom-group-image" />
+          <img src={selectedGroup.picture} alt={selectedGroup.name} className="custom-group-image" /> 
+
 
           <div className="custom-info">
             <p><i className="fas fa-envelope"></i> Email: <span>{selectedGroup.email}</span></p>
