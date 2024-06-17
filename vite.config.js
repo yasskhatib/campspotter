@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['react-dnd'],
+      external: ['react-dnd', 'react-dnd-html5-backend'],
     },
   },
 })
