@@ -123,7 +123,7 @@ export default function Register() {
       }
     } else {
       // Handle initial registration submission
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za\d]{8,}$/;
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\-_ ]{8,}$/;
       if (!passwordRegex.test(formData.password)) {
         setIsLoading(false); // Stop loading spinner
         toast.error('Password must be at least 8 characters long and include at least one letter and one number', {
@@ -240,7 +240,7 @@ export default function Register() {
               ) : (
                 <>
                   <label htmlFor="verificationCode" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Verification code</label>
-                  <div className="form-input mt-10">
+                    <div className="form-input mt-10 mb-10">
                     <input id="verificationCode" type="text" placeholder="Enter the verification code" value={verificationCode} onChange={handleVerificationChange} required />
                   </div>
                   <small>Remaining attempts: {remainingAttempts}</small>

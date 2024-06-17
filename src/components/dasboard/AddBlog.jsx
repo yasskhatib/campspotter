@@ -7,7 +7,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axiosInstance from '@/components/axiosInstance'; // Ensure the path is correct
 import PropTypes from "prop-types";
-
+import { WithContext as ReactTags } from 'react-tag-input';
 
 const modules = {
   toolbar: {
@@ -46,6 +46,13 @@ const modules = {
   }
 };
 
+const KeyCodes = {
+  comma: 188,
+  enter: 13
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
+
 export default function AddBlog({ onLogout }) {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [formData, setFormData] = useState({
@@ -55,7 +62,7 @@ export default function AddBlog({ onLogout }) {
     creatorName: "",
     articleText: "",
     coverImage: null,
-    tags: "",
+    tags: [],
     status: "pending" // Default status
   });
 
@@ -84,6 +91,20 @@ export default function AddBlog({ onLogout }) {
 
   const handleArticleTextChange = (value) => {
     setFormData({ ...formData, articleText: value });
+  };
+
+  const handleDelete = (i) => {
+    setFormData({
+      ...formData,
+      tags: formData.tags.filter((tag, index) => index !== i)
+    });
+  };
+
+  const handleAddition = (tag) => {
+    setFormData({
+      ...formData,
+      tags: [...formData.tags, tag]
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -122,7 +143,7 @@ export default function AddBlog({ onLogout }) {
           creatorName: "",
           articleText: "",
           coverImage: null,
-          tags: "",
+          tags: [],
           campgrpEmail: localStorage.getItem('campgrpEmail'), // Reset to the value from localStorage
           status: "pending" // Reset status to default
         });
@@ -133,7 +154,6 @@ export default function AddBlog({ onLogout }) {
       toast.error(`Error: ${error.response ? error.response.data.error : error.message}`);
     }
   };
-
 
   return (
     <>
@@ -184,8 +204,14 @@ export default function AddBlog({ onLogout }) {
                 {formData.coverImage && <p>{formData.coverImage.name}</p>}
               </div>
               <div className="form-group col-md-6">
-                <label>Tags (comma-separated)</label>
-                <input type="text" name="tags" value={formData.tags} onChange={handleChange} className="form-control" />
+                <label>Tags</label>
+                <ReactTags
+                  tags={formData.tags}
+                  handleDelete={handleDelete}
+                  handleAddition={handleAddition}
+                  delimiters={delimiters}
+                  className="form-control"
+                />
               </div>
               <div className="form-group col-md-6">
                 <label>Creator Name (optional)</label>
@@ -211,6 +237,7 @@ export default function AddBlog({ onLogout }) {
     </>
   );
 }
+
 AddBlog.propTypes = {
   onLogout: PropTypes.func.isRequired,
 };
