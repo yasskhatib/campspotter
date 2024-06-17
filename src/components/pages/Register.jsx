@@ -15,7 +15,6 @@ export default function Register() {
   });
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
-  const [emailForVerification, setEmailForVerification] = useState('');
   const [remainingAttempts, setRemainingAttempts] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,10 +46,20 @@ export default function Register() {
     if (isVerificationSent) {
       // Handle verification code submission
       try {
-        const response = await axiosInstance.post('/verify', { email: emailForVerification, verificationCode });
+        console.log(`Verification code submission data: ${JSON.stringify({ verificationCode, ...formData })}`);
+        const response = await axiosInstance.post('/verify', {
+          verificationCode,
+          fullName: formData.fullName,
+          email: formData.email,
+          telephone: formData.telephone,
+          governorate: formData.governorate,
+          password: formData.password
+        });
+
         setIsLoading(false); // Stop loading spinner
 
-        if (response.status === 200) {
+        if (response.status === 201) {
+          console.log(`Verification response: ${JSON.stringify(response.data)}`);
           toast.success('Email verified successfully. User registered.', {
             position: "bottom-right",
             autoClose: 7000,
@@ -60,6 +69,7 @@ export default function Register() {
             draggable: true,
             progress: undefined,
           });
+          // Reset form
           setFormData({
             fullName: '',
             email: '',
@@ -86,6 +96,7 @@ export default function Register() {
             progress: undefined,
             theme: "dark", // Dark theme for toast
           });
+          // Reset form
           setFormData({
             fullName: '',
             email: '',
@@ -97,6 +108,7 @@ export default function Register() {
           setIsVerificationSent(false);
           setRemainingAttempts(3); // Reset attempts
         } else {
+          console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
           toast.error(error.response.data.message || 'Verification code is incorrect', {
             position: "bottom-right",
             autoClose: 7000,
@@ -127,10 +139,14 @@ export default function Register() {
       }
 
       try {
+        console.log(`Initial registration data: ${JSON.stringify(formData)}`);
+
         const response = await axiosInstance.post('/init-register', formData);
+
         setIsLoading(false); // Stop loading spinner
 
         if (response.status === 200) {
+          console.log(`Initial registration response: ${JSON.stringify(response.data)}`);
           toast.success('Verification code sent to email.', {
             position: "bottom-right",
             autoClose: 7000,
@@ -140,7 +156,6 @@ export default function Register() {
             draggable: true,
             progress: undefined,
           });
-          setEmailForVerification(formData.email);
           setIsVerificationSent(true);
         }
       } catch (error) {
