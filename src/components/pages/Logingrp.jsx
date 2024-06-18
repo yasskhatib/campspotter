@@ -24,13 +24,11 @@ export default function Logingrp() {
 
     try {
       const response = await axiosInstance.post('/loginCampgrp', formData);
-      const data = response.data;
 
       if (response.status === 200) {
+        const data = response.data;
         localStorage.setItem('campgrpLoggedIn', true);
         localStorage.setItem('campgrpEmail', formData.email);
-
-        console.log('camperLoggedIn:', localStorage.getItem('campgrpLoggedIn'));
 
         toast.success('Login successful', {
           position: "bottom-right",
@@ -44,7 +42,8 @@ export default function Logingrp() {
 
         navigate('/campgrp-dashboard');
       } else {
-        toast.error(data.message, {
+        // Handling other HTTP status codes from the server with a generic message
+        toast.error('Authentication failed, please check your credentials.', {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -55,7 +54,8 @@ export default function Logingrp() {
         });
       }
     } catch (error) {
-      toast.error('Error: ' + error.message, {
+      // This captures network errors and other unexpected errors
+      toast.error('Login failed: ' + (error.response?.data?.message || 'Network Error'), {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -67,9 +67,10 @@ export default function Logingrp() {
     }
   };
 
+
   const handleForgotPassword = async () => {
     if (!formData.email) {
-      toast.error('Please enter your email address first', {
+      toast.error('Please enter your email address first.', {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -107,7 +108,7 @@ export default function Logingrp() {
         });
       }
     } catch (error) {
-      toast.error('Error: ' + error.message, {
+      toast.error('Failed to send reset link: ' + (error.response?.data?.message || 'Network Error'), {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -118,6 +119,7 @@ export default function Logingrp() {
       });
     }
   };
+
 
   return (
     <section className="mt-header layout-pt-lg layout-pb-lg bg-img3">

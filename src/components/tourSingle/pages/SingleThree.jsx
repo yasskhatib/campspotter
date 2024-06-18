@@ -163,7 +163,7 @@ export default function SingleThree({ camp, user }) {
   }
 
   return (
-    <section className="pt-30 js-pin-container">
+    <section className="pt-60 js-pin-container">
       <div className="container">
         <div className="row mt-20 y-gap-30 justify-between">
           <div className="col-lg-8">

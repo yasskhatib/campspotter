@@ -86,7 +86,7 @@ export default function Profile({ onLogout }) {
       toast.info('New passwords do not match');
       return;
     }
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za\d]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\-_ ]{8,}$/;
     if (!passwordRegex.test(newPassword)) {
       toast.error('Password must be at least 8 characters long and include at least one letter and one number');
       return;

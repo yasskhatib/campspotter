@@ -22,6 +22,11 @@ export default function CampDashboard({ onLogout }) {
     socialMediaLink: "",
     comments: ""
   });
+  const [passwords, setPasswords] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,6 +71,49 @@ export default function CampDashboard({ onLogout }) {
       ...campgrpInfo,
       [name]: files ? files[0] : value,
     });
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswords({
+      ...passwords,
+      [name]: value,
+    });
+  };
+
+  const handleChangePassword = async () => {
+    const { oldPassword, newPassword, confirmPassword } = passwords;
+
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\-_ ]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      toast.error('Password must be at least 8 characters long and include at least one letter and one number');
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post('/updatePasswordgrp', {
+        email: campgrpInfo.email,
+        oldPassword,
+        newPassword,
+      });
+
+      if (response.status === 200) {
+        toast.success('Password updated successfully');
+      } else {
+        toast.error(response.data.message || 'Failed to update password');
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Error updating password');
+      }
+    }
   };
 
   const currentYear = new Date().getFullYear();
@@ -212,6 +260,39 @@ export default function CampDashboard({ onLogout }) {
                 </button>
               </>
             )}
+          </div>
+          <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-30">
+            <h5 className="text-20 fw-500 mb-30">Change Password</h5>
+            <div className="contactForm y-gap-30">
+              <div className="row y-gap-30">
+                <div className="col-md-12">
+                  <div className="form-input">
+                    <input placeholder="Old password" type="password" name="oldPassword" value={passwords.oldPassword} onChange={handlePasswordChange} required />
+                  </div>
+                </div>
+              </div>
+              <div className="row y-gap-30">
+                <div className="col-md-6">
+                  <div className="form-input">
+                    <input placeholder="New password" type="password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordChange} required />
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="form-input">
+                    <input placeholder="Confirm new password" type="password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} required />
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12">
+                  <button className="button -md -dark-1 bg-green-3 text-white" onClick={handleChangePassword} style={{ width: '100%' }}>
+                    Save Changes
+                    <i className="icon-arrow-top-right text-16 ml-10"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="text-center pt-30">
             © Copyright Campspotter {new Date().getFullYear()}

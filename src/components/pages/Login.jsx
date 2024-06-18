@@ -38,9 +38,8 @@ export default function Login() {
     try {
       const response = await axiosInstance.post('/login', formData);
 
-      const data = response.data;
-
       if (response.status === 200) {
+        const data = response.data;
         localStorage.setItem('fullName', data.fullName);
         toast.success('Login successful', {
           position: "bottom-right",
@@ -65,7 +64,8 @@ export default function Login() {
 
         navigate('/db-profile');
       } else {
-        toast.error(data.message, {
+        // Handling custom error messages received from the server
+        toast.error(response.data.message, {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -76,7 +76,8 @@ export default function Login() {
         });
       }
     } catch (error) {
-      toast.error('Error: ' + error.message, {
+      // Handling errors in case of network issues or server errors
+      toast.error((error.response?.data?.message || error.message), {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -84,9 +85,11 @@ export default function Login() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        theme: "dark",
       });
     }
   };
+
 
   const handleForgotPassword = async () => {
     if (!formData.email) {
@@ -98,6 +101,8 @@ export default function Login() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        theme: "dark",
+
       });
       return;
     }
@@ -125,10 +130,12 @@ export default function Login() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
+          theme: "dark",
+
         });
       }
     } catch (error) {
-      toast.error('Error: ' + error.message, {
+      toast.error(error.message, {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -136,6 +143,8 @@ export default function Login() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        theme: "dark",
+
       });
     }
   };
