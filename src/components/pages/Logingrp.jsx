@@ -42,7 +42,6 @@ export default function Logingrp() {
 
         navigate('/campgrp-dashboard');
       } else {
-        // Handling other HTTP status codes from the server with a generic message
         toast.error('Authentication failed, please check your credentials.', {
           position: "bottom-right",
           autoClose: 5000,
@@ -54,7 +53,6 @@ export default function Logingrp() {
         });
       }
     } catch (error) {
-      // This captures network errors and other unexpected errors
       toast.error('Login failed: ' + (error.response?.data?.message || 'Network Error'), {
         position: "bottom-right",
         autoClose: 5000,
@@ -66,7 +64,6 @@ export default function Logingrp() {
       });
     }
   };
-
 
   const handleForgotPassword = async () => {
     if (!formData.email) {
@@ -119,7 +116,6 @@ export default function Logingrp() {
       });
     }
   };
-
 
   return (
     <section className="mt-header layout-pt-lg layout-pb-lg bg-img3">

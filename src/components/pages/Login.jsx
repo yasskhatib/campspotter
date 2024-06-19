@@ -64,7 +64,6 @@ export default function Login() {
 
         navigate('/db-profile');
       } else {
-        // Handling custom error messages received from the server
         toast.error(response.data.message, {
           position: "bottom-right",
           autoClose: 5000,
@@ -76,7 +75,6 @@ export default function Login() {
         });
       }
     } catch (error) {
-      // Handling errors in case of network issues or server errors
       toast.error((error.response?.data?.message || error.message), {
         position: "bottom-right",
         autoClose: 5000,
@@ -90,7 +88,6 @@ export default function Login() {
     }
   };
 
-
   const handleForgotPassword = async () => {
     if (!formData.email) {
       toast.error('Please enter your email address first', {
@@ -102,7 +99,6 @@ export default function Login() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-
       });
       return;
     }
@@ -131,11 +127,10 @@ export default function Login() {
           draggable: true,
           progress: undefined,
           theme: "dark",
-
         });
       }
     } catch (error) {
-      toast.error(error.message, {
+      toast.error((error.response?.data?.message || error.message), {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -144,7 +139,6 @@ export default function Login() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-
       });
     }
   };
