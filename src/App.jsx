@@ -15,9 +15,7 @@ import GrpList from "./pages/tour-lists/groups";
 
 import TourSinglePage3 from "./pages/tour-singles/tour-single-3";
 
-import BookingPage from "./pages/pages/booking-pages";
 import DBMainPage from "./pages/dashboard/db-main";
-import DBBookingPage from "./pages/dashboard/db-booking";
 import DBListingPage from "./pages/dashboard/db-listing";
 
 import DBListinggrp from "./pages/dashboard/db-listing-grp";
@@ -47,7 +45,6 @@ import RegisterPage from "./pages/pages/register";
 import RegisterCampgrp from "./pages/pages/registergrp";
 
 import InvoicePage from "./pages/pages/invoice";
-import UIElementsPage from "./pages/pages/ui-elements";
 import NotFoundPage from "./pages/pages/404";
 import ContactPage from "./pages/pages/contact";
 
@@ -71,9 +68,7 @@ function App() {
 
 
           <Route path="/camp/:id" element={<TourSinglePage3 />} />
-          <Route path="/booking-pages" element={<BookingPage />} />
           <Route path="/db-main" element={<DBMainPage />} />
-          <Route path="/db-booking" element={<DBBookingPage />} />
           <Route path="/db-listing" element={<DBListingPage />} />
           <Route path="/db-listing-grp" element={<DBListinggrp />} />
           <Route path="/db-add-tour" element={<DBAddTourPage />} />
@@ -98,7 +93,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/registergrp" element={<RegisterCampgrp />} />
           <Route path="/invoice" element={<InvoicePage />} />
-          <Route path="/ui-elements" element={<UIElementsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="/*" element={<NotFoundPage />} />
