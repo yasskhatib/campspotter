@@ -18,7 +18,9 @@ export default function HelpCenterPage() {
       <MetaComponent meta={metadata} />
       <main>
         <Header1 />
-       
+        <Hero />
+        <Activity />
+        <Faq />
         <FooterOne />
       </main>
     </>

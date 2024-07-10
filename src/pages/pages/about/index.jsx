@@ -21,7 +21,7 @@ export default function AboutPage() {
       <MetaComponent meta={metadata} />
       <main>
         <Header1 />
-       
+        
         <FooterOne />
       </main>
     </>
