@@ -17,8 +17,7 @@ export default function TermsPage() {
       <MetaComponent meta={metadata} />
       <main>
         <Header1 />
-        <PageHeader />
-        <Content />
+       
         <FooterOne />
       </main>
     </>

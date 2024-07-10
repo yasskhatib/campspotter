@@ -21,15 +21,7 @@ export default function AboutPage() {
       <MetaComponent meta={metadata} />
       <main>
         <Header1 />
-        <Hero />
-        <Information />
-        <Banner />
-        <FeaturesOne />
-        <div className="mt-60">
-          <FeturesTwo />
-        </div>
-        <BannerOne />
-        <Team />
+       
         <FooterOne />
       </main>
     </>
